@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="sr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Najbolje iz Vojvodine – embed</title>
+  <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <style>
+    html,body {height:100%; margin:0; background:#0b1220;}
+    #map {position:absolute; inset:0}
+    .topbar{
+      position:absolute; left:10px; top:10px; z-index:10;
+      background:rgba(17,24,39,.85); color:#e5e7eb; border:1px solid rgba(255,255,255,.08);
+      border-radius:12px; padding:.45rem .6rem; font:13px system-ui;
+      display:flex; gap:.5rem; align-items:center;
+    }
+    .topbar a { color:#93c5fd; text-decoration:none; border-bottom:1px dashed rgba(147,197,253,.5) }
+    .topbar a:hover { border-bottom-color: transparent }
+  </style>
+</head>
+<body>
+<div id="map"></div>
+<div class="topbar">
+  <a id="open" href="#">Otvori veću mapu</a>
+</div>
+
+<script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
+<script>
+  function qp(){ const u=new URL(location.href); return Object.fromEntries(u.searchParams.entries()); }
+  const p=qp();
+  const center=[ +(p.lng||19.8335), +(p.lat||45.2671) ];
+  const zoom=+(p.zoom||7);
+
+  const style={ "version":8, "glyphs":"https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+    "sources":{ "osm":{ "type":"raster","tiles":["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],"tileSize":256,"attribution":"© OpenStreetMap contributors"} },
+    "layers":[ {"id":"osm","type":"raster","source":"osm"} ] };
+
+  const map=new maplibregl.Map({ container:'map', style, center, zoom });
+  map.addControl(new maplibregl.NavigationControl(), 'top-right');
+
+  const data={"type":"FeatureCollection","features":[
+    { "type":"Feature", "properties":{"naziv":"Vinarija Primer","kategorija":"Vina","opis":"Porodična vinarija na obroncima Fruške gore.","web":"https://primer-vinarija.rs","foto":"https://picsum.photos/seed/vino/800/440"}, "geometry":{"type":"Point","coordinates":[19.715,45.144]} },
+    { "type":"Feature", "properties":{"naziv":"Salaš Primer","kategorija":"Gastronomija","opis":"Autentična vojvođanska kuhinja.","web":"https://salas-primer.rs","foto":"https://picsum.photos/seed/salas/800/440"}, "geometry":{"type":"Point","coordinates":[19.12,45.26]} },
+    { "type":"Feature", "properties":{"naziv":"Med iz Ravnice","kategorija":"Proizvodi","opis":"Pčelarska domaćinstva sa sertifikatom kvaliteta.","web":"https://med-ravnica.rs","foto":"https://picsum.photos/seed/med/800/440"}, "geometry":{"type":"Point","coordinates":[20.05,45.49]} }
+  ]};
+
+  function makeMarker(f){
+    const el=document.createElement('div');
+    el.textContent='📍';
+    el.style.cssText='width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#1f2937;color:#fff;font-size:16px;box-shadow:0 6px 14px rgba(0,0,0,.35);border:1px solid rgba(0,0,0,.35);cursor:pointer';
+    return el;
+  }
+  const popup=new maplibregl.Popup({closeButton:true, closeOnClick:true, anchor:'bottom'});
+  function popupHTML(p){
+    return `<div style="font:14px/1.5 system-ui,Arial,sans-serif;color:#e5e7eb;background:linear-gradient(180deg,rgba(31,41,55,.98),rgba(17,24,39,.98));border:1px solid rgba(255,255,255,.08);border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.25);overflow:hidden;max-width:320px">
+      <div style="padding:.7rem .85rem">
+        <div style="font-weight:700;font-size:15px;letter-spacing:.2px">${p.naziv||""}</div>
+        <div style="opacity:.9;margin-top:.25rem">${p.opis||""}</div>
+        ${p.web?`<div style="margin-top:.4rem"><a style="color:#93c5fd;text-decoration:none;border-bottom:1px dashed rgba(147,197,253,.5)" href="${p.web}" target="_blank" rel="noopener">Web sajt ⇗</a></div>`:""}
+        ${p.foto?`<img src="${p.foto}" alt="${p.naziv||'Foto'}" style="width:100%;display:block;border-radius:12px;margin-top:.5rem">`:""}
+      </div>
+    </div>`;
+  }
+
+  map.on('load', ()=>{
+    data.features.forEach(f=>{
+      const [lng,lat]=f.geometry.coordinates;
+      const el=makeMarker(f);
+      el.addEventListener('click', ()=> popup.setLngLat([lng,lat]).setHTML(popupHTML(f.properties)).addTo(map) );
+      new maplibregl.Marker({element:el,anchor:'bottom'}).setLngLat([lng,lat]).addTo(map);
+    });
+  });
+
+  const base = new URL(location.href);
+  base.pathname = base.pathname.replace(/embed\.html$/,'app.html');
+  document.getElementById('open').href = base.toString();
+</script>
+</body>
+</html>
