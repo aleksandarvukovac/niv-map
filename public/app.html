@@ -14,13 +14,14 @@
 
     <style>
       :root {
-        --card-bg: #fff;
-        --card-text: #1b1f24;
+        --card-w: 260px;
+        --card-pad: 12px;
+        --card-radius: 12px;
+        --fg: #1a1a1a;
+        --muted: #5b5b5b;
         --accent: #1f7a8c;
-        --muted: #8a9099;
-        --shadow: 0 10px 30px rgba(0, 0, 0, 0.14);
-        --radius: 14px;
       }
+
       html,
       body {
         height: 100%;
@@ -31,103 +32,101 @@
         width: 100vw;
       }
 
-      /* badge */
       .badge {
         position: absolute;
         left: 12px;
         top: 12px;
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(255, 255, 255, 0.92);
         border-radius: 10px;
-        padding: 8px 10px;
-        font: 14px/1.3 system-ui, -apple-system, Segoe UI, Roboto, Arial,
-          sans-serif;
+        padding: 6px 9px;
+        font: 13px/1.35 ui-sans-serif, system-ui, Arial;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-        z-index: 2;
       }
-      .badge a {
+
+      /* ==== kompaktan popup ==== */
+      .maplibregl-popup {
+        max-width: var(--card-w);
+      }
+      .maplibregl-popup-content {
+        padding: 0;
+        border-radius: var(--card-radius);
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+      }
+      .maplibregl-popup-close-button {
+        top: 6px;
+        right: 8px;
+      }
+
+      .card {
+        width: var(--card-w);
+        max-height: 400px;
+        overflow: auto;
+        background: #fff;
+      }
+      .card_media {
+        position: relative;
+        background: #f6f7f8;
+      }
+      .card_img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        display: block;
+        border-bottom: 1px solid #eee;
+      }
+      /* pin-maska za sliku u popapu */
+      .card_img.pin {
+        -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260"><path d="M100 5a85 85 0 0 0-85 85c0 59 85 165 85 165s85-106 85-165A85 85 0 0 0 100 5z" fill="%23000"/></svg>');
+        mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 260"><path d="M100 5a85 85 0 0 0-85 85c0 59 85 165 85 165s85-106 85-165A85 85 0 0 0 100 5z" fill="%23000"/></svg>');
+        -webkit-mask-size: contain;
+        mask-size: contain;
+        -webkit-mask-position: center top;
+        mask-position: center top;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        padding: 6px;
+        height: 160px;
+        background: #fff;
+        border-bottom: none;
+      }
+
+      .card_body {
+        padding: var(--card-pad);
+        font: 13px/1.45 ui-sans-serif, system-ui, Arial;
+        color: var(--fg);
+      }
+      .card_title {
+        margin: 0 0 0.4rem;
+        font-size: 15px;
+        font-weight: 650;
+      }
+      .card_meta {
+        margin: 0.25rem 0;
+        color: var(--muted);
+      }
+      .card_link {
         color: var(--accent);
         text-decoration: none;
       }
-
-      /* ====== custom HTML pin ====== */
-      .pin {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: #fff;
-        border: 2px solid #2a2e34;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        display: grid;
-        place-items: center;
-        cursor: pointer;
-        transform: translateY(-4px);
-      }
-      .pin::before {
-        content: "";
-        width: 16px;
-        height: 16px;
-        display: block;
-        /* inline SVG – alat (čekić/odvijač) */
-        background: no-repeat center/contain
-          url("data:image/svg+xml,%3Csvg width='256' height='256' viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%231f7a8c'%3E%3Cpath d='M89 59c11-11 29-11 40 0l13 13 10-10 9 9-10 10 13 13c11 11 11 29 0 40l-7 7-62-62 7-7z'/%3E%3Cpath d='M169 155 101 87 58 130l68 68a8 8 0 0 0 11 0l32-32a8 8 0 0 0 0-11zM66 138l35-35 52 52-35 35z'/%3E%3C/g%3E%3C/svg%3E");
+      .card_link:hover {
+        text-decoration: underline;
       }
 
-      /* ====== popup card ====== */
-      .card {
-        width: min(320px, calc(100vw - 24px));
-        color: var(--card-text);
-        background: var(--card-bg);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        overflow: hidden;
-        font: 14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial,
-          sans-serif;
-      }
-      .card__media {
-        position: relative;
-        aspect-ratio: 16/10;
-        background: #f1f3f5;
-        overflow: hidden;
-      }
-      .card__img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-      }
-      .card__controls {
-        position: absolute;
-        inset: auto 0 8px 0;
-        display: flex;
-        gap: 6px;
-        justify-content: center;
-        pointer-events: none;
-      }
-      .dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.5);
-        backdrop-filter: blur(2px);
-        outline: 1px solid rgba(0, 0, 0, 0.15);
-      }
-      .dot--active {
-        background: #fff;
-      }
-
+      /* mini karusel */
       .navbtn {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        width: 34px;
-        height: 34px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.9);
-        border: 1px solid rgba(0, 0, 0, 0.1);
+        width: 26px;
+        height: 26px;
+        border: none;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        cursor: pointer;
         display: grid;
         place-items: center;
-        cursor: pointer;
-        user-select: none;
       }
       .navbtn:hover {
         background: #fff;
@@ -138,90 +137,33 @@
       .navbtn--next {
         right: 8px;
       }
-
-      .card__body {
-        padding: 14px 14px 12px;
+      .dots {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 6px;
+        display: flex;
+        gap: 6px;
+        justify-content: center;
       }
-      .card h3 {
-        margin: 0 0 6px;
-        font-size: 16px;
-        line-height: 1.25;
-      }
-      .muted {
-        color: var(--muted);
-      }
-      .card a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-      .kv {
-        margin: 0.35rem 0;
-      }
-      .kv strong {
-        font-weight: 600;
-      }
-
-      /* maplibre popup reset (we render our own card) */
-      .maplibregl-popup-content {
-        background: transparent;
-        box-shadow: none;
-        padding: 0;
-        border-radius: 0;
-      }
-      .maplibregl-popup-tip {
-        display: none;
-      }
-
-      /* === Compact overrides === */
-      :root {
-        --radius: 12px;
-        --shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
-      }
-
-      .card {
-        width: 280px;
-        max-height: 320px; /* skrol kad je sadržaj duži */
-        overflow: auto;
-        font-size: 13px; /* kompaktniji tekst */
-        line-height: 1.45;
-      }
-
-      .card h3 {
-        font-size: 15px;
-        font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
-        margin: 0 0 6px;
-      }
-
-      .card__body {
-        padding: 12px 12px 10px;
-      }
-
-      .card__media {
-        aspect-ratio: 4 / 3;
-      } /* manja i "viša" slika */
-
-      /* kompaktan pin */
-      .pin {
-        width: 22px;
-        height: 22px;
-        border: 2px solid #2a2e34;
-        transform: translateY(-3px);
-      }
-      .pin::before {
-        width: 12px;
-        height: 12px;
-      }
-
-      /* sitniji dot indikatori u karuselu */
-      .dot {
+      .dots i {
         width: 6px;
         height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.7);
+      }
+      .dots i.on {
+        background: #fff;
       }
 
-      /* sitnije strelice */
-      .navbtn {
-        width: 30px;
-        height: 30px;
+      /* HTML marker – zanati pin */
+      .marker-zanat {
+        width: 28px;
+        height: 28px;
+        background: url("/img/kategorije/zanat-pin.svg") center / contain
+          no-repeat;
+        transform: translate(-50%, -100%); /* anchor: bottom */
+        cursor: pointer;
       }
     </style>
   </head>
@@ -233,7 +175,7 @@
     </div>
 
     <script>
-      // 1) Map style
+      // 1) Map style (MapTiler)
       const MAPTILER_KEY = "WJJJqPPstboZWo4827qc";
       const STYLE_URL = `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`;
 
@@ -241,92 +183,86 @@
       const map = new maplibregl.Map({
         container: "map",
         style: STYLE_URL,
-        center: [19.8335, 45.2671],
+        center: [19.8335, 45.2671], // Novi Sad
         zoom: 7.2,
         attributionControl: true,
       });
       map.addControl(new maplibregl.NavigationControl(), "top-right");
 
-      // 3) Data
+      // 3) Učitavanje GeoJSON-a
       async function loadData() {
         const res = await fetch("/data/places.geojson", { cache: "no-store" });
         if (!res.ok) throw new Error("Ne mogu da učitam /data/places.geojson");
         return res.json();
       }
 
-      // Helper: build carousel HTML (string)
+      // Helper: HTML za karusel (slike iz CSV kolone 'foto')
       function buildCarouselHTML(fotoCsv, altText) {
         const imgs = (fotoCsv || "")
           .split(",")
           .map((x) => x.trim())
           .filter(Boolean);
 
-        if (!imgs.length) return ""; // no media
+        if (!imgs.length) return "";
 
-        // dots (indicators)
         const dots = imgs
           .map(
-            (_, i) =>
-              `<span class="dot ${
-                i === 0 ? "dot--active" : ""
-              }" data-idx="${i}"></span>`
+            (_, i) => `<i class="${i === 0 ? "on" : ""}" data-idx="${i}"></i>`
           )
           .join("");
 
         return `
-        <div class="card__media" data-count="${imgs.length}">
-          <img class="card__img" src="${imgs[0]}" alt="${
+          <div class="card_media" data-count="${imgs.length}">
+            <img class="card_img pin" src="${imgs[0]}" alt="${
           altText || "Foto"
-        }" data-idx="0" />
-          ${
-            imgs.length > 1
-              ? `
-            <button class="navbtn navbtn--prev" aria-label="Prethodna">&#10094;</button>
-            <button class="navbtn navbtn--next" aria-label="Sledeća">&#10095;</button>
-            <div class="card__controls">${dots}</div>
-          `
-              : ``
-          }
-          <template data-images>${imgs
-            .map((s) => `<span>${s}</span>`)
-            .join("")}</template>
-        </div>
-      `;
+        }" data-idx="0">
+            ${
+              imgs.length > 1
+                ? `
+              <button class="navbtn navbtn--prev" aria-label="Prethodna">‹</button>
+              <button class="navbtn navbtn--next" aria-label="Sledeća">›</button>
+              <div class="dots">${dots}</div>
+            `
+                : ``
+            }
+            <template data-images>${imgs
+              .map((s) => `<span>${s}</span>`)
+              .join("")}</template>
+          </div>
+        `;
       }
 
-      // attach behavior to carousel (prev/next + dots)
       function wireCarousel(root) {
-        const media = root.querySelector(".card__media");
+        const media = root.querySelector(".card_media");
         if (!media) return;
 
-        const imgEl = media.querySelector(".card__img");
+        const imgEl = media.querySelector("img.card_img");
         const templ = media.querySelector("template[data-images]");
         const urls = Array.from(templ.content.children).map(
           (n) => n.textContent
         );
         let idx = 0;
 
-        const dots = root.querySelectorAll(".dot");
+        const dots = root.querySelectorAll(".dots i");
         const setActive = (i) => {
-          idx = i;
+          idx = (i + urls.length) % urls.length;
           imgEl.src = urls[idx];
           imgEl.dataset.idx = String(idx);
-          dots.forEach((d, j) => d.classList.toggle("dot--active", j === idx));
+          dots.forEach((d, j) => d.classList.toggle("on", j === idx));
         };
 
         const prev = root.querySelector(".navbtn--prev");
         const next = root.querySelector(".navbtn--next");
-        if (prev)
+        prev &&
           prev.addEventListener("click", (e) => {
             e.stopPropagation();
-            setActive((idx - 1 + urls.length) % urls.length);
+            setActive(idx - 1);
           });
-        if (next)
+        next &&
           next.addEventListener("click", (e) => {
             e.stopPropagation();
-            setActive((idx + 1) % urls.length);
+            setActive(idx + 1);
           });
-
         dots.forEach((d) =>
           d.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -336,70 +272,63 @@
         );
       }
 
-      // Popup renderer
-      function popupHTML(p) {
+      function buildPopupHTML(p) {
         const media = buildCarouselHTML(p.foto, p.naziv);
         return `
-        <article class="card">
-          ${media}
-          <div class="card__body">
-            <h3>${p.naziv ?? ""}</h3>
-            ${
-              p.kategorija
-                ? `<div class="kv"><strong>Kategorija:</strong> <span>${p.kategorija}</span></div>`
-                : ""
-            }
-            ${
-              p.opis
-                ? `<p class="muted" style="margin:.5rem 0 0">${p.opis}</p>`
-                : ""
-            }
-            ${
-              p.web
-                ? `<p style="margin:.6rem 0 0"><a href="${p.web}" target="_blank" rel="noopener">Web sajt ⇗</a></p>`
-                : ""
-            }
-          </div>
-        </article>
-      `;
+          <article class="card">
+            ${media}
+            <div class="card_body">
+              <h3 class="card_title">${p.naziv ?? ""}</h3>
+              ${
+                p.kategorija
+                  ? `<div class="card_meta"><strong>Kategorija:</strong> ${p.kategorija}</div>`
+                  : ``
+              }
+              ${p.opis ? `<p>${p.opis}</p>` : ``}
+              ${
+                p.web
+                  ? `<p><a class="card_link" href="${p.web}" target="_blank" rel="noopener">Web sajt ⇗</a></p>`
+                  : ``
+              }
+            </div>
+          </article>
+        `;
       }
 
-      // 4) Markeri + popup (DOM Marker + custom pin)
+      const popup = new maplibregl.Popup({
+        closeButton: true,
+        closeOnClick: true,
+      });
+
+      // 4) Markeri (HTML marker sa tvojim pinom) + popup
       map.on("load", async () => {
         try {
           const data = await loadData();
 
-          const cardPopup = new maplibregl.Popup({
-            closeButton: true,
-            closeOnClick: true,
-            offset: 18,
-          });
-
-          for (const f of data.features || []) {
+          data.features.forEach((f) => {
             const p = f.properties || {};
-            const [lng, lat] = f.geometry?.coordinates || [];
+            const [lng, lat] = f.geometry.coordinates;
 
-            // custom HTML pin
+            // HTML marker
             const el = document.createElement("div");
-            el.className = "pin";
+            el.className = "marker-zanat";
 
-            const marker = new maplibregl.Marker({ element: el })
+            const marker = new maplibregl.Marker({
+              element: el,
+              anchor: "bottom",
+            })
               .setLngLat([lng, lat])
               .addTo(map);
 
-            el.addEventListener("click", (e) => {
-              e.stopPropagation();
-              const html = popupHTML(p);
-              cardPopup.setLngLat([lng, lat]).setHTML(html).addTo(map);
-              // kad se popup ubaci u DOM, poveži carousel
-              setTimeout(() => {
-                const root = document.querySelector(
-                  ".maplibregl-popup-content"
-                );
-                if (root) wireCarousel(root);
-              }, 0);
+            el.addEventListener("click", (ev) => {
+              ev.stopPropagation();
+              const html = buildPopupHTML(p);
+              popup.setLngLat([lng, lat]).setHTML(html).addTo(map);
+              // oživi karusel kada se popup ubaci u DOM
+              const root = document.querySelector(".maplibregl-popup");
+              root && wireCarousel(root);
             });
-          }
+          });
         } catch (err) {
           console.error(err);
           alert("Podaci nisu učitani. Proveri /data/places.geojson");
