@@ -171,6 +171,57 @@
       .maplibregl-popup-tip {
         display: none;
       }
+
+      /* === Compact overrides === */
+      :root {
+        --radius: 12px;
+        --shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+      }
+
+      .card {
+        width: 280px;
+        max-height: 360px; /* skrol kad je sadržaj duži */
+        overflow: auto;
+        font-size: 13px; /* kompaktniji tekst */
+        line-height: 1.45;
+      }
+
+      .card h3 {
+        font-size: 15px;
+        margin: 0 0 6px;
+      }
+
+      .card__body {
+        padding: 12px 12px 10px;
+      }
+
+      .card__media {
+        aspect-ratio: 4 / 3;
+      } /* manja i "viša" slika */
+
+      /* kompaktan pin */
+      .pin {
+        width: 22px;
+        height: 22px;
+        border: 2px solid #2a2e34;
+        transform: translateY(-3px);
+      }
+      .pin::before {
+        width: 12px;
+        height: 12px;
+      }
+
+      /* sitniji dot indikatori u karuselu */
+      .dot {
+        width: 6px;
+        height: 6px;
+      }
+
+      /* sitnije strelice */
+      .navbtn {
+        width: 30px;
+        height: 30px;
+      }
     </style>
   </head>
   <body>
