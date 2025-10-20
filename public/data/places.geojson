@@ -4,32 +4,25 @@
     {
       "type": "Feature",
       "properties": {
-        "naziv": "Vinarija Primer",
-        "kategorija": "Vina",
-        "opis": "Porodična vinarija.",
-        "web": "https://primer-vinarija.rs"
+        "id": "NIV-0001",
+        "naziv": "Ferenc Torma PR Umetnička obrada drveta – Umetnik DABAR",
+        "kategorija": "Zanat",
+        "opis": "\"Preduzetnička radnja Umetnik Dabar iz Subotice bavi se umetničkom obradom drveta i izradom ručno rađene opreme za dečija igrališta od prirodnog bagrema. Njihovi proizvodi spajaju funkcionalnost, kreativnost i estetiku, podstičući razvoj dece kroz igru.\"",
+        "web": "https://www.facebook.com/umetnikdabar/",
+        "foto": "/img/dabar-logo.jpg,/img/dabar-carolija-1.jpg,/img/dabar-carolija-2.jpg,/img/dabar-carolija-3.jpg",
+        "adresa": "Dositejeva 6",
+        "mesto": "Subotica",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
       },
-      "geometry": { "type": "Point", "coordinates": [19.715, 45.144] }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "naziv": "Salaš Primer",
-        "kategorija": "Gastronomija",
-        "opis": "Autentična kuhinja.",
-        "web": "https://salas-primer.rs"
-      },
-      "geometry": { "type": "Point", "coordinates": [19.12, 45.26] }
-    },
-    {
-      "type": "Feature",
-      "properties": {
-        "naziv": "Med iz Ravnice",
-        "kategorija": "Proizvodi",
-        "opis": "Pčelarsko domaćinstvo.",
-        "web": "https://med-ravnica.rs"
-      },
-      "geometry": { "type": "Point", "coordinates": [20.05, 45.49] }
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.662195,
+          46.091005
+        ]
+      }
     }
   ]
 }
