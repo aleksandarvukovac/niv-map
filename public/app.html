@@ -31,6 +31,7 @@
         padding: 8px 10px;
         font: 14px/1.3 system-ui, Arial, sans-serif;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        z-index: 10;
       }
       .popup {
         font: 14px/1.45 system-ui, Arial, sans-serif;
@@ -57,7 +58,7 @@
 
     <script>
       // === 1) MapTiler ključ & stil ===
-      const MAPTILER_KEY = "WJJJqPPstboZWo4827qc"; // po želji kasnije prebaci u zaseban config fajl
+      const MAPTILER_KEY = "WJJJqPPstboZWo4827qc";
       const STYLE_URL = `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`;
 
       // === 2) Inicijalizuj mapu (MapLibre + MapTiler stil) ===
@@ -68,7 +69,6 @@
         zoom: 7.3,
         attributionControl: true,
       });
-
       map.addControl(new maplibregl.NavigationControl(), "top-right");
 
       // === 3) Učitaj GeoJSON tačke ===
@@ -78,48 +78,24 @@
         return await res.json();
       }
 
-      map.on("load", async () => {
-        try {
-          const data = await loadData();
+      // Helper: uzmi niz slika iz stringa "foto" (zarez-odvojen)
+      function photosFrom(p) {
+        return String(p.foto || "")
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean);
+      }
 
-          map.addSource("places", { type: "geojson", data });
+      // Helper: HTML za popup (prva slika = logo)
+      function popupHTML(p) {
+        const imgs = photosFrom(p);
+        const first = imgs[0]; // logo
+        const imgHTML = first
+          ? `<img src="${first}" alt="${p.naziv || "Foto"}"
+               style="width:100%; border-radius:8px; margin-top:.5rem">`
+          : "";
 
-          // krugovi
-          map.addLayer({
-            id: "places-circles",
-            type: "circle",
-            source: "places",
-            paint: {
-              "circle-radius": 6,
-              "circle-color": "#1f7a8c",
-              "circle-stroke-width": 1,
-              "circle-stroke-color": "#ffffff",
-            },
-          });
-
-          // etikete
-          map.addLayer({
-            id: "places-labels",
-            type: "symbol",
-            source: "places",
-            layout: {
-              "text-field": ["get", "naziv"],
-              "text-size": 12,
-              "text-offset": [0, 1.1],
-              "text-anchor": "top",
-            },
-            paint: { "text-halo-color": "#fff", "text-halo-width": 1 },
-          });
-
-          // popup
-          const popup = new maplibregl.Popup({
-            closeButton: true,
-            closeOnClick: true,
-          });
-          map.on("click", "places-circles", (e) => {
-            const f = e.features[0];
-            const p = f.properties || {};
-            const html = `
+        return `
           <div class="popup">
             <h3>${p.naziv ?? ""}</h3>
             ${
@@ -133,15 +109,54 @@
                 ? `<p><a href="${p.web}" target="_blank" rel="noopener">Web sajt ⇗</a></p>`
                 : ""
             }
-            ${
-              p.foto
-                ? `<img src="${p.foto}" alt="${
-                    p.naziv ?? "Foto"
-                  }" style="width:100%; border-radius:8px; margin-top:.25rem">`
-                : ""
-            }
-          </div>`;
-            popup.setLngLat(e.lngLat).setHTML(html).addTo(map);
+            ${imgHTML}
+          </div>
+        `;
+      }
+
+      map.on("load", async () => {
+        try {
+          const data = await loadData();
+
+          map.addSource("places", { type: "geojson", data });
+
+          // Krugovi
+          map.addLayer({
+            id: "places-circles",
+            type: "circle",
+            source: "places",
+            paint: {
+              "circle-radius": 6,
+              "circle-color": "#1f7a8c",
+              "circle-stroke-width": 1,
+              "circle-stroke-color": "#ffffff",
+            },
+          });
+
+          // Etikete
+          map.addLayer({
+            id: "places-labels",
+            type: "symbol",
+            source: "places",
+            layout: {
+              "text-field": ["get", "naziv"],
+              "text-size": 12,
+              "text-offset": [0, 1.1],
+              "text-anchor": "top",
+            },
+            paint: { "text-halo-color": "#fff", "text-halo-width": 1 },
+          });
+
+          // Popup
+          const popup = new maplibregl.Popup({
+            closeButton: true,
+            closeOnClick: true,
+          });
+
+          map.on("click", "places-circles", (e) => {
+            const f = e.features[0];
+            const p = f.properties || {};
+            popup.setLngLat(e.lngLat).setHTML(popupHTML(p)).addTo(map);
           });
 
           map.on(
