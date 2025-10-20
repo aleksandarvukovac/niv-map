@@ -1,79 +1,192 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="sr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Najbolje iz Vojvodine – embed</title>
-  <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
-  <style>
-    html,body {height:100%; margin:0; background:#0b1220;}
-    #map {position:absolute; inset:0}
-    .topbar{
-      position:absolute; left:10px; top:10px; z-index:10;
-      background:rgba(17,24,39,.85); color:#e5e7eb; border:1px solid rgba(255,255,255,.08);
-      border-radius:12px; padding:.45rem .6rem; font:13px system-ui;
-      display:flex; gap:.5rem; align-items:center;
-    }
-    .topbar a { color:#93c5fd; text-decoration:none; border-bottom:1px dashed rgba(147,197,253,.5) }
-    .topbar a:hover { border-bottom-color: transparent }
-  </style>
-</head>
-<body>
-<div id="map"></div>
-<div class="topbar">
-  <a id="open" href="#">Otvori veću mapu</a>
-</div>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Embed – Najbolje iz Vojvodine</title>
+    <meta name="robots" content="noindex" />
+    <style>
+      :root {
+        --bg: #0b1320;
+        --card: #121a2b;
+        --muted: #a7b0c0;
+        --text: #e6edf6;
+        --accent: #7bd2ff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.45 system-ui, -apple-system, Segoe UI, Roboto, Arial,
+          sans-serif;
+      }
+      .wrap {
+        max-width: 960px;
+        margin: 48px auto;
+        padding: 0 16px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 0 0 12px;
+      }
+      p {
+        color: var(--muted);
+        margin: 6px 0 14px;
+      }
+      code,
+      pre {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+      pre {
+        background: #0d1424;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 14px;
+        overflow: auto;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .btn {
+        background: var(--accent);
+        color: #002333;
+        border: 0;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .btn:active {
+        transform: translateY(1px);
+      }
+      .preview {
+        margin-top: 18px;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .muted {
+        color: var(--muted);
+      }
+      .small {
+        font-size: 12px;
+      }
+      .inputs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin: 8px 0 0;
+      }
+      .inputs input {
+        background: #0d1424;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: var(--text);
+        padding: 8px 10px;
+        border-radius: 8px;
+        width: 200px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <h1>Embed kod</h1>
+        <p>
+          Ovo je copy-paste snippet koji partner stavlja na svoju stranicu. Po
+          potrebi možeš podesiti <em>visinu</em> i destinaciju (<em>src</em>).
+        </p>
 
-<script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
-<script>
-  function qp(){ const u=new URL(location.href); return Object.fromEntries(u.searchParams.entries()); }
-  const p=qp();
-  const center=[ +(p.lng||19.8335), +(p.lat||45.2671) ];
-  const zoom=+(p.zoom||7);
+        <div class="inputs">
+          <label
+            ><span class="small muted">Širina</span><br /><input
+              id="w"
+              value="100%"
+          /></label>
+          <label
+            ><span class="small muted">Visina</span><br /><input
+              id="h"
+              value="600"
+          /></label>
+          <label style="flex: 1; min-width: 280px"
+            ><span class="small muted">Src</span><br />
+            <input id="src" value="https://niv.amityintegration.com/app.html" />
+          </label>
+        </div>
 
-  const style={ "version":8, "glyphs":"https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
-    "sources":{ "osm":{ "type":"raster","tiles":["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],"tileSize":256,"attribution":"© OpenStreetMap contributors"} },
-    "layers":[ {"id":"osm","type":"raster","source":"osm"} ] };
+        <pre id="snippet"></pre>
+        <button class="btn" id="copy">Kopiraj</button>
 
-  const map=new maplibregl.Map({ container:'map', style, center, zoom });
-  map.addControl(new maplibregl.NavigationControl(), 'top-right');
+        <div class="preview" id="preview"></div>
 
-  const data={"type":"FeatureCollection","features":[
-    { "type":"Feature", "properties":{"naziv":"Vinarija Primer","kategorija":"Vina","opis":"Porodična vinarija na obroncima Fruške gore.","web":"https://primer-vinarija.rs","foto":"https://picsum.photos/seed/vino/800/440"}, "geometry":{"type":"Point","coordinates":[19.715,45.144]} },
-    { "type":"Feature", "properties":{"naziv":"Salaš Primer","kategorija":"Gastronomija","opis":"Autentična vojvođanska kuhinja.","web":"https://salas-primer.rs","foto":"https://picsum.photos/seed/salas/800/440"}, "geometry":{"type":"Point","coordinates":[19.12,45.26]} },
-    { "type":"Feature", "properties":{"naziv":"Med iz Ravnice","kategorija":"Proizvodi","opis":"Pčelarska domaćinstva sa sertifikatom kvaliteta.","web":"https://med-ravnica.rs","foto":"https://picsum.photos/seed/med/800/440"}, "geometry":{"type":"Point","coordinates":[20.05,45.49]} }
-  ]};
-
-  function makeMarker(f){
-    const el=document.createElement('div');
-    el.textContent='📍';
-    el.style.cssText='width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#1f2937;color:#fff;font-size:16px;box-shadow:0 6px 14px rgba(0,0,0,.35);border:1px solid rgba(0,0,0,.35);cursor:pointer';
-    return el;
-  }
-  const popup=new maplibregl.Popup({closeButton:true, closeOnClick:true, anchor:'bottom'});
-  function popupHTML(p){
-    return `<div style="font:14px/1.5 system-ui,Arial,sans-serif;color:#e5e7eb;background:linear-gradient(180deg,rgba(31,41,55,.98),rgba(17,24,39,.98));border:1px solid rgba(255,255,255,.08);border-radius:14px;box-shadow:0 10px 25px rgba(0,0,0,.25);overflow:hidden;max-width:320px">
-      <div style="padding:.7rem .85rem">
-        <div style="font-weight:700;font-size:15px;letter-spacing:.2px">${p.naziv||""}</div>
-        <div style="opacity:.9;margin-top:.25rem">${p.opis||""}</div>
-        ${p.web?`<div style="margin-top:.4rem"><a style="color:#93c5fd;text-decoration:none;border-bottom:1px dashed rgba(147,197,253,.5)" href="${p.web}" target="_blank" rel="noopener">Web sajt ⇗</a></div>`:""}
-        ${p.foto?`<img src="${p.foto}" alt="${p.naziv||'Foto'}" style="width:100%;display:block;border-radius:12px;margin-top:.5rem">`:""}
+        <p class="small muted" style="margin-top: 14px">
+          Parametri koje podržava loader: <code>data-width</code>,
+          <code>data-height</code>, <code>data-src</code>,
+          <code>data-title</code>, <code>data-fullscreen</code> (true/false),
+          <code>data-rounded</code> (npr. 12px).
+        </p>
       </div>
-    </div>`;
-  }
+    </div>
 
-  map.on('load', ()=>{
-    data.features.forEach(f=>{
-      const [lng,lat]=f.geometry.coordinates;
-      const el=makeMarker(f);
-      el.addEventListener('click', ()=> popup.setLngLat([lng,lat]).setHTML(popupHTML(f.properties)).addTo(map) );
-      new maplibregl.Marker({element:el,anchor:'bottom'}).setLngLat([lng,lat]).addTo(map);
-    });
-  });
+    <script>
+      const tpl = ({ src, width, height }) =>
+        `<script async src="https://niv.amityintegration.com/embed.js"
+  data-src="${src}"
+  data-width="${width}"
+  data-height="${height}"
+  data-title="Najbolje iz Vojvodine – mapa"
+  data-fullscreen="true"><\/script>`;
 
-  const base = new URL(location.href);
-  base.pathname = base.pathname.replace(/embed\.html$/,'app.html');
-  document.getElementById('open').href = base.toString();
-</script>
-</body>
+      const $w = document.getElementById("w");
+      const $h = document.getElementById("h");
+      const $src = document.getElementById("src");
+      const $snip = document.getElementById("snippet");
+      const $copy = document.getElementById("copy");
+      const $prev = document.getElementById("preview");
+
+      function render() {
+        const data = {
+          src: $src.value.trim(),
+          width: $w.value.trim(),
+          height: $h.value.trim(),
+        };
+        const code = tpl(data);
+        $snip.textContent = code;
+
+        // preview
+        $prev.innerHTML = "";
+        const holder = document.createElement("div");
+        holder.innerHTML = code;
+        $prev.appendChild(holder);
+        // eval script for preview
+        const s = holder.querySelector("script");
+        const ns = document.createElement("script");
+        [...s.attributes].forEach((a) => ns.setAttribute(a.name, a.value));
+        ns.textContent = s.textContent;
+        holder.appendChild(ns);
+        s.remove();
+      }
+
+      [$w, $h, $src].forEach((i) => i.addEventListener("input", render));
+      $copy.addEventListener("click", async () => {
+        await navigator.clipboard.writeText($snip.textContent);
+        $copy.textContent = "Iskopirano ✓";
+        setTimeout(() => ($copy.textContent = "Kopiraj"), 1200);
+      });
+
+      render();
+    </script>
+  </body>
 </html>

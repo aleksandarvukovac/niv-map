@@ -1,66 +1,94 @@
-(function(){
-  const me = document.currentScript;
-  const targetId = me.getAttribute('data-target');
-  const el = document.getElementById(targetId);
-  if (!el) return;
+(function () {
+  // Script tag koji je uključio loader
+  const scriptEl = document.currentScript;
 
-  const host = new URL(me.src).origin;
-  const params = new URLSearchParams();
-  const cat  = el.dataset.cat  || 'sve';
-  const lat  = el.dataset.lat  || '45.2671';
-  const lng  = el.dataset.lng  || '19.8335';
-  const zoom = el.dataset.zoom || '7';
-  params.set('cat', cat); params.set('lat', lat); params.set('lng', lng); params.set('zoom', zoom);
+  // Parametri (sa podrazumevanim vrednostima)
+  const src = scriptEl.dataset.src || new URL("/app.html", scriptEl.src).href;
+  const width = scriptEl.dataset.width || "100%";
+  const heightRaw = scriptEl.dataset.height || "600";
+  const height = /^\d+$/.test(heightRaw) ? heightRaw + "px" : heightRaw;
+  const title = scriptEl.dataset.title || "Najbolje iz Vojvodine – mapa";
+  const rounded = scriptEl.dataset.rounded || "12px";
+  const allowFullscreen = (scriptEl.dataset.fullscreen ?? "true") !== "false";
+  const border = scriptEl.dataset.border || "1px solid rgba(0,0,0,.08)";
+  const shadow = scriptEl.dataset.shadow || "0 8px 28px rgba(0,0,0,.08)";
 
-  const mode   = el.dataset.mode   || 'inline'; // inline | lightbox
-  const height = el.dataset.height || '520';
+  // Kontejner
+  const container = document.createElement("div");
+  container.style.position = "relative";
+  container.style.width = width;
+  container.style.maxWidth = "100%";
+  container.style.margin = "0 auto";
+  container.style.borderRadius = rounded;
+  container.style.overflow = "hidden";
+  container.style.border = border;
+  container.style.boxShadow = shadow;
 
-  function buildIframe(src) {
-    const ifr = document.createElement('iframe');
-    ifr.src = src;
-    ifr.loading = 'lazy';
-    ifr.style.border = '0';
-    ifr.referrerPolicy = 'no-referrer-when-downgrade';
-    ifr.allow = 'fullscreen';
-    return ifr;
-  }
+  // Iframe
+  const iframe = document.createElement("iframe");
+  iframe.src = src;
+  iframe.title = title;
+  iframe.loading = "lazy";
+  iframe.referrerPolicy = "strict-origin-when-cross-origin";
+  iframe.style.width = "100%";
+  iframe.style.height = height;
+  iframe.style.border = "0";
+  iframe.setAttribute("allow", allowFullscreen ? "fullscreen" : "");
 
-  if (mode === 'lightbox') {
-    let btn = el.querySelector('button');
-    if (!btn) {
-      btn = document.createElement('button');
-      btn.textContent = 'Otvori mapu';
-      btn.style.cssText = 'padding:.55rem .9rem;border-radius:10px;border:1px solid #111827;background:#111827;color:#e5e7eb;cursor:pointer';
-      el.appendChild(btn);
-    }
-    btn.addEventListener('click', () => {
-      const overlay = document.createElement('div');
-      overlay.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:999999;';
-      const box = document.createElement('div');
-      box.style.cssText = 'position:absolute; inset:4%; background:#000; border-radius:12px; overflow:hidden;';
+  container.appendChild(iframe);
 
-      const close = document.createElement('button');
-      close.textContent = '✕';
-      close.setAttribute('aria-label','Zatvori');
-      close.style.cssText = 'position:absolute; top:8px; right:12px; z-index:2; background:rgba(255,255,255,.85); border:0; border-radius:999px; padding:6px 10px; cursor:pointer;';
+  // Toolbar (fullscreen)
+  if (allowFullscreen && document.fullscreenEnabled) {
+    const bar = document.createElement("div");
+    bar.style.position = "absolute";
+    bar.style.right = "8px";
+    bar.style.top = "8px";
+    bar.style.display = "flex";
+    bar.style.gap = "6px";
+    bar.style.zIndex = "10";
 
-      const src = host + '/embed.html?' + params.toString() + '&ui=lightbox';
-      const ifr = buildIframe(src);
-      ifr.style.cssText = 'width:100%; height:100%; display:block;';
-
-      close.addEventListener('click', () => document.body.removeChild(overlay));
-      box.appendChild(close);
-      box.appendChild(ifr);
-      overlay.appendChild(box);
-      document.body.appendChild(overlay);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.ariaLabel = "Prikaži u celom ekranu";
+    btn.textContent = "⤢";
+    Object.assign(btn.style, {
+      font: "14px/1 system-ui, -apple-system, Segoe UI, Roboto, Arial",
+      background: "rgba(255,255,255,.92)",
+      border: "1px solid rgba(0,0,0,.1)",
+      borderRadius: "8px",
+      padding: "6px 8px",
+      cursor: "pointer",
     });
-  } else {
-    const wrap = document.createElement('div');
-    wrap.style.cssText = `position:relative; width:100%; height:${/^\d+$/.test(height)? height+'px':height};`;
-    const src = host + '/embed.html?' + params.toString() + '&ui=inline';
-    const ifr = buildIframe(src);
-    ifr.style.cssText = 'position:absolute; inset:0; width:100%; height:100%; display:block;';
-    wrap.appendChild(ifr);
-    el.appendChild(wrap);
+
+    btn.addEventListener("click", async () => {
+      try {
+        if (!document.fullscreenElement) {
+          await container.requestFullscreen();
+          btn.textContent = "⤡";
+        } else {
+          await document.exitFullscreen();
+          btn.textContent = "⤢";
+        }
+      } catch (e) {
+        // ignoriši
+      }
+    });
+
+    bar.appendChild(btn);
+    container.appendChild(bar);
   }
+
+  // Umetni odmah posle <script> taga
+  scriptEl.parentNode.insertBefore(container, scriptEl.nextSibling);
+
+  // Auto-resize preko postMessage (ako ikad zatreba)
+  window.addEventListener("message", (ev) => {
+    if (!ev || !ev.data) return;
+    if (
+      ev.data.type === "niv-embed:height" &&
+      typeof ev.data.height === "number"
+    ) {
+      iframe.style.height = Math.max(300, ev.data.height) + "px";
+    }
+  });
 })();
