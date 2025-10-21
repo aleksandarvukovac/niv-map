@@ -201,6 +201,20 @@
       const TEST_MARKER = `
         <div style="width: 30px; height: 30px; background: red; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>
       `;
+      
+      // Simple HTML marker for testing
+      const SIMPLE_MARKER = `
+        <div style="
+          width: 30px; 
+          height: 30px; 
+          background: #1f7a8c; 
+          border-radius: 50% 50% 50% 0; 
+          transform: rotate(-45deg); 
+          border: 3px solid white; 
+          box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+          cursor: pointer;
+        "></div>
+      `;
 
       // Cache busting for development
       console.log('NIV Map loaded - version:', new Date().toISOString());
@@ -318,7 +332,7 @@
           // Create marker element with explicit styling
           const el = document.createElement("div");
           el.className = "custom-marker";
-          el.innerHTML = PIN_SVG;
+          el.innerHTML = SIMPLE_MARKER; // Test with simple HTML marker
           
           // Force the element to be visible and properly sized
           el.style.cssText = `
