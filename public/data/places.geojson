@@ -5,9 +5,9 @@
       "type": "Feature",
       "properties": {
         "id": "NIV-0001",
-        "naziv": "Ferenc Torma PR Umetnička obrada drveta – Umetnik DABAR",
+        "naziv": "Preduzetnička radnja \"Umetnik DABAR\"",
         "kategorija": "Zanat",
-        "opis": "\"Preduzetnička radnja Umetnik Dabar iz Subotice bavi se umetničkom obradom drveta i izradom ručno rađene opreme za dečija igrališta od prirodnog bagrema. Njihovi proizvodi spajaju funkcionalnost, kreativnost i estetiku, podstičući razvoj dece kroz igru.\"",
+        "opis": "Preduzetnička radnja \"Umetnik Dabar\" iz Subotice bavi se umetničkom obradom drveta i izradom ručno rađene opreme za dečija igrališta. Kroz funkcionalnost, kreativnost i estetiku, podstiču razvoj dece kroz igru.",
         "web": "https://www.facebook.com/umetnikdabar/",
         "foto": "/img/dabar-logo.jpg,/img/dabar-carolija-1.jpg,/img/dabar-carolija-2.jpg,/img/dabar-carolija-3.jpg",
         "adresa": "Dositejeva 6",
@@ -21,6 +21,52 @@
         "coordinates": [
           19.662195,
           46.091005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0002",
+        "naziv": "Dijamant Zrenjanin",
+        "kategorija": "Proizvodi",
+        "opis": "Jestivo rafinisano ulje suncokreta je osnovni proizvod kompanije Dijamant. Prvi je prehrambeni proizvod u Srbiji koji je stekao pravo na znak kvaliteta “Najbolje iz Vojvodine”.",
+        "web": "https://dijamant.rs/",
+        "foto": "/img/dijamant-logo.jpg,/img/dijamant-1.jpg,/img/dijamant-2.jpg",
+        "adresa": "Temišvarski drum 14",
+        "mesto": "Zrenjanin",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.421398,
+          45.387731
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0003",
+        "naziv": "Gastro Srem",
+        "kategorija": "Manifestacije",
+        "opis": "„Gastro Srem“ je jedinstvena manifestacija koja povezuje gastronomiju, kulturu i turizam, prikazujući tradiciju i savremeni duh Srema. Održava se u Staroj Pazovi i okuplja brojne proizvođače mesa, sira, meda, vina, rakije, udruženja žena, umetnike i goste iz Srbije i inostranstva.",
+        "web": "https://gastrosrem.rs/",
+        "foto": "/img/gastrosrem-logo.jpg,/img/gastrosrem-1.jpg,/img/gastrosrem-2.jpg,/img/gastrosrem-3.jpg",
+        "adresa": "Svetosavska 11",
+        "mesto": "Stara Pazova",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.281477,
+          44.962988
         ]
       }
     }
