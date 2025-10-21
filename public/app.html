@@ -61,6 +61,27 @@
         transform: scale(1.1);
         z-index: 1000;
       }
+
+      /* Pulse animation for markers */
+      @keyframes markerPulse {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 0 8px 4px rgba(0, 0, 0, 0.2);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+        }
+      }
+
+      /* Add pulse effect to symbol layer markers on hover */
+      .maplibregl-canvas-container:hover {
+        cursor: pointer;
+      }
       
       .marker-pin {
         width: 32px;
@@ -728,55 +749,79 @@
           }, 100);
         });
 
-        // Change cursor on hover and show business name tooltip
+        // Global tooltip management
+        let currentTooltip = null;
+        let tooltipTimeout = null;
+
+        // Change cursor on hover and show business name tooltip with pulse effect
         map.on('mouseenter', 'places-symbols', (e) => {
           map.getCanvas().style.cursor = 'pointer';
+          
+          // Clear any existing tooltip
+          if (currentTooltip) {
+            document.body.removeChild(currentTooltip);
+            currentTooltip = null;
+          }
+          if (tooltipTimeout) {
+            clearTimeout(tooltipTimeout);
+            tooltipTimeout = null;
+          }
+          
+          // Add pulse effect to the marker
+          map.setPaintProperty('places-symbols', 'icon-opacity', 0.8);
+          map.setLayoutProperty('places-symbols', 'icon-size', 1.1);
           
           // Show business name on hover
           const properties = e.features[0].properties;
           const businessName = properties.naziv;
           
-          // Create tooltip
+          // Create smaller, less conspicuous tooltip
           const tooltip = document.createElement('div');
           tooltip.className = 'marker-tooltip';
           tooltip.textContent = businessName;
           tooltip.style.cssText = `
             position: absolute;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.7);
             color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
             pointer-events: none;
             z-index: 1000;
             white-space: nowrap;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+            max-width: 200px;
+            text-align: center;
           `;
           
           document.body.appendChild(tooltip);
+          currentTooltip = tooltip;
           
           // Position tooltip
           const updateTooltip = (e) => {
-            tooltip.style.left = e.pageX + 10 + 'px';
-            tooltip.style.top = e.pageY - 30 + 'px';
+            tooltip.style.left = e.pageX + 8 + 'px';
+            tooltip.style.top = e.pageY - 25 + 'px';
           };
           
           updateTooltip(e.originalEvent);
-          
-          // Store tooltip reference for cleanup
-          e.features[0].tooltip = tooltip;
-          e.features[0].updateTooltip = updateTooltip;
         });
 
         map.on('mouseleave', 'places-symbols', (e) => {
           map.getCanvas().style.cursor = '';
           
-          // Remove tooltip
-          if (e.features[0].tooltip) {
-            document.body.removeChild(e.features[0].tooltip);
-            delete e.features[0].tooltip;
-            delete e.features[0].updateTooltip;
+          // Reset marker appearance
+          map.setPaintProperty('places-symbols', 'icon-opacity', 1);
+          map.setLayoutProperty('places-symbols', 'icon-size', 1);
+          
+          // Close tooltip immediately
+          if (currentTooltip) {
+            document.body.removeChild(currentTooltip);
+            currentTooltip = null;
+          }
+          if (tooltipTimeout) {
+            clearTimeout(tooltipTimeout);
+            tooltipTimeout = null;
           }
         });
 
