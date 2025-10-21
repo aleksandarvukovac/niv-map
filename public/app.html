@@ -14,7 +14,7 @@
 
     <style>
       :root {
-        --card-w: 232px;
+        --card-w: 240px;
         --card-pad: 10px;
         --radius: 12px;
         --fg: #1a1a1a;
@@ -43,20 +43,21 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
       }
 
-      /* ===== custom DOM marker (SVG pin kao bg) ===== */
+      /* ===== Marker (SVG) ===== */
       .custom-marker {
-        width: 30px;
-        height: 38px;
-        background: url("/img/kategorije/zanat-pin.svg") center/contain
-          no-repeat;
+        width: 34px;
+        height: 46px; /* otprilike kao MapLibre default */
+        transform: translate(-50%, -100%); /* vrh markera tačno na koordinati */
         cursor: pointer;
-        pointer-events: auto;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
       }
-      .maplibregl-marker {
-        z-index: 5;
+      .custom-marker svg {
+        width: 100%;
+        height: 100%;
+        display: block;
       }
 
-      /* ===== kompaktan popup ===== */
+      /* ===== Popup ===== */
       .maplibregl-popup {
         max-width: var(--card-w) !important;
       }
@@ -73,44 +74,29 @@
 
       .card {
         width: var(--card-w);
-        max-height: 328px;
+        max-height: 360px;
         overflow: auto;
+        background: #fff;
       }
       .card_media {
         position: relative;
-        background: transparent;
+        background: #f6f7f8;
       }
       .card_img {
         display: block;
         width: 100%;
-        height: 128px;
+        height: 140px;
         object-fit: cover;
         border-bottom: 1px solid #eee;
       }
 
-      /* maska slike u obliku pina (isključi tako što skineš klasu 'pin-mask') */
-      .card_img.pin-mask {
-        -webkit-mask-image: url("/img/kategorije/zanat-pin.svg");
-        mask-image: url("/img/kategorije/zanat-pin.svg");
-        -webkit-mask-size: contain;
-        mask-size: contain;
-        -webkit-mask-repeat: no-repeat;
-        mask-repeat: no-repeat;
-        -webkit-mask-position: center;
-        mask-position: center;
-        background: #fff;
-        border-bottom: none;
-        height: 132px;
-        padding: 6px;
-      }
-
       .card_body {
         padding: var(--card-pad);
-        font: 12px/1.35 ui-sans-serif, system-ui, Arial;
+        font: 12.5px/1.4 ui-sans-serif, system-ui, Arial;
         color: var(--fg);
       }
       .card_title {
-        margin: 0 0 0.3rem;
+        margin: 0 0 0.25rem;
         font-size: 14px;
         font-weight: 650;
       }
@@ -125,7 +111,7 @@
         text-decoration: underline;
       }
 
-      /* mini karusel */
+      /* Carousel kontrole */
       .navbtn {
         position: absolute;
         top: 50%;
@@ -139,9 +125,8 @@
         cursor: pointer;
         display: grid;
         place-items: center;
-      }
-      .navbtn:hover {
-        background: #fff;
+        font-size: 14px;
+        line-height: 1;
       }
       .navbtn--prev {
         left: 6px;
@@ -177,15 +162,15 @@
     </div>
 
     <script>
-      // 1) Map style (MapTiler)
+      // 1) Stil (MapTiler)
       const MAPTILER_KEY = "WJJJqPPstboZWo4827qc";
       const STYLE_URL = `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`;
 
-      // 2) Init mapa
+      // 2) Mapa
       const map = new maplibregl.Map({
         container: "map",
         style: STYLE_URL,
-        center: [19.8335, 45.2671], // Novi Sad
+        center: [19.8335, 45.2671],
         zoom: 7.2,
         attributionControl: true,
       });
@@ -198,7 +183,25 @@
         return res.json();
       }
 
-      // Popup helpers
+      // Marker SVG – popunjen, kontrastan
+      function markerSVG(fill = "#1f7a8c", stroke = "#0f4150") {
+        return `
+          <svg viewBox="0 0 48 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <!-- telo pina -->
+            <path d="M24 1C12 1 2 11 2 23c0 15 22 39 22 39s22-24 22-39C46 11 36 1 24 1z"
+                  fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
+            <!-- kružni okvir -->
+            <circle cx="24" cy="23" r="11" fill="#fff" stroke="${stroke}" stroke-width="1.5"/>
+            <!-- piktogram – čekić i dletо -->
+            <g stroke="${stroke}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 20l12 12"/>
+              <path d="M30 20l-12 12"/>
+              <path d="M31 18l4-1-1 4-8 8"/>
+            </g>
+          </svg>`;
+      }
+
+      // Karusel: gradi HTML za slike
       function buildCarousel(arr, alt) {
         if (!arr.length) return "";
         const dots = arr
@@ -206,9 +209,9 @@
           .join("");
         return `
           <div class="card_media" data-count="${arr.length}">
-            <img class="card_img pin-mask" src="${arr[0]}" alt="${
+            <img class="card_img" src="${arr[0]}" alt="${
           alt ?? "Foto"
-        }" data-idx="0" />
+        }" data-idx="0"/>
             ${
               arr.length > 1
                 ? `
@@ -221,11 +224,9 @@
           </div>`;
       }
 
+      // Popup HTML
       function popupHTML(p) {
-        const photos = (p.foto || "")
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean);
+        const photos = cleanPhotos(p.foto);
         return `
           <article class="card">
             ${buildCarousel(photos, p.naziv)}
@@ -250,7 +251,23 @@
           </article>`;
       }
 
+      // Robustno parsiranje foto kolone
+      function cleanPhotos(csv) {
+        if (!csv) return [];
+        const exts = [".jpg", ".jpeg", ".png", ".webp", ".gif"];
+        return csv
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .filter((u) => {
+            const l = u.toLowerCase();
+            return exts.some((ext) => l.endsWith(ext));
+          });
+      }
+
+      // Oživi karusel
       function wireCarousel(container, items) {
+        if (!items.length) return;
         const wrap = container.querySelector(".card_media");
         if (!wrap) return;
         const img = wrap.querySelector("img.card_img");
@@ -284,38 +301,27 @@
 
       map.on("load", async () => {
         const data = await loadData();
-
         const popup = new maplibregl.Popup({
           closeButton: true,
           closeOnClick: true,
         });
 
-        data.features.forEach((feature) => {
-          const p = feature.properties || {};
-          const coords = feature.geometry.coordinates;
+        data.features.forEach((f) => {
+          const p = f.properties ?? {};
+          const coords = f.geometry.coordinates;
 
-          // ✅ DOM marker kroz options (MapLibre v3)
+          // DOM marker
           const el = document.createElement("div");
           el.className = "custom-marker";
+          el.innerHTML = markerSVG("#1f7a8c", "#0e3e4a"); // pun i kontrastan
+          const marker = new maplibregl.Marker(el).setLngLat(coords).addTo(map);
 
-          const marker = new maplibregl.Marker({
-            element: el,
-            anchor: "bottom",
-          })
-            .setLngLat(coords)
-            .addTo(map);
-
-          // klik na marker -> popup
-          marker.getElement().addEventListener("click", (e) => {
+          // klik -> popup
+          el.addEventListener("click", (e) => {
             e.stopPropagation();
-
-            const photos = (p.foto || "")
-              .split(",")
-              .map((s) => s.trim())
-              .filter(Boolean);
             popup.setLngLat(coords).setHTML(popupHTML(p)).addTo(map);
 
-            // posle umetanja u DOM
+            const photos = cleanPhotos(p.foto);
             const container = document.querySelector(
               ".maplibregl-popup-content"
             );
