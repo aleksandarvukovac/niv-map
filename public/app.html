@@ -323,7 +323,7 @@
         border-color: #3182ce;
       }
       
-      .filter-btn[data-category="Zanati"].active {
+      .filter-btn[data-category="Zanat"].active {
         background: #F4A261;
         border-color: #F4A261;
       }
@@ -396,17 +396,13 @@
       
       <div class="category-filters">
         <button class="filter-btn active" data-category="all">Sve</button>
-        <button class="filter-btn" data-category="Zanati">Zanati</button>
+        <button class="filter-btn" data-category="Zanat">Zanati</button>
         <button class="filter-btn" data-category="Proizvodi">Proizvodi</button>
         <button class="filter-btn" data-category="Usluge">Usluge</button>
         <button class="filter-btn" data-category="Manifestacije">Manifestacije</button>
       </div>
     </div>
     
-    <div class="badge">
-      Najbolje iz Vojvodine — demo ·
-      <a href="/embed.html" target="_blank">Kopiraj link</a>
-    </div>
 
     <script>
       // 1) Map style (MapTiler) - Analysis: We're using MapTiler for:
@@ -467,7 +463,7 @@
       // Modern marker design with category colors
       const createModernMarker = (category) => {
         const colors = {
-          'Zanati': { primary: '#F4A261', secondary: '#E76F51', icon: '🔨' }, // Saffron
+          'Zanat': { primary: '#F4A261', secondary: '#E76F51', icon: '🔨' }, // Saffron
           'Proizvodi': { primary: '#8B4513', secondary: '#A0522D', icon: '📦' }, // Chestnut
           'Usluge': { primary: '#20B2AA', secondary: '#40E0D0', icon: '🛠️' }, // Teal
           'Manifestacije': { primary: '#DC143C', secondary: '#FF6347', icon: '🎪' }, // Carmine
@@ -476,8 +472,8 @@
         
         const color = colors[category] || colors.default;
         
-        // Try to use custom SVG logo for Zanati category
-        if (category === 'Zanati') {
+        // Try to use custom SVG logo for Zanat category
+        if (category === 'Zanat') {
           return `
             <div class="modern-marker" data-category="${category}">
               <div class="marker-pin" style="
@@ -485,7 +481,7 @@
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1);
               ">
                 <div class="marker-icon">
-                  <img src="/img/kategorije/zanati.svg" alt="Zanati" style="width: 20px; height: 20px;" />
+                  <img src="/img/kategorije/zanati.svg" alt="Zanat" style="width: 20px; height: 20px;" />
                 </div>
               </div>
               <div class="marker-shadow"></div>
@@ -679,7 +675,7 @@
           data: data
         });
 
-        // Try completely different approach - manual DOM positioning
+        // Use proper MapLibre markers with custom elements
         const markers = [];
         
         data.features.forEach((f) => {
@@ -691,22 +687,20 @@
           el.className = "modern-marker";
           el.innerHTML = createModernMarker(p.kategorija);
           
-          // Modern marker positioning
-          el.style.cssText = `
-            position: absolute !important;
-            z-index: 1000 !important;
-            transform: translate(-50%, -100%) !important;
-            pointer-events: auto !important;
-          `;
-          
           console.log('Creating marker for:', p.naziv, 'at', [lng, lat]); // debug
           console.log('Element HTML:', el.outerHTML.substring(0, 200)); // debug
           
-          // Add to map container directly
-          map.getContainer().appendChild(el);
+          // Use MapLibre Marker with custom element
+          const marker = new maplibregl.Marker({
+            element: el,
+            anchor: 'bottom'
+          })
+            .setLngLat([lng, lat])
+            .addTo(map);
           
-          // Store marker info for positioning
+          // Store marker info
           markers.push({
+            marker: marker,
             element: el,
             lngLat: [lng, lat],
             properties: p
@@ -740,19 +734,6 @@
           });
         });
         
-        // Update marker positions on map move
-        function updateMarkerPositions() {
-          markers.forEach(marker => {
-            const pos = map.project(marker.lngLat);
-            marker.element.style.left = pos.x + 'px';
-            marker.element.style.top = pos.y + 'px';
-          });
-        }
-        
-        map.on('move', updateMarkerPositions);
-        map.on('zoom', updateMarkerPositions);
-        updateMarkerPositions(); // Initial positioning
-        
         // Search and Filter Functionality
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
@@ -767,7 +748,7 @@
           if (!query) {
             // Show all markers
             allMarkers.forEach(marker => {
-              marker.element.style.display = 'block';
+              marker.marker.getElement().style.display = 'block';
             });
             return;
           }
@@ -778,9 +759,9 @@
             const searchText = `${props.naziv} ${props.kategorija} ${props.mesto} ${props.opis}`.toLowerCase();
             
             if (searchText.includes(query)) {
-              marker.element.style.display = 'block';
+              marker.marker.getElement().style.display = 'block';
             } else {
-              marker.element.style.display = 'none';
+              marker.marker.getElement().style.display = 'none';
             }
           });
         }
@@ -802,9 +783,9 @@
             const markerCategory = marker.properties.kategorija;
             
             if (category === 'all' || markerCategory === category) {
-              marker.element.style.display = 'block';
+              marker.marker.getElement().style.display = 'block';
             } else {
-              marker.element.style.display = 'none';
+              marker.marker.getElement().style.display = 'none';
             }
           });
         }
