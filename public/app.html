@@ -100,7 +100,7 @@
 
       /* ===== modern glassmorphism popup ===== */
       .maplibregl-popup {
-        max-width: 320px !important;
+        max-width: 280px !important;
       }
       .maplibregl-popup-content {
         padding: 0;
@@ -143,14 +143,33 @@
       }
 
       .card {
-        width: 320px;
+        width: 280px;
         max-height: 400px;
-        overflow: hidden;
+        overflow-y: auto;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px);
         border-radius: 20px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+      }
+      
+      .card::-webkit-scrollbar {
+        width: 6px;
+      }
+      
+      .card::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      
+      .card::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+      
+      .card::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
       }
       
       .card:hover {
@@ -320,15 +339,31 @@
       // Modern marker design with category colors
       const createModernMarker = (category) => {
         const colors = {
-          'Zanat': { primary: '#8B5CF6', secondary: '#A78BFA', icon: '🔨' },
-          'Restoran': { primary: '#F59E0B', secondary: '#FBBF24', icon: '🍽️' },
-          'Turizam': { primary: '#10B981', secondary: '#34D399', icon: '🏛️' },
-          'Kultura': { primary: '#EF4444', secondary: '#F87171', icon: '🎭' },
-          'Sport': { primary: '#3B82F6', secondary: '#60A5FA', icon: '⚽' },
+          'Zanati': { primary: '#F4A261', secondary: '#E76F51', icon: '🔨' }, // Saffron
+          'Proizvodi': { primary: '#8B4513', secondary: '#A0522D', icon: '📦' }, // Chestnut
+          'Usluge': { primary: '#20B2AA', secondary: '#40E0D0', icon: '🛠️' }, // Teal
+          'Manifestacije': { primary: '#DC143C', secondary: '#FF6347', icon: '🎪' }, // Carmine
           'default': { primary: '#1F7A8C', secondary: '#4A9BB5', icon: '📍' }
         };
         
         const color = colors[category] || colors.default;
+        
+        // Try to use custom SVG logo for Zanati category
+        if (category === 'Zanati') {
+          return `
+            <div class="modern-marker" data-category="${category}">
+              <div class="marker-pin" style="
+                background: linear-gradient(135deg, ${color.primary} 0%, ${color.secondary} 100%);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1);
+              ">
+                <div class="marker-icon">
+                  <img src="/img/kategorije/zanat-pin.svg" alt="Zanat" style="width: 16px; height: 16px; filter: brightness(0) invert(1);" />
+                </div>
+              </div>
+              <div class="marker-shadow"></div>
+            </div>
+          `;
+        }
         
         return `
           <div class="modern-marker" data-category="${category}">
@@ -414,12 +449,77 @@
         const next = wrap.querySelector(".navbtn--next");
         const dots = wrap.querySelectorAll(".dots i");
         let idx = 0;
+        let startX = 0;
+        let startY = 0;
+        let isDragging = false;
+        
         const go = (to) => {
           idx = (to + items.length) % items.length;
           img.src = items[idx];
           img.dataset.idx = String(idx);
           dots.forEach((d, i) => d.classList.toggle("on", i === idx));
         };
+        
+        // Touch/swipe support for mobile
+        wrap.addEventListener("touchstart", (e) => {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+          isDragging = true;
+        });
+        
+        wrap.addEventListener("touchmove", (e) => {
+          if (!isDragging) return;
+          e.preventDefault();
+        });
+        
+        wrap.addEventListener("touchend", (e) => {
+          if (!isDragging) return;
+          isDragging = false;
+          
+          const endX = e.changedTouches[0].clientX;
+          const endY = e.changedTouches[0].clientY;
+          const diffX = startX - endX;
+          const diffY = startY - endY;
+          
+          // Only trigger swipe if horizontal movement is greater than vertical
+          if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+              go(idx + 1); // Swipe left - next image
+            } else {
+              go(idx - 1); // Swipe right - previous image
+            }
+          }
+        });
+        
+        // Mouse drag support for desktop
+        wrap.addEventListener("mousedown", (e) => {
+          startX = e.clientX;
+          isDragging = true;
+          e.preventDefault();
+        });
+        
+        wrap.addEventListener("mousemove", (e) => {
+          if (!isDragging) return;
+          e.preventDefault();
+        });
+        
+        wrap.addEventListener("mouseup", (e) => {
+          if (!isDragging) return;
+          isDragging = false;
+          
+          const endX = e.clientX;
+          const diffX = startX - endX;
+          
+          if (Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+              go(idx + 1);
+            } else {
+              go(idx - 1);
+            }
+          }
+        });
+        
+        // Button controls
         prev &&
           prev.addEventListener("click", (e) => {
             e.stopPropagation();
