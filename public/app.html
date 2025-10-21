@@ -177,11 +177,6 @@
         return r.json();
       }
       
-      // Cache busting for development
-      console.log('NIV Map loaded - version:', new Date().toISOString());
-      console.log('PIN_SVG length:', PIN_SVG.length);
-      console.log('PIN_SVG preview:', PIN_SVG.substring(0, 100) + '...');
-
       // 4) INLINE SVG MARKERA (popunjen, kontrastan)
       //   – nema fetch-a → nema CORS/404; lako menjaš boje/veličinu
       const PIN_SVG = `
@@ -206,6 +201,11 @@
       const TEST_MARKER = `
         <div style="width: 30px; height: 30px; background: red; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>
       `;
+
+      // Cache busting for development
+      console.log('NIV Map loaded - version:', new Date().toISOString());
+      console.log('PIN_SVG length:', PIN_SVG.length);
+      console.log('PIN_SVG preview:', PIN_SVG.substring(0, 100) + '...');
 
       // helper: normalizuj CSV foto listu → apsolutni put
       // SAMO fotke iz CSV/GeoJSON (bez fallbacka)
@@ -315,7 +315,7 @@
           el.style.height = "44px";
           el.style.cursor = "pointer";
           el.style.pointerEvents = "auto";
-          el.innerHTML = TEST_MARKER; // Test with simple red circle first
+          el.innerHTML = PIN_SVG;
           
           console.log('Creating marker for:', p.naziv, 'at', [lng, lat]); // debug
           console.log('Element HTML:', el.outerHTML.substring(0, 200)); // debug
