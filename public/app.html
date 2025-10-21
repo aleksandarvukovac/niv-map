@@ -241,6 +241,108 @@
         transform: translate(2px, -2px);
       }
 
+      /* ===== Map Controls ===== */
+      .map-controls {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 300px;
+      }
+      
+      .search-container {
+        display: flex;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      #searchInput {
+        flex: 1;
+        border: none;
+        background: transparent;
+        padding: 8px 12px;
+        font-size: 14px;
+        outline: none;
+        color: #333;
+      }
+      
+      #searchInput::placeholder {
+        color: #666;
+      }
+      
+      #searchBtn {
+        background: #3182ce;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.2s ease;
+      }
+      
+      #searchBtn:hover {
+        background: #2c5282;
+        transform: scale(1.05);
+      }
+      
+      .category-filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      
+      .filter-btn {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #666;
+      }
+      
+      .filter-btn:hover {
+        background: rgba(255, 255, 255, 1);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .filter-btn.active {
+        background: #3182ce;
+        color: white;
+        border-color: #3182ce;
+      }
+      
+      .filter-btn[data-category="Zanati"].active {
+        background: #F4A261;
+        border-color: #F4A261;
+      }
+      
+      .filter-btn[data-category="Proizvodi"].active {
+        background: #8B4513;
+        border-color: #8B4513;
+      }
+      
+      .filter-btn[data-category="Usluge"].active {
+        background: #20B2AA;
+        border-color: #20B2AA;
+      }
+      
+      .filter-btn[data-category="Manifestacije"].active {
+        background: #DC143C;
+        border-color: #DC143C;
+      }
+
       /* carousel kontrole */
       .navbtn {
         position: absolute;
@@ -284,15 +386,41 @@
   </head>
   <body>
     <div id="map"></div>
+    
+    <!-- Search and Filter Controls -->
+    <div class="map-controls">
+      <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Pretraži lokacije..." />
+        <button id="searchBtn">🔍</button>
+      </div>
+      
+      <div class="category-filters">
+        <button class="filter-btn active" data-category="all">Sve</button>
+        <button class="filter-btn" data-category="Zanati">Zanati</button>
+        <button class="filter-btn" data-category="Proizvodi">Proizvodi</button>
+        <button class="filter-btn" data-category="Usluge">Usluge</button>
+        <button class="filter-btn" data-category="Manifestacije">Manifestacije</button>
+      </div>
+    </div>
+    
     <div class="badge">
       Najbolje iz Vojvodine — demo ·
       <a href="/embed.html" target="_blank">Kopiraj link</a>
     </div>
 
     <script>
-      // 1) Map style (MapTiler)
+      // 1) Map style (MapTiler) - Analysis: We're using MapTiler for:
+      // - Base map tiles (satellite/street view)
+      // - Geocoding (in csv2geojson.js)
+      // - Map styling and themes
+      // Alternative: OpenStreetMap (free) or Mapbox (paid)
       const MAPTILER_KEY = "WJJJqPPstboZWo4827qc";
       const STYLE_URL = `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`;
+      
+      // Alternative free map styles:
+      // const STYLE_URL = 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + MAPTILER_KEY;
+      // const STYLE_URL = 'https://api.maptiler.com/maps/outdoor-v2/style.json?key=' + MAPTILER_KEY;
+      // const STYLE_URL = 'https://api.maptiler.com/maps/satellite/style.json?key=' + MAPTILER_KEY;
 
       // 2) Init mapa
       const map = new maplibregl.Map({
@@ -357,7 +485,7 @@
                 box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1);
               ">
                 <div class="marker-icon">
-                  <img src="/img/kategorije/zanat-pin.svg" alt="Zanat" style="width: 16px; height: 16px; filter: brightness(0) invert(1);" />
+                  <img src="/img/kategorije/zanati.svg" alt="Zanati" style="width: 20px; height: 20px;" />
                 </div>
               </div>
               <div class="marker-shadow"></div>
@@ -584,10 +712,18 @@
             properties: p
           });
 
-          // Klik na marker
+          // Klik na marker - toggle popup
           el.addEventListener("click", (e) => {
             e.stopPropagation();
             e.preventDefault();
+            
+            // Check if popup is already open for this marker
+            const existingPopup = document.querySelector('.maplibregl-popup');
+            if (existingPopup) {
+              // Close existing popup
+              popup.remove();
+              return;
+            }
             
             const photos = normPhotos(p.foto);
             console.log('Marker clicked, photos:', photos); // debug
@@ -616,6 +752,80 @@
         map.on('move', updateMarkerPositions);
         map.on('zoom', updateMarkerPositions);
         updateMarkerPositions(); // Initial positioning
+        
+        // Search and Filter Functionality
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        
+        let currentFilter = 'all';
+        let allMarkers = [...markers]; // Keep reference to all markers
+        
+        // Search functionality
+        function performSearch() {
+          const query = searchInput.value.toLowerCase().trim();
+          if (!query) {
+            // Show all markers
+            allMarkers.forEach(marker => {
+              marker.element.style.display = 'block';
+            });
+            return;
+          }
+          
+          // Filter markers based on search query
+          allMarkers.forEach(marker => {
+            const props = marker.properties;
+            const searchText = `${props.naziv} ${props.kategorija} ${props.mesto} ${props.opis}`.toLowerCase();
+            
+            if (searchText.includes(query)) {
+              marker.element.style.display = 'block';
+            } else {
+              marker.element.style.display = 'none';
+            }
+          });
+        }
+        
+        // Category filtering
+        function filterByCategory(category) {
+          currentFilter = category;
+          
+          // Update filter buttons
+          filterBtns.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.category === category) {
+              btn.classList.add('active');
+            }
+          });
+          
+          // Filter markers
+          allMarkers.forEach(marker => {
+            const markerCategory = marker.properties.kategorija;
+            
+            if (category === 'all' || markerCategory === category) {
+              marker.element.style.display = 'block';
+            } else {
+              marker.element.style.display = 'none';
+            }
+          });
+        }
+        
+        // Event listeners
+        searchInput.addEventListener('input', performSearch);
+        searchBtn.addEventListener('click', performSearch);
+        
+        filterBtns.forEach(btn => {
+          btn.addEventListener('click', () => {
+            filterByCategory(btn.dataset.category);
+          });
+        });
+        
+        // Clear search on escape
+        searchInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            searchInput.value = '';
+            performSearch();
+          }
+        });
       });
     </script>
   </body>
