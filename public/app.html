@@ -324,7 +324,9 @@
           data: data
         });
 
-        // Add custom markers using DOM elements
+        // Try completely different approach - manual DOM positioning
+        const markers = [];
+        
         data.features.forEach((f) => {
           const p = f.properties || {};
           const [lng, lat] = f.geometry.coordinates;
@@ -341,19 +343,23 @@
             cursor: pointer !important;
             pointer-events: auto !important;
             display: block !important;
-            position: relative !important;
-            z-index: 1 !important;
+            position: absolute !important;
+            z-index: 1000 !important;
+            transform: translate(-50%, -100%) !important;
           `;
           
           console.log('Creating marker for:', p.naziv, 'at', [lng, lat]); // debug
           console.log('Element HTML:', el.outerHTML.substring(0, 200)); // debug
           
-          // Create marker with explicit element
-          const marker = new maplibregl.Marker(el)
-            .setLngLat([lng, lat])
-            .addTo(map);
-            
-          console.log('Marker created:', marker); // debug
+          // Add to map container directly
+          map.getContainer().appendChild(el);
+          
+          // Store marker info for positioning
+          markers.push({
+            element: el,
+            lngLat: [lng, lat],
+            properties: p
+          });
 
           // Klik na marker
           el.addEventListener("click", (e) => {
@@ -374,6 +380,19 @@
             }, 100);
           });
         });
+        
+        // Update marker positions on map move
+        function updateMarkerPositions() {
+          markers.forEach(marker => {
+            const pos = map.project(marker.lngLat);
+            marker.element.style.left = pos.x + 'px';
+            marker.element.style.top = pos.y + 'px';
+          });
+        }
+        
+        map.on('move', updateMarkerPositions);
+        map.on('zoom', updateMarkerPositions);
+        updateMarkerPositions(); // Initial positioning
       });
     </script>
   </body>
