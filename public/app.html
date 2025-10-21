@@ -494,7 +494,7 @@
           'Zanat': { primary: '#F4A261', secondary: '#E76F51', icon: '🔨' }, // Saffron
           'Proizvodi': { primary: '#8B4513', secondary: '#A0522D', icon: '📦' }, // Chestnut
           'Usluge': { primary: '#20B2AA', secondary: '#40E0D0', icon: '🛠️' }, // Teal
-          'Manifestacije': { primary: '#DC143C', secondary: '#FF6347', icon: '🎪' }, // Carmine
+          'Manifestacije': { primary: '#DC143C', secondary: '#FF6347', icon: '🎭' }, // Carmine
           'default': { primary: '#1F7A8C', secondary: '#4A9BB5', icon: '📍' }
         };
         
@@ -728,13 +728,56 @@
           }, 100);
         });
 
-        // Change cursor on hover
-        map.on('mouseenter', 'places-symbols', () => {
+        // Change cursor on hover and show business name tooltip
+        map.on('mouseenter', 'places-symbols', (e) => {
           map.getCanvas().style.cursor = 'pointer';
+          
+          // Show business name on hover
+          const properties = e.features[0].properties;
+          const businessName = properties.naziv;
+          
+          // Create tooltip
+          const tooltip = document.createElement('div');
+          tooltip.className = 'marker-tooltip';
+          tooltip.textContent = businessName;
+          tooltip.style.cssText = `
+            position: absolute;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            pointer-events: none;
+            z-index: 1000;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          `;
+          
+          document.body.appendChild(tooltip);
+          
+          // Position tooltip
+          const updateTooltip = (e) => {
+            tooltip.style.left = e.pageX + 10 + 'px';
+            tooltip.style.top = e.pageY - 30 + 'px';
+          };
+          
+          updateTooltip(e.originalEvent);
+          
+          // Store tooltip reference for cleanup
+          e.features[0].tooltip = tooltip;
+          e.features[0].updateTooltip = updateTooltip;
         });
 
-        map.on('mouseleave', 'places-symbols', () => {
+        map.on('mouseleave', 'places-symbols', (e) => {
           map.getCanvas().style.cursor = '';
+          
+          // Remove tooltip
+          if (e.features[0].tooltip) {
+            document.body.removeChild(e.features[0].tooltip);
+            delete e.features[0].tooltip;
+            delete e.features[0].updateTooltip;
+          }
         });
 
         // Create custom pin images for each category
@@ -743,7 +786,7 @@
             'Zanat': { primary: '#F4A261', secondary: '#E76F51', icon: '🔨' },
             'Proizvodi': { primary: '#8B4513', secondary: '#A0522D', icon: '📦' },
             'Usluge': { primary: '#20B2AA', secondary: '#40E0D0', icon: '🛠️' },
-            'Manifestacije': { primary: '#DC143C', secondary: '#FF6347', icon: '🎪' },
+            'Manifestacije': { primary: '#DC143C', secondary: '#FF6347', icon: '🎭' },
             'default': { primary: '#1F7A8C', secondary: '#4A9BB5', icon: '📍' }
           };
           
