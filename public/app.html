@@ -176,6 +176,9 @@
         if (!r.ok) throw new Error("Ne mogu da učitam /data/places.geojson");
         return r.json();
       }
+      
+      // Cache busting for development
+      console.log('NIV Map loaded - version:', new Date().toISOString());
 
       // 4) INLINE SVG MARKERA (popunjen, kontrastan)
       //   – nema fetch-a → nema CORS/404; lako menjaš boje/veličinu
