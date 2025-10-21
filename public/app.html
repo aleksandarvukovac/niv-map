@@ -304,25 +304,42 @@
           closeOnClick: true,
         });
 
+        // Add data source
+        map.addSource('places', {
+          type: 'geojson',
+          data: data
+        });
+
+        // Add custom markers using DOM elements
         data.features.forEach((f) => {
           const p = f.properties || {};
           const [lng, lat] = f.geometry.coordinates;
 
-          // DOM element markera - eksplicitno postavljamo stilove
+          // Create marker element with explicit styling
           const el = document.createElement("div");
           el.className = "custom-marker";
-          el.style.width = "34px";
-          el.style.height = "44px";
-          el.style.cursor = "pointer";
-          el.style.pointerEvents = "auto";
           el.innerHTML = PIN_SVG;
+          
+          // Force the element to be visible and properly sized
+          el.style.cssText = `
+            width: 34px !important;
+            height: 44px !important;
+            cursor: pointer !important;
+            pointer-events: auto !important;
+            display: block !important;
+            position: relative !important;
+            z-index: 1 !important;
+          `;
           
           console.log('Creating marker for:', p.naziv, 'at', [lng, lat]); // debug
           console.log('Element HTML:', el.outerHTML.substring(0, 200)); // debug
           
+          // Create marker with explicit element
           const marker = new maplibregl.Marker(el)
             .setLngLat([lng, lat])
             .addTo(map);
+            
+          console.log('Marker created:', marker); // debug
 
           // Klik na marker
           el.addEventListener("click", (e) => {
