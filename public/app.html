@@ -43,6 +43,12 @@
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
         z-index: 10;
       }
+      .custom-marker {
+        pointer-events: auto;
+      }
+      .maplibregl-marker {
+        z-index: 5;
+      }
 
       /* ===== kompaktan popup ===== */
       .maplibregl-popup {
@@ -153,21 +159,6 @@
       }
       .dots i.on {
         background: #fff;
-      }
-
-      /* custom DOM marker sa tvojim SVG pinom */
-      .custom-marker {
-        width: 36px;
-        height: 36px;
-        background-image: url("/img/kategorije/zanat-pin.svg");
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position: center;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-      }
-      .custom-marker:hover {
-        transform: scale(1.15);
       }
     </style>
   </head>
@@ -295,11 +286,11 @@
 
         data.features.forEach((feature) => {
           const p = feature.properties || {};
-          const coords = feature.geometry.coordinates;
-
           // DOM marker sa tvojim pin SVG-om
           const el = document.createElement("div");
           el.className = "custom-marker";
+
+          const marker = new maplibregl.Marker(el).setLngLat(coords).addTo(map);
 
           const marker = new maplibregl.Marker(el).setLngLat(coords).addTo(map);
 
