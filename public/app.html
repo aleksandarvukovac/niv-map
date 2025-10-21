@@ -50,6 +50,11 @@
         user-select: none;
         pointer-events: auto;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       
       .modern-marker:hover {
@@ -69,6 +74,7 @@
         border: 3px solid rgba(255, 255, 255, 0.9);
         backdrop-filter: blur(10px);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        margin: 0 auto;
       }
       
       .marker-icon {
@@ -250,7 +256,7 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
-        max-width: 300px;
+        max-width: 250px;
       }
       
       .search-container {
@@ -271,6 +277,8 @@
         font-size: 14px;
         outline: none;
         color: #333;
+        width: 180px;
+        max-width: 180px;
       }
       
       #searchInput::placeholder {
@@ -693,7 +701,8 @@
           // Use MapLibre Marker with custom element
           const marker = new maplibregl.Marker({
             element: el,
-            anchor: 'bottom'
+            anchor: 'bottom',
+            offset: [0, 0]
           })
             .setLngLat([lng, lat])
             .addTo(map);
