@@ -286,10 +286,10 @@
 
         data.features.forEach((feature) => {
           const p = feature.properties || {};
+          const coords = feature.geometry.coordinates;
           // DOM marker sa tvojim pin SVG-om
           const el = document.createElement("div");
           el.className = "custom-marker";
-
           const marker = new maplibregl.Marker(el).setLngLat(coords).addTo(map);
 
           // klik na marker -> popup
