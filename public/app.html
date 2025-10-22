@@ -56,7 +56,7 @@
         align-items: center;
         justify-content: center;
       }
-      
+
       .modern-marker:hover {
         transform: scale(1.1);
         z-index: 1000;
@@ -82,7 +82,7 @@
       .maplibregl-canvas-container:hover {
         cursor: pointer;
       }
-      
+
       .marker-pin {
         width: 32px;
         height: 32px;
@@ -97,13 +97,13 @@
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         margin: 0 auto;
       }
-      
+
       .marker-icon {
         transform: rotate(45deg);
         font-size: 14px;
         filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
       }
-      
+
       .marker-shadow {
         position: absolute;
         bottom: -8px;
@@ -111,15 +111,19 @@
         transform: translateX(-50%);
         width: 20px;
         height: 8px;
-        background: radial-gradient(ellipse, rgba(0, 0, 0, 0.2) 0%, transparent 70%);
+        background: radial-gradient(
+          ellipse,
+          rgba(0, 0, 0, 0.2) 0%,
+          transparent 70%
+        );
         border-radius: 50%;
         filter: blur(2px);
       }
-      
+
       .modern-marker:hover .marker-pin {
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.1);
       }
-      
+
       .modern-marker:hover .marker-shadow {
         transform: translateX(-50%) scale(1.2);
         opacity: 0.8;
@@ -136,7 +140,8 @@
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
+          0 8px 16px rgba(0, 0, 0, 0.05);
         animation: popupSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .maplibregl-popup-close-button {
@@ -157,7 +162,7 @@
         background: rgba(255, 255, 255, 1);
         transform: scale(1.1);
       }
-      
+
       @keyframes popupSlideIn {
         from {
           opacity: 0;
@@ -181,35 +186,35 @@
         scrollbar-width: thin;
         scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
       }
-      
+
       .card::-webkit-scrollbar {
         width: 6px;
       }
-      
+
       .card::-webkit-scrollbar-track {
         background: transparent;
       }
-      
+
       .card::-webkit-scrollbar-thumb {
         background: rgba(0, 0, 0, 0.2);
         border-radius: 3px;
       }
-      
+
       .card::-webkit-scrollbar-thumb:hover {
         background: rgba(0, 0, 0, 0.3);
       }
-      
+
       .card:hover {
         transform: translateY(-2px);
         box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
       }
-      
+
       .card_media {
         position: relative;
         background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         overflow: hidden;
       }
-      
+
       .card_img {
         display: block;
         width: 100%;
@@ -217,17 +222,18 @@
         object-fit: cover;
         transition: transform 0.3s ease;
       }
-      
+
       .card_media:hover .card_img {
         transform: scale(1.05);
       }
-      
+
       .card_body {
         padding: 20px;
-        font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
         color: #1a202c;
       }
-      
+
       .card_title {
         margin: 0 0 8px;
         font-size: 18px;
@@ -235,13 +241,13 @@
         color: #2d3748;
         line-height: 1.3;
       }
-      
+
       .muted {
         color: #718096;
         font-size: 13px;
         margin: 4px 0;
       }
-      
+
       .card_link {
         color: #3182ce;
         text-decoration: none;
@@ -252,18 +258,18 @@
         align-items: center;
         gap: 4px;
       }
-      
+
       .card_link:hover {
         color: #2c5282;
         transform: translateX(2px);
       }
-      
+
       .card_link::after {
-        content: '↗';
+        content: "↗";
         font-size: 12px;
         transition: transform 0.2s ease;
       }
-      
+
       .card_link:hover::after {
         transform: translate(2px, -2px);
       }
@@ -279,7 +285,7 @@
         gap: 10px;
         max-width: 180px;
       }
-      
+
       .search-container {
         display: flex;
         background: rgba(255, 255, 255, 0.95);
@@ -290,7 +296,7 @@
         border: 1px solid rgba(255, 255, 255, 0.2);
         align-items: center;
       }
-      
+
       #searchInput {
         flex: 1;
         border: none;
@@ -302,12 +308,12 @@
         width: 100px;
         max-width: 100px;
       }
-      
+
       #searchInput::placeholder {
         color: #666;
         font-size: 12px;
       }
-      
+
       #searchBtn {
         background: #3182ce;
         border: none;
@@ -324,25 +330,25 @@
         align-items: center;
         justify-content: center;
       }
-      
+
       #searchBtn:hover {
         background: #2c5282;
         transform: scale(1.05);
       }
-      
+
       .category-filters {
         display: flex;
         flex-direction: column;
         gap: 8px;
         align-items: center;
       }
-      
+
       .filter-row {
         display: flex;
         gap: 6px;
         justify-content: center;
       }
-      
+
       .filter-btn {
         background: rgba(255, 255, 255, 0.9);
         border: 1px solid rgba(0, 0, 0, 0.1);
@@ -355,37 +361,37 @@
         color: #666;
         white-space: nowrap;
       }
-      
+
       .filter-btn:hover {
         background: rgba(255, 255, 255, 1);
         transform: translateY(-1px);
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
-      
+
       .filter-btn.active {
         background: #3182ce;
         color: white;
         border-color: #3182ce;
       }
-      
+
       .filter-btn[data-category="Zanat"].active {
-        background: #F4A261;
-        border-color: #F4A261;
+        background: #f4a261;
+        border-color: #f4a261;
       }
-      
+
       .filter-btn[data-category="Proizvodi"].active {
-        background: #8B4513;
-        border-color: #8B4513;
+        background: #8b4513;
+        border-color: #8b4513;
       }
-      
+
       .filter-btn[data-category="Usluge"].active {
-        background: #20B2AA;
-        border-color: #20B2AA;
+        background: #20b2aa;
+        border-color: #20b2aa;
       }
-      
+
       .filter-btn[data-category="Manifestacije"].active {
-        background: #DC143C;
-        border-color: #DC143C;
+        background: #dc143c;
+        border-color: #dc143c;
       }
 
       /* carousel kontrole */
@@ -431,27 +437,34 @@
   </head>
   <body>
     <div id="map"></div>
-    
+
     <!-- Search and Filter Controls -->
     <div class="map-controls">
       <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Pretraži lokacije..." />
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Pretraži lokacije..."
+        />
         <button id="searchBtn">🔍</button>
       </div>
-      
+
       <div class="category-filters">
         <div class="filter-row">
           <button class="filter-btn active" data-category="all">Sve</button>
           <button class="filter-btn" data-category="Zanat">Zanati</button>
-          <button class="filter-btn" data-category="Proizvodi">Proizvodi</button>
+          <button class="filter-btn" data-category="Proizvodi">
+            Proizvodi
+          </button>
         </div>
         <div class="filter-row">
           <button class="filter-btn" data-category="Usluge">Usluge</button>
-          <button class="filter-btn" data-category="Manifestacije">Manifestacije</button>
+          <button class="filter-btn" data-category="Manifestacije">
+            Manifestacije
+          </button>
         </div>
       </div>
     </div>
-    
 
     <script>
       // 1) Map style (MapTiler) - Analysis: We're using MapTiler for:
@@ -461,7 +474,7 @@
       // Alternative: OpenStreetMap (free) or Mapbox (paid)
       const MAPTILER_KEY = "WJJJqPPstboZWo4827qc";
       const STYLE_URL = `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`;
-      
+
       // Alternative free map styles:
       // const STYLE_URL = 'https://api.maptiler.com/maps/basic-v2/style.json?key=' + MAPTILER_KEY;
       // const STYLE_URL = 'https://api.maptiler.com/maps/outdoor-v2/style.json?key=' + MAPTILER_KEY;
@@ -508,21 +521,25 @@
       const TEST_MARKER = `
         <div style="width: 30px; height: 30px; background: red; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>
       `;
-      
+
       // Modern marker design with category colors
       const createModernMarker = (category) => {
         const colors = {
-          'Zanat': { primary: '#F4A261', secondary: '#E76F51', icon: '🔨' }, // Saffron
-          'Proizvodi': { primary: '#8B4513', secondary: '#A0522D', icon: '📦' }, // Chestnut
-          'Usluge': { primary: '#20B2AA', secondary: '#40E0D0', icon: '🛠️' }, // Teal
-          'Manifestacije': { primary: '#DC143C', secondary: '#FF6347', icon: '🎡' }, // Carmine
-          'default': { primary: '#1F7A8C', secondary: '#4A9BB5', icon: '📍' }
+          Zanat: { primary: "#F4A261", secondary: "#E76F51", icon: "🔨" }, // Saffron
+          Proizvodi: { primary: "#8B4513", secondary: "#A0522D", icon: "📦" }, // Chestnut
+          Usluge: { primary: "#20B2AA", secondary: "#40E0D0", icon: "🛠️" }, // Teal
+          Manifestacije: {
+            primary: "#DC143C",
+            secondary: "#FF6347",
+            icon: "🎡",
+          }, // Carmine
+          default: { primary: "#1F7A8C", secondary: "#4A9BB5", icon: "📍" },
         };
-        
+
         const color = colors[category] || colors.default;
-        
+
         // Use emoji icons for all categories
-        
+
         return `
           <div class="modern-marker" data-category="${category}">
             <div class="marker-pin" style="
@@ -537,20 +554,20 @@
       };
 
       // Cache busting for development
-      console.log('NIV Map loaded - version:', new Date().toISOString());
-      console.log('PIN_SVG length:', PIN_SVG.length);
-      console.log('PIN_SVG preview:', PIN_SVG.substring(0, 100) + '...');
+      console.log("NIV Map loaded - version:", new Date().toISOString());
+      console.log("PIN_SVG length:", PIN_SVG.length);
+      console.log("PIN_SVG preview:", PIN_SVG.substring(0, 100) + "...");
 
       // helper: normalizuj CSV foto listu → apsolutni put
       // SAMO fotke iz CSV/GeoJSON (bez fallbacka)
       const normPhotos = (fotoString) => {
         if (!fotoString) return [];
         return String(fotoString)
-          .split(',')
-          .map(s => s.trim())
+          .split(",")
+          .map((s) => s.trim())
           .filter(Boolean)
-          .filter(u => /\.(png|jpe?g|webp|gif|svg)$/i.test(u))
-          .map(u => u.startsWith('/') ? u : `/${u}`);
+          .filter((u) => /\.(png|jpe?g|webp|gif|svg)$/i.test(u))
+          .map((u) => (u.startsWith("/") ? u : `/${u}`));
       };
 
       // popup HTML + carousel
@@ -610,35 +627,35 @@
         let startX = 0;
         let startY = 0;
         let isDragging = false;
-        
+
         const go = (to) => {
           idx = (to + items.length) % items.length;
           img.src = items[idx];
           img.dataset.idx = String(idx);
           dots.forEach((d, i) => d.classList.toggle("on", i === idx));
         };
-        
+
         // Touch/swipe support for mobile
         wrap.addEventListener("touchstart", (e) => {
           startX = e.touches[0].clientX;
           startY = e.touches[0].clientY;
           isDragging = true;
         });
-        
+
         wrap.addEventListener("touchmove", (e) => {
           if (!isDragging) return;
           e.preventDefault();
         });
-        
+
         wrap.addEventListener("touchend", (e) => {
           if (!isDragging) return;
           isDragging = false;
-          
+
           const endX = e.changedTouches[0].clientX;
           const endY = e.changedTouches[0].clientY;
           const diffX = startX - endX;
           const diffY = startY - endY;
-          
+
           // Only trigger swipe if horizontal movement is greater than vertical
           if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
             if (diffX > 0) {
@@ -648,26 +665,26 @@
             }
           }
         });
-        
+
         // Mouse drag support for desktop
         wrap.addEventListener("mousedown", (e) => {
           startX = e.clientX;
           isDragging = true;
           e.preventDefault();
         });
-        
+
         wrap.addEventListener("mousemove", (e) => {
           if (!isDragging) return;
           e.preventDefault();
         });
-        
+
         wrap.addEventListener("mouseup", (e) => {
           if (!isDragging) return;
           isDragging = false;
-          
+
           const endX = e.clientX;
           const diffX = startX - endX;
-          
+
           if (Math.abs(diffX) > 50) {
             if (diffX > 0) {
               go(idx + 1);
@@ -676,7 +693,7 @@
             }
           }
         });
-        
+
         // Button controls
         prev &&
           prev.addEventListener("click", (e) => {
@@ -705,10 +722,10 @@
 
         // Use Symbol Layers for proper zoom behavior (best practice)
         // Add the GeoJSON source
-        map.addSource('places', {
-          type: 'geojson',
+        map.addSource("places", {
+          type: "geojson",
           data: data,
-          generateId: true // This ensures each feature gets a unique ID
+          generateId: true, // This ensures each feature gets a unique ID
         });
 
         // Use the existing popupHTML function instead of creating new one
@@ -716,24 +733,24 @@
         // Create custom pin images for Symbol Layers
         const createCustomPin = (category) => {
           const emojis = {
-            'Zanat': '🔨',
-            'Proizvodi': '📦', 
-            'Usluge': '🛠️',
-            'Manifestacije': '🎡',
-            'default': '📍'
+            Zanat: "🔨",
+            Proizvodi: "📦",
+            Usluge: "🛠️",
+            Manifestacije: "🎡",
+            default: "📍",
           };
           const emoji = emojis[category] || emojis.default;
-          
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
+
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
           canvas.width = 32;
           canvas.height = 40;
-          
+
           // Draw teardrop shape
-          ctx.fillStyle = '#00903b';
-          ctx.strokeStyle = '#ffffff';
+          ctx.fillStyle = "#00903b";
+          ctx.strokeStyle = "#ffffff";
           ctx.lineWidth = 2;
-          
+
           // Teardrop path
           ctx.beginPath();
           ctx.arc(16, 12, 8, 0, Math.PI * 2);
@@ -743,53 +760,56 @@
           ctx.closePath();
           ctx.fill();
           ctx.stroke();
-          
+
           // Add emoji
-          ctx.font = '12px Arial';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = '#ffffff';
+          ctx.font = "12px Arial";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = "#ffffff";
           ctx.fillText(emoji, 16, 12);
-          
-          return canvas.toDataURL('image/png');
+
+          return canvas.toDataURL("image/png");
         };
 
-
         // Add custom pin images to map style
-        const categories = ['Zanat', 'Proizvodi', 'Usluge', 'Manifestacije'];
+        const categories = ["Zanat", "Proizvodi", "Usluge", "Manifestacije"];
         let loadedImages = 0;
         const totalImages = categories.length;
-        
-        categories.forEach(category => {
+
+        categories.forEach((category) => {
           const imageData = createCustomPin(category);
           map.loadImage(imageData, (error, image) => {
             if (error) {
-              console.error('Error loading image for', category, error);
+              console.error("Error loading image for", category, error);
               return;
             }
             map.addImage(`pin-${category.toLowerCase()}`, image);
             loadedImages++;
-            
+
             // Add symbol layer only after all images are loaded
             if (loadedImages === totalImages) {
               map.addLayer({
-                id: 'places-symbols',
-                type: 'symbol',
-                source: 'places',
+                id: "places-symbols",
+                type: "symbol",
+                source: "places",
                 layout: {
-                  'icon-image': [
-                    'case',
-                    ['==', ['get', 'kategorija'], 'Zanat'], 'pin-zanat',
-                    ['==', ['get', 'kategorija'], 'Proizvodi'], 'pin-proizvodi',
-                    ['==', ['get', 'kategorija'], 'Usluge'], 'pin-usluge',
-                    ['==', ['get', 'kategorija'], 'Manifestacije'], 'pin-manifestacije',
-                    'pin-zanat' // default
+                  "icon-image": [
+                    "case",
+                    ["==", ["get", "kategorija"], "Zanat"],
+                    "pin-zanat",
+                    ["==", ["get", "kategorija"], "Proizvodi"],
+                    "pin-proizvodi",
+                    ["==", ["get", "kategorija"], "Usluge"],
+                    "pin-usluge",
+                    ["==", ["get", "kategorija"], "Manifestacije"],
+                    "pin-manifestacije",
+                    "pin-zanat", // default
                   ],
-                  'icon-size': 1.0,
-                  'icon-anchor': 'bottom'
-                }
+                  "icon-size": 1.0,
+                  "icon-anchor": "bottom",
+                },
               });
-              
+
               // Add event handlers after layer is created
               addEventHandlers();
             }
@@ -799,19 +819,19 @@
         // Function to add event handlers after layer is created
         function addEventHandlers() {
           // Add hover effects (simplified without feature state)
-          map.on('mouseenter', 'places-symbols', (e) => {
-            map.getCanvas().style.cursor = 'pointer';
-            
+          map.on("mouseenter", "places-symbols", (e) => {
+            map.getCanvas().style.cursor = "pointer";
+
             // Remove any existing tooltip
             if (currentTooltip) {
               document.body.removeChild(currentTooltip);
               currentTooltip = null;
             }
-            
+
             // Create tooltip
             const properties = e.features[0].properties;
-            currentTooltip = document.createElement('div');
-            currentTooltip.className = 'custom-tooltip';
+            currentTooltip = document.createElement("div");
+            currentTooltip.className = "custom-tooltip";
             currentTooltip.textContent = properties.naziv;
             currentTooltip.style.cssText = `
               position: absolute;
@@ -831,9 +851,9 @@
             document.body.appendChild(currentTooltip);
           });
 
-          map.on('mouseleave', 'places-symbols', () => {
-            map.getCanvas().style.cursor = '';
-            
+          map.on("mouseleave", "places-symbols", () => {
+            map.getCanvas().style.cursor = "";
+
             // Remove tooltip
             if (currentTooltip) {
               document.body.removeChild(currentTooltip);
@@ -842,25 +862,30 @@
           });
 
           // Add click handler for popups
-          map.on('click', 'places-symbols', (e) => {
+          map.on("click", "places-symbols", (e) => {
             e.preventDefault();
-            
+
             // Check if popup is already open
-            const existingPopup = document.querySelector('.maplibregl-popup');
+            const existingPopup = document.querySelector(".maplibregl-popup");
             if (existingPopup) {
               existingPopup.remove();
               return;
             }
-            
+
             const coordinates = e.features[0].geometry.coordinates.slice();
             const properties = e.features[0].properties;
             const photos = normPhotos(properties.foto);
-            
-            popup.setLngLat(coordinates).setHTML(popupHTML(properties)).addTo(map);
-            
+
+            popup
+              .setLngLat(coordinates)
+              .setHTML(popupHTML(properties))
+              .addTo(map);
+
             // Wire up carousel if photos exist
             setTimeout(() => {
-              const container = popup.getElement().querySelector(".maplibregl-popup-content");
+              const container = popup
+                .getElement()
+                .querySelector(".maplibregl-popup-content");
               if (container && photos.length > 1) {
                 wireCarousel(container, photos);
               }
@@ -868,67 +893,70 @@
           });
         }
 
-
         // Search and Filter Functionality
-        const searchInput = document.getElementById('searchInput');
-        const searchBtn = document.getElementById('searchBtn');
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        
-        let currentFilter = 'all';
-        
+        const searchInput = document.getElementById("searchInput");
+        const searchBtn = document.getElementById("searchBtn");
+        const filterBtns = document.querySelectorAll(".filter-btn");
+
+        let currentFilter = "all";
+
         // Search functionality
         function performSearch() {
           const query = searchInput.value.toLowerCase().trim();
-          
+
           if (!query) {
             // Show all markers
-            map.setFilter('places-symbols', null);
+            map.setFilter("places-symbols", null);
             return;
           }
-          
+
           // For now, just show all markers when searching
           // We'll implement proper text search later
-          map.setFilter('places-symbols', null);
+          map.setFilter("places-symbols", null);
         }
-        
+
         // Category filtering
         function filterByCategory(category) {
           currentFilter = category;
-          
+
           // Update filter buttons
-          filterBtns.forEach(btn => {
-            btn.classList.remove('active');
+          filterBtns.forEach((btn) => {
+            btn.classList.remove("active");
             if (btn.dataset.category === category) {
-              btn.classList.add('active');
+              btn.classList.add("active");
             }
           });
-          
+
           // Filter markers using Symbol Layer filter
-          if (category === 'all') {
-            map.setFilter('places-symbols', null);
+          if (category === "all") {
+            map.setFilter("places-symbols", null);
           } else {
-            map.setFilter('places-symbols', ['==', ['get', 'kategorija'], category]);
+            map.setFilter("places-symbols", [
+              "==",
+              ["get", "kategorija"],
+              category,
+            ]);
           }
         }
-        
+
         // Event listeners
-        searchInput.addEventListener('input', performSearch);
-        searchBtn.addEventListener('click', performSearch);
-        
-        filterBtns.forEach(btn => {
-          btn.addEventListener('click', () => {
+        searchInput.addEventListener("input", performSearch);
+        searchBtn.addEventListener("click", performSearch);
+
+        filterBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
             filterByCategory(btn.dataset.category);
           });
         });
-        
+
         // Clear search on escape
-        searchInput.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape') {
-            searchInput.value = '';
+        searchInput.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            searchInput.value = "";
             performSearch();
           }
         });
-      
+      }); // <-- Close map.on("load", ...) function
     </script>
   </body>
 </html>
