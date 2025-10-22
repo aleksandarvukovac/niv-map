@@ -483,7 +483,7 @@
         if (!r.ok) throw new Error("Ne mogu da učitam /data/places.geojson");
         return r.json();
       }
-      
+
       // 4) INLINE SVG MARKERA (popunjen, kontrastan)
       //   – nema fetch-a → nema CORS/404; lako menjaš boje/veličinu
       const PIN_SVG = `
@@ -757,154 +757,117 @@
 
         // Add custom pin images to map style
         const categories = ['Zanat', 'Proizvodi', 'Usluge', 'Manifestacije'];
+        let loadedImages = 0;
+        const totalImages = categories.length;
+        
         categories.forEach(category => {
           const imageData = createCustomPin(category);
           map.loadImage(imageData, (error, image) => {
-            if (error) throw error;
+            if (error) {
+              console.error('Error loading image for', category, error);
+              return;
+            }
             map.addImage(`pin-${category.toLowerCase()}`, image);
+            loadedImages++;
+            
+            // Add symbol layer only after all images are loaded
+            if (loadedImages === totalImages) {
+              map.addLayer({
+                id: 'places-symbols',
+                type: 'symbol',
+                source: 'places',
+                layout: {
+                  'icon-image': [
+                    'case',
+                    ['==', ['get', 'kategorija'], 'Zanat'], 'pin-zanat',
+                    ['==', ['get', 'kategorija'], 'Proizvodi'], 'pin-proizvodi',
+                    ['==', ['get', 'kategorija'], 'Usluge'], 'pin-usluge',
+                    ['==', ['get', 'kategorija'], 'Manifestacije'], 'pin-manifestacije',
+                    'pin-zanat' // default
+                  ],
+                  'icon-size': 1.0,
+                  'icon-anchor': 'bottom'
+                }
+              });
+              
+              // Add event handlers after layer is created
+              addEventHandlers();
+            }
           });
         });
 
-        // Add symbol layer for markers
-        map.addLayer({
-          id: 'places-symbols',
-          type: 'symbol',
-          source: 'places',
-          layout: {
-            'icon-image': [
-              'case',
-              ['==', ['get', 'kategorija'], 'Zanat'], 'pin-zanat',
-              ['==', ['get', 'kategorija'], 'Proizvodi'], 'pin-proizvodi',
-              ['==', ['get', 'kategorija'], 'Usluge'], 'pin-usluge',
-              ['==', ['get', 'kategorija'], 'Manifestacije'], 'pin-manifestacije',
-              'pin-zanat' // default
-            ],
-            'icon-size': 1.0,
-            'icon-anchor': 'bottom'
-          }
-        });
-
-        // Add hover effects (simplified without feature state)
-        map.on('mouseenter', 'places-symbols', (e) => {
-          map.getCanvas().style.cursor = 'pointer';
-          
-          // Remove any existing tooltip
-          if (currentTooltip) {
-            document.body.removeChild(currentTooltip);
-            currentTooltip = null;
-          }
-          
-          // Create tooltip
-          const properties = e.features[0].properties;
-          currentTooltip = document.createElement('div');
-          currentTooltip.className = 'custom-tooltip';
-          currentTooltip.textContent = properties.naziv;
-          currentTooltip.style.cssText = `
-            position: absolute;
-            left: ${e.originalEvent.pageX + 8}px;
-            top: ${e.originalEvent.pageY - 25}px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 500;
-            z-index: 10000;
-            pointer-events: none;
-            max-width: 200px;
-            word-wrap: break-word;
-          `;
-          document.body.appendChild(currentTooltip);
-        });
-
-        map.on('mouseleave', 'places-symbols', () => {
-          map.getCanvas().style.cursor = '';
-          
-          // Remove tooltip
-          if (currentTooltip) {
-            document.body.removeChild(currentTooltip);
-            currentTooltip = null;
-          }
-        });
-
-        // Add click handler for popups
-        map.on('click', 'places-symbols', (e) => {
-          e.preventDefault();
-          
-          // Check if popup is already open
-          const existingPopup = document.querySelector('.maplibregl-popup');
-          if (existingPopup) {
-            existingPopup.remove();
-            return;
-          }
-          
-          const coordinates = e.features[0].geometry.coordinates.slice();
-          const properties = e.features[0].properties;
-          const photos = normPhotos(properties.foto);
-          
-          popup.setLngLat(coordinates).setHTML(popupHTML(properties)).addTo(map);
-          
-          // Wire up carousel if photos exist
-          setTimeout(() => {
-            const container = popup.getElement().querySelector(".maplibregl-popup-content");
-            if (container && photos.length > 1) {
-              wireCarousel(container, photos);
+        // Function to add event handlers after layer is created
+        function addEventHandlers() {
+          // Add hover effects (simplified without feature state)
+          map.on('mouseenter', 'places-symbols', (e) => {
+            map.getCanvas().style.cursor = 'pointer';
+            
+            // Remove any existing tooltip
+            if (currentTooltip) {
+              document.body.removeChild(currentTooltip);
+              currentTooltip = null;
             }
-          }, 100);
-        });
+            
+            // Create tooltip
+            const properties = e.features[0].properties;
+            currentTooltip = document.createElement('div');
+            currentTooltip.className = 'custom-tooltip';
+            currentTooltip.textContent = properties.naziv;
+            currentTooltip.style.cssText = `
+              position: absolute;
+              left: ${e.originalEvent.pageX + 8}px;
+              top: ${e.originalEvent.pageY - 25}px;
+              background: rgba(0, 0, 0, 0.8);
+              color: white;
+              padding: 4px 8px;
+              border-radius: 4px;
+              font-size: 11px;
+              font-weight: 500;
+              z-index: 10000;
+              pointer-events: none;
+              max-width: 200px;
+              word-wrap: break-word;
+            `;
+            document.body.appendChild(currentTooltip);
+          });
 
-        // Global tooltip management
-        let currentTooltip = null;
-          
-          // Clear any existing tooltip
-          if (currentTooltip) {
-            document.body.removeChild(currentTooltip);
-            currentTooltip = null;
-          }
-          if (tooltipTimeout) {
-            clearTimeout(tooltipTimeout);
-            tooltipTimeout = null;
-          }
-          
-          // Add pulse effect to the marker
-          map.setPaintProperty('places-symbols', 'icon-opacity', 0.8);
-          map.setLayoutProperty('places-symbols', 'icon-size', 1.1);
-          
-          // Show business name on hover
-          const properties = e.features[0].properties;
-          const businessName = properties.naziv;
-          
-          // Create smaller, less conspicuous tooltip
-          const tooltip = document.createElement('div');
-          tooltip.className = 'marker-tooltip';
-          tooltip.textContent = businessName;
-          tooltip.style.cssText = `
-            position: absolute;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 500;
-            pointer-events: none;
-            z-index: 1000;
-            white-space: nowrap;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-            max-width: 200px;
-            text-align: center;
-          `;
-          
-          document.body.appendChild(tooltip);
-          currentTooltip = tooltip;
-          
-          // Position tooltip
-          const updateTooltip = (e) => {
-            tooltip.style.left = e.pageX + 8 + 'px';
-            tooltip.style.top = e.pageY - 25 + 'px';
-          };
-          
-          updateTooltip(e.originalEvent);
-        });
+          map.on('mouseleave', 'places-symbols', () => {
+            map.getCanvas().style.cursor = '';
+            
+            // Remove tooltip
+            if (currentTooltip) {
+              document.body.removeChild(currentTooltip);
+              currentTooltip = null;
+            }
+          });
+
+          // Add click handler for popups
+          map.on('click', 'places-symbols', (e) => {
+            e.preventDefault();
+            
+            // Check if popup is already open
+            const existingPopup = document.querySelector('.maplibregl-popup');
+            if (existingPopup) {
+              existingPopup.remove();
+              return;
+            }
+            
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const properties = e.features[0].properties;
+            const photos = normPhotos(properties.foto);
+            
+            popup.setLngLat(coordinates).setHTML(popupHTML(properties)).addTo(map);
+            
+            // Wire up carousel if photos exist
+            setTimeout(() => {
+              const container = popup.getElement().querySelector(".maplibregl-popup-content");
+              if (container && photos.length > 1) {
+                wireCarousel(container, photos);
+              }
+            }, 100);
+          });
+        }
+
 
         // Search and Filter Functionality
         const searchInput = document.getElementById('searchInput');
