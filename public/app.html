@@ -774,16 +774,20 @@
 
         categories.forEach((category) => {
           const imageData = createCustomPin(category);
+          console.log(`Creating pin for ${category}:`, imageData.substring(0, 50) + '...');
+          
           map.loadImage(imageData, (error, image) => {
             if (error) {
               console.error("Error loading image for", category, error);
               return;
             }
+            console.log(`Successfully loaded image for ${category}`);
             map.addImage(`pin-${category.toLowerCase()}`, image);
             loadedImages++;
 
             // Add symbol layer only after all images are loaded
             if (loadedImages === totalImages) {
+              console.log("All images loaded, creating symbol layer");
               map.addLayer({
                 id: "places-symbols",
                 type: "symbol",
@@ -811,6 +815,24 @@
             }
           });
         });
+
+        // Fallback: If images fail to load, create a simple symbol layer
+        setTimeout(() => {
+          if (loadedImages < totalImages) {
+            console.log("Images failed to load, creating fallback symbol layer");
+            map.addLayer({
+              id: "places-symbols",
+              type: "symbol",
+              source: "places",
+              layout: {
+                "icon-image": "marker",
+                "icon-size": 1.0,
+                "icon-anchor": "bottom",
+              },
+            });
+            addEventHandlers();
+          }
+        }, 3000);
 
         // Store all markers for search functionality
         const allMarkers = data.features.map(f => ({
