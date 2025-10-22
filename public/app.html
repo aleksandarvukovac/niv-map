@@ -718,8 +718,16 @@
           closeOnClick: true,
         });
 
-        // Create HTML markers (like Leaflet) for better reliability
-        const createHTMLMarker = (category) => {
+        // Use Symbol Layers for stability (best practice for MapLibre)
+        // Add GeoJSON source
+        map.addSource("places", {
+          type: "geojson",
+          data: data,
+          generateId: true
+        });
+
+        // Create custom pin images for Symbol Layers
+        const createCustomPin = (category) => {
           const emojis = {
             Zanat: "🔨",
             Proizvodi: "📦",
@@ -729,54 +737,94 @@
           };
           const emoji = emojis[category] || emojis.default;
 
-          const markerEl = document.createElement("div");
-          markerEl.className = "html-marker";
-          markerEl.style.cssText = `
-            width: 20px;
-            height: 28px;
-            cursor: pointer;
-            position: relative;
-            display: block;
-            margin: 0;
-            padding: 0;
-          `;
-          markerEl.innerHTML = `
-            <div class="marker-pin">
-              <div class="marker-emoji">${emoji}</div>
-            </div>
-          `;
-          return markerEl;
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          canvas.width = 24;
+          canvas.height = 32;
+
+          // Draw teardrop shape
+          ctx.fillStyle = "#00903b";
+          ctx.strokeStyle = "#ffffff";
+          ctx.lineWidth = 2;
+
+          // Teardrop path
+          ctx.beginPath();
+          ctx.arc(12, 10, 6, 0, Math.PI * 2);
+          ctx.moveTo(12, 16);
+          ctx.lineTo(8, 28);
+          ctx.lineTo(16, 28);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+
+          // Add emoji
+          ctx.font = "10px Arial";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillStyle = "#ffffff";
+          ctx.fillText(emoji, 12, 10);
+
+          return canvas.toDataURL("image/png");
         };
 
+        // Add custom pin images to map
+        const categories = ["Zanat", "Proizvodi", "Usluge", "Manifestacije"];
+        let loadedImages = 0;
+        const totalImages = categories.length;
+
+        categories.forEach((category) => {
+          const imageData = createCustomPin(category);
+          map.loadImage(imageData, (error, image) => {
+            if (error) {
+              console.error("Error loading image for", category, error);
+              return;
+            }
+            map.addImage(`pin-${category.toLowerCase()}`, image);
+            loadedImages++;
+
+            // Add symbol layer only after all images are loaded
+            if (loadedImages === totalImages) {
+              map.addLayer({
+                id: "places-symbols",
+                type: "symbol",
+                source: "places",
+                layout: {
+                  "icon-image": [
+                    "case",
+                    ["==", ["get", "kategorija"], "Zanat"],
+                    "pin-zanat",
+                    ["==", ["get", "kategorija"], "Proizvodi"],
+                    "pin-proizvodi",
+                    ["==", ["get", "kategorija"], "Usluge"],
+                    "pin-usluge",
+                    ["==", ["get", "kategorija"], "Manifestacije"],
+                    "pin-manifestacije",
+                    "pin-zanat", // default
+                  ],
+                  "icon-size": 1.0,
+                  "icon-anchor": "bottom",
+                },
+              });
+
+              // Add event handlers after layer is created
+              addEventHandlers();
+            }
+          });
+        });
+
         // Store all markers for search functionality
-        const allMarkers = [];
+        const allMarkers = data.features.map(f => ({
+          properties: f.properties,
+          coordinates: f.geometry.coordinates,
+          category: f.properties.kategorija
+        }));
         let currentTooltip = null;
 
-        // Create markers for each location
-        data.features.forEach((feature) => {
-          const coordinates = feature.geometry.coordinates;
-          const properties = feature.properties;
-          const category = properties.kategorija;
-
-          const markerEl = createHTMLMarker(category);
-          const marker = new maplibregl.Marker({
-            element: markerEl,
-            anchor: "bottom"
-          })
-            .setLngLat(coordinates)
-            .addTo(map);
-
-          // Store marker reference
-          allMarkers.push({
-            marker,
-            properties,
-            coordinates,
-            category,
-          });
-
-          // Add hover tooltip
-          markerEl.addEventListener("mouseenter", (e) => {
-            e.stopPropagation();
+        // Function to add event handlers after layer is created
+        function addEventHandlers() {
+          // Add hover effects
+          map.on("mouseenter", "places-symbols", (e) => {
+            map.getCanvas().style.cursor = "pointer";
 
             // Remove any existing tooltip
             if (currentTooltip) {
@@ -785,13 +833,14 @@
             }
 
             // Create tooltip
+            const properties = e.features[0].properties;
             currentTooltip = document.createElement("div");
             currentTooltip.className = "custom-tooltip";
             currentTooltip.textContent = properties.naziv;
             currentTooltip.style.cssText = `
               position: absolute;
-              left: ${e.pageX + 8}px;
-              top: ${e.pageY - 25}px;
+              left: ${e.originalEvent.pageX + 8}px;
+              top: ${e.originalEvent.pageY - 25}px;
               background: rgba(0, 0, 0, 0.8);
               color: white;
               padding: 4px 8px;
@@ -806,8 +855,10 @@
             document.body.appendChild(currentTooltip);
           });
 
-          markerEl.addEventListener("mouseleave", (e) => {
-            e.stopPropagation();
+          map.on("mouseleave", "places-symbols", () => {
+            map.getCanvas().style.cursor = "";
+
+            // Remove tooltip
             if (currentTooltip) {
               document.body.removeChild(currentTooltip);
               currentTooltip = null;
@@ -815,8 +866,8 @@
           });
 
           // Add click handler for popups
-          markerEl.addEventListener("click", (e) => {
-            e.stopPropagation();
+          map.on("click", "places-symbols", (e) => {
+            e.preventDefault();
 
             // Check if popup is already open
             const existingPopup = document.querySelector(".maplibregl-popup");
@@ -825,7 +876,10 @@
               return;
             }
 
+            const coordinates = e.features[0].geometry.coordinates.slice();
+            const properties = e.features[0].properties;
             const photos = normPhotos(properties.foto);
+
             popup
               .setLngLat(coordinates)
               .setHTML(popupHTML(properties))
@@ -841,62 +895,8 @@
               }
             }, 100);
           });
-        });
+        }
 
-        // Add CSS for HTML markers
-        const style = document.createElement("style");
-        style.textContent = `
-          .html-marker {
-            width: 20px;
-            height: 28px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            z-index: 1000;
-            position: relative;
-            display: block;
-            margin: 0;
-            padding: 0;
-          }
-          
-          .html-marker:hover {
-            transform: scale(1.1);
-            z-index: 1001;
-          }
-          
-          .marker-pin {
-            width: 20px;
-            height: 28px;
-            background: #00903b;
-            border: 2px solid #ffffff;
-            border-radius: 50% 50% 50% 0;
-            transform: rotate(-45deg);
-            position: relative;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-          }
-          
-          .marker-emoji {
-            font-size: 8px;
-            filter: grayscale(100%) brightness(0) invert(1);
-            line-height: 1;
-            transform: rotate(45deg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            position: absolute;
-            top: 0;
-            left: 0;
-          }
-        `;
-        document.head.appendChild(style);
 
         // Search and Filter Functionality
         const searchInput = document.getElementById("searchInput");
@@ -911,9 +911,7 @@
 
           if (!query) {
             // Show all markers
-            allMarkers.forEach(({ marker }) => {
-              marker.getElement().style.display = "block";
-            });
+            map.setFilter("places-symbols", null);
             return;
           }
 
@@ -924,18 +922,12 @@
             return naziv.includes(query) || mesto.includes(query);
           });
 
-          // Hide all markers first
-          allMarkers.forEach(({ marker }) => {
-            marker.getElement().style.display = "none";
-          });
-
-          // Show only matching markers
-          matchingMarkers.forEach(({ marker }) => {
-            marker.getElement().style.display = "block";
-          });
-
-          // If we have matches, zoom to them
+          // Filter to show only matching markers
           if (matchingMarkers.length > 0) {
+            const matchingIds = matchingMarkers.map((_, index) => index);
+            map.setFilter("places-symbols", ["in", ["id"], ["literal", matchingIds]]);
+            
+            // Zoom to results
             const coordinates = matchingMarkers.map(({ coordinates }) => coordinates);
             if (coordinates.length === 1) {
               // Single result - zoom to it
@@ -950,6 +942,9 @@
               coordinates.forEach((coord) => bounds.extend(coord));
               map.fitBounds(bounds, { padding: 50, duration: 1000 });
             }
+          } else {
+            // No matches - hide all markers
+            map.setFilter("places-symbols", ["==", ["id"], -1]);
           }
         }
 
@@ -965,14 +960,12 @@
             }
           });
 
-          // Filter markers
-          allMarkers.forEach(({ marker, category: markerCategory }) => {
-            if (category === "all" || markerCategory === category) {
-              marker.getElement().style.display = "block";
-            } else {
-              marker.getElement().style.display = "none";
-            }
-          });
+          // Filter markers using Symbol Layer filter
+          if (category === "all") {
+            map.setFilter("places-symbols", null);
+          } else {
+            map.setFilter("places-symbols", ["==", ["get", "kategorija"], category]);
+          }
         }
 
         // Event listeners
