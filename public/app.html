@@ -710,50 +710,7 @@
           data: data
         });
 
-        // Create popup content function
-        const createPopupContent = (properties) => {
-          const photos = properties.foto ? properties.foto.split(',') : [];
-          let photoHTML = '';
-          
-          if (photos.length > 0) {
-            photoHTML = `
-              <div class="carousel-container">
-                <div class="carousel-wrapper">
-                  <div class="carousel-track">
-                    ${photos.map((photo, index) => `
-                      <div class="carousel-slide ${index === 0 ? 'active' : ''}">
-                        <img src="${photo.trim()}" alt="Photo ${index + 1}" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
-                      </div>
-                    `).join('')}
-                  </div>
-                  ${photos.length > 1 ? `
-                    <button class="carousel-prev">‹</button>
-                    <button class="carousel-next">›</button>
-                  ` : ''}
-                </div>
-                ${photos.length > 1 ? `
-                  <div class="carousel-dots">
-                    ${photos.map((_, index) => `
-                      <span class="dot ${index === 0 ? 'active' : ''}" data-slide="${index}"></span>
-                    `).join('')}
-                  </div>
-                ` : ''}
-              </div>
-            `;
-          }
-          
-          return `
-            <div class="popup-content">
-              <h3>${properties.naziv}</h3>
-              <p><strong>Kategorija:</strong> ${properties.kategorija}</p>
-              <p><strong>Mesto:</strong> ${properties.mesto}</p>
-              <p><strong>Adresa:</strong> ${properties.adresa}</p>
-              ${properties.opis ? `<p><strong>Opis:</strong> ${properties.opis}</p>` : ''}
-              ${properties.web ? `<p><strong>Web:</strong> <a href="${properties.web}" target="_blank">${properties.web}</a></p>` : ''}
-              ${photoHTML}
-            </div>
-          `;
-        };
+        // Use the existing popupHTML function instead of creating new one
 
         // Create HTML-based teardrop markers (like Leaflet approach)
         const createHTMLMarker = (category) => {
@@ -815,13 +772,12 @@
             filter: grayscale(100%) brightness(0) invert(1);
             line-height: 1;
             transform: rotate(45deg);
-            display: block;
-            text-align: center;
-            width: 100%;
-            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
+            height: 100%;
+            text-align: center;
           }
         `;
         document.head.appendChild(style);
@@ -901,18 +857,11 @@
               return;
             }
             
-            // Create popup content
-            const popupContent = createPopupContent(properties);
-            console.log('Popup content created:', popupContent);
+            // Use the original popupHTML function
+            const photos = normPhotos(properties.foto);
+            console.log('Marker clicked, photos:', photos);
             
-            const popup = new maplibregl.Popup({
-              offset: 25,
-              closeButton: true,
-              closeOnClick: false
-            })
-              .setLngLat(coordinates)
-              .setHTML(popupContent)
-              .addTo(map);
+            popup.setLngLat(coordinates).setHTML(popupHTML(properties)).addTo(map);
             
             console.log('Popup added to map');
             
