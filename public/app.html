@@ -555,8 +555,6 @@
 
       // Cache busting for development
       console.log("NIV Map loaded - version:", new Date().toISOString());
-      console.log("PIN_SVG length:", PIN_SVG.length);
-      console.log("PIN_SVG preview:", PIN_SVG.substring(0, 100) + "...");
 
       // helper: normalizuj CSV foto listu → apsolutni put
       // SAMO fotke iz CSV/GeoJSON (bez fallbacka)
@@ -734,8 +732,8 @@
           const markerEl = document.createElement("div");
           markerEl.className = "html-marker";
           markerEl.style.cssText = `
-            width: 24px;
-            height: 32px;
+            width: 20px;
+            height: 28px;
             cursor: pointer;
             position: relative;
             display: block;
@@ -763,8 +761,7 @@
           const markerEl = createHTMLMarker(category);
           const marker = new maplibregl.Marker({
             element: markerEl,
-            anchor: "bottom",
-            offset: [0, 0]
+            anchor: "bottom"
           })
             .setLngLat(coordinates)
             .addTo(map);
@@ -850,8 +847,8 @@
         const style = document.createElement("style");
         style.textContent = `
           .html-marker {
-            width: 24px;
-            height: 32px;
+            width: 20px;
+            height: 28px;
             cursor: pointer;
             transition: transform 0.2s ease;
             z-index: 1000;
@@ -867,8 +864,8 @@
           }
           
           .marker-pin {
-            width: 24px;
-            height: 32px;
+            width: 20px;
+            height: 28px;
             background: #00903b;
             border: 2px solid #ffffff;
             border-radius: 50% 50% 50% 0;
@@ -884,7 +881,7 @@
           }
           
           .marker-emoji {
-            font-size: 10px;
+            font-size: 8px;
             filter: grayscale(100%) brightness(0) invert(1);
             line-height: 1;
             transform: rotate(45deg);
