@@ -745,6 +745,8 @@
             cursor: pointer;
             transition: transform 0.2s ease;
             z-index: 1000;
+            position: relative;
+            display: block;
           }
           
           .custom-teardrop-marker:hover {
@@ -765,6 +767,8 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            margin: 0;
+            padding: 0;
           }
           
           .teardrop-emoji {
@@ -791,7 +795,8 @@
           const markerEl = createHTMLMarker(category);
           const marker = new maplibregl.Marker({
             element: markerEl,
-            anchor: 'bottom'
+            anchor: 'bottom',
+            offset: [0, 0]
           })
             .setLngLat(coordinates)
             .addTo(map);
@@ -867,9 +872,9 @@
             
             // Wire up carousel if photos exist
             setTimeout(() => {
-              const container = popup.getElement().querySelector('.carousel-container');
-              if (container) {
-                wireCarousel(container, properties.foto ? properties.foto.split(',') : []);
+              const container = popup.getElement().querySelector(".maplibregl-popup-content");
+              if (container && photos.length > 1) {
+                wireCarousel(container, photos);
               }
             }, 100);
           });
