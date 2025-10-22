@@ -896,54 +896,6 @@
           }
         });
 
-        // Create custom pin images for each category
-        const createTeardropMarker = (category) => {
-          const emojis = {
-            'Zanat': '🔨',
-            'Proizvodi': '📦', 
-            'Usluge': '🛠️',
-            'Manifestacije': '🎡',
-            'default': '📍'
-          };
-          
-          const emoji = emojis[category] || emojis.default;
-          const brandGreen = '#00903b';
-          
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = 40;
-          canvas.height = 50;
-          
-          // Create teardrop shape (standard map pin shape)
-          ctx.fillStyle = brandGreen;
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 2;
-          
-          // Draw teardrop body (circle)
-          ctx.beginPath();
-          ctx.arc(20, 18, 12, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-          
-          // Draw teardrop point
-          ctx.beginPath();
-          ctx.moveTo(20, 30);
-          ctx.lineTo(16, 42);
-          ctx.lineTo(24, 42);
-          ctx.closePath();
-          ctx.fill();
-          ctx.stroke();
-          
-          // Add white emoji icon
-          ctx.font = '18px Arial';
-          ctx.fillStyle = '#ffffff';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(emoji, 20, 18);
-          
-          return canvas.toDataURL();
-        };
-
         // Markers are now loaded and symbol layer is created above
 
         // Store markers for filtering (we'll use the GeoJSON data)
