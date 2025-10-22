@@ -826,48 +826,57 @@
         });
 
         // Create custom pin images for each category
-        const createCustomPin = (category) => {
-          const colors = {
-            'Zanat': { primary: '#F4A261', secondary: '#E76F51', icon: '🔨' },
-            'Proizvodi': { primary: '#8B4513', secondary: '#A0522D', icon: '📦' },
-            'Usluge': { primary: '#20B2AA', secondary: '#40E0D0', icon: '🛠️' },
-            'Manifestacije': { primary: '#DC143C', secondary: '#FF6347', icon: '🎡' },
-            'default': { primary: '#1F7A8C', secondary: '#4A9BB5', icon: '📍' }
+        const createTeardropMarker = (category) => {
+          const emojis = {
+            'Zanat': '🔨',
+            'Proizvodi': '📦', 
+            'Usluge': '🛠️',
+            'Manifestacije': '🎡',
+            'default': '📍'
           };
           
-          const color = colors[category] || colors.default;
+          const emoji = emojis[category] || emojis.default;
+          const brandGreen = '#00903b';
           
-          // Create canvas for custom pin
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
-          canvas.width = 32;
-          canvas.height = 32;
+          canvas.width = 40;
+          canvas.height = 50;
           
-          // Draw pin shape
-          ctx.fillStyle = color.primary;
-          ctx.beginPath();
-          ctx.arc(16, 16, 14, 0, 2 * Math.PI);
-          ctx.fill();
-          
-          // Add border
+          // Create teardrop shape (standard map pin shape)
+          ctx.fillStyle = brandGreen;
           ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 3;
+          ctx.lineWidth = 2;
+          
+          // Draw teardrop body (circle)
+          ctx.beginPath();
+          ctx.arc(20, 18, 12, 0, Math.PI * 2);
+          ctx.fill();
           ctx.stroke();
           
-          // Add icon
+          // Draw teardrop point
+          ctx.beginPath();
+          ctx.moveTo(20, 30);
+          ctx.lineTo(16, 42);
+          ctx.lineTo(24, 42);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+          
+          // Add white emoji icon
+          ctx.font = '18px Arial';
           ctx.fillStyle = '#ffffff';
-          ctx.font = '16px Arial';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText(color.icon, 16, 16);
+          ctx.fillText(emoji, 20, 18);
           
           return canvas.toDataURL();
         };
 
-        // Add custom pin images to map
+        // Add uniform teardrop markers to map
         const categories = ['Zanat', 'Proizvodi', 'Usluge', 'Manifestacije'];
         categories.forEach(category => {
-          const pinImage = createCustomPin(category);
+          const pinImage = createTeardropMarker(category);
           map.loadImage(pinImage, (error, image) => {
             if (error) throw error;
             map.addImage(`pin-${category.toLowerCase()}`, image);
