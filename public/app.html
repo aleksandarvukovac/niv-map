@@ -738,35 +738,38 @@
         const style = document.createElement('style');
         style.textContent = `
           .custom-teardrop-marker {
-            width: 30px;
-            height: 40px;
+            width: 24px;
+            height: 32px;
             cursor: pointer;
             transition: transform 0.2s ease;
+            z-index: 1000;
           }
           
           .custom-teardrop-marker:hover {
             transform: scale(1.1);
+            z-index: 1001;
           }
           
           .teardrop-pin {
-            width: 30px;
-            height: 40px;
+            width: 24px;
+            height: 32px;
             background: #00903b;
             border: 2px solid #ffffff;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
             position: relative;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
           
           .teardrop-emoji {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(45deg);
-            font-size: 16px;
+            font-size: 12px;
             filter: grayscale(100%) brightness(0) invert(1);
             line-height: 1;
+            transform: rotate(45deg);
+            display: block;
           }
         `;
         document.head.appendChild(style);
@@ -784,6 +787,55 @@
           })
             .setLngLat(coordinates)
             .addTo(map);
+          
+          // Add hover tooltip
+          let tooltip = null;
+          markerEl.addEventListener('mouseenter', (e) => {
+            e.stopPropagation();
+            
+            // Remove any existing tooltip
+            if (tooltip) {
+              document.body.removeChild(tooltip);
+            }
+            
+            // Create tooltip
+            tooltip = document.createElement('div');
+            tooltip.className = 'marker-tooltip';
+            tooltip.textContent = properties.naziv;
+            tooltip.style.cssText = `
+              position: absolute;
+              background: rgba(0, 0, 0, 0.8);
+              color: white;
+              padding: 4px 8px;
+              border-radius: 4px;
+              font-size: 11px;
+              font-weight: 500;
+              pointer-events: none;
+              z-index: 1002;
+              white-space: nowrap;
+              box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+              max-width: 200px;
+              text-align: center;
+            `;
+            
+            document.body.appendChild(tooltip);
+            
+            // Position tooltip
+            const updateTooltip = (e) => {
+              tooltip.style.left = e.pageX + 8 + 'px';
+              tooltip.style.top = e.pageY - 25 + 'px';
+            };
+            
+            updateTooltip(e);
+          });
+          
+          markerEl.addEventListener('mouseleave', (e) => {
+            e.stopPropagation();
+            if (tooltip) {
+              document.body.removeChild(tooltip);
+              tooltip = null;
+            }
+          });
           
           // Add click handler
           markerEl.addEventListener('click', (e) => {
