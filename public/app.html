@@ -728,22 +728,21 @@
           canvas.width = 40;
           canvas.height = 50;
           
-          // Create proper teardrop shape
+          // Create proper teardrop shape using path
           ctx.fillStyle = brandGreen;
           ctx.strokeStyle = '#ffffff';
           ctx.lineWidth = 2;
           
-          // Draw teardrop body (circle)
+          // Draw teardrop shape as a single path
           ctx.beginPath();
-          ctx.arc(20, 18, 12, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-          
-          // Draw teardrop point (triangle)
-          ctx.beginPath();
-          ctx.moveTo(20, 30);
-          ctx.lineTo(16, 42);
-          ctx.lineTo(24, 42);
+          // Start from the point
+          ctx.moveTo(20, 45);
+          // Left side of teardrop
+          ctx.quadraticCurveTo(8, 35, 8, 20);
+          ctx.quadraticCurveTo(8, 8, 20, 8);
+          // Right side of teardrop
+          ctx.quadraticCurveTo(32, 8, 32, 20);
+          ctx.quadraticCurveTo(32, 35, 20, 45);
           ctx.closePath();
           ctx.fill();
           ctx.stroke();
