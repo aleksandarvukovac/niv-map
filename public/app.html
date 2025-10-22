@@ -710,8 +710,8 @@
           data: data
         });
 
-        // Create PNG teardrop markers using canvas (MapLibre doesn't support SVG)
-        const createTeardropPNG = (category) => {
+        // Create HTML-based teardrop markers (like Leaflet approach)
+        const createHTMLMarker = (category) => {
           const emojis = {
             'Zanat': '🔨',
             'Proizvodi': '📦', 
@@ -721,106 +721,103 @@
           };
           
           const emoji = emojis[category] || emojis.default;
-          const brandGreen = '#00903b';
           
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = 40;
-          canvas.height = 50;
+          // Create HTML element for marker
+          const markerEl = document.createElement('div');
+          markerEl.className = 'custom-teardrop-marker';
+          markerEl.innerHTML = `
+            <div class="teardrop-pin">
+              <div class="teardrop-emoji">${emoji}</div>
+            </div>
+          `;
           
-          // Create proper teardrop shape using path
-          ctx.fillStyle = brandGreen;
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 2;
-          
-          // Draw teardrop shape as a single path
-          ctx.beginPath();
-          // Start from the point
-          ctx.moveTo(20, 45);
-          // Left side of teardrop
-          ctx.quadraticCurveTo(8, 35, 8, 20);
-          ctx.quadraticCurveTo(8, 8, 20, 8);
-          // Right side of teardrop
-          ctx.quadraticCurveTo(32, 8, 32, 20);
-          ctx.quadraticCurveTo(32, 35, 20, 45);
-          ctx.closePath();
-          ctx.fill();
-          ctx.stroke();
-          
-          // Add white emoji icon
-          ctx.font = '18px Arial';
-          ctx.fillStyle = '#ffffff';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(emoji, 20, 18);
-          
-          return canvas.toDataURL('image/png');
+          return markerEl;
         };
 
-        // Load PNG teardrop markers
-        const categories = ['Zanat', 'Proizvodi', 'Usluge', 'Manifestacije'];
-        let loadedMarkers = 0;
-        
-        categories.forEach(category => {
-          const pngDataURL = createTeardropPNG(category);
-          map.loadImage(pngDataURL, (error, image) => {
-            if (error) {
-              console.error(`Error loading marker for ${category}:`, error);
+        // Add CSS for teardrop markers
+        const style = document.createElement('style');
+        style.textContent = `
+          .custom-teardrop-marker {
+            width: 30px;
+            height: 40px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+          }
+          
+          .custom-teardrop-marker:hover {
+            transform: scale(1.1);
+          }
+          
+          .teardrop-pin {
+            width: 30px;
+            height: 40px;
+            background: #00903b;
+            border: 2px solid #ffffff;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+          }
+          
+          .teardrop-emoji {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            font-size: 16px;
+            filter: grayscale(100%) brightness(0) invert(1);
+            line-height: 1;
+          }
+        `;
+        document.head.appendChild(style);
+
+        // Create individual HTML markers for each location
+        data.features.forEach(feature => {
+          const coordinates = feature.geometry.coordinates;
+          const properties = feature.properties;
+          const category = properties.kategorija;
+          
+          const markerEl = createHTMLMarker(category);
+          const marker = new maplibregl.Marker({
+            element: markerEl,
+            anchor: 'bottom'
+          })
+            .setLngLat(coordinates)
+            .addTo(map);
+          
+          // Add click handler
+          markerEl.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            // Check if popup is already open
+            const existingPopup = document.querySelector('.maplibregl-popup');
+            if (existingPopup) {
+              existingPopup.remove();
               return;
             }
-            map.addImage(`pin-${category.toLowerCase()}`, image);
-            loadedMarkers++;
             
-            // Add symbol layer after all markers are loaded
-            if (loadedMarkers === categories.length) {
-              // Add symbol layer for markers
-              map.addLayer({
-                id: 'places-symbols',
-                type: 'symbol',
-                source: 'places',
-                layout: {
-                  'icon-image': [
-                    'case',
-                    ['==', ['get', 'kategorija'], 'Zanat'], 'pin-zanat',
-                    ['==', ['get', 'kategorija'], 'Proizvodi'], 'pin-proizvodi',
-                    ['==', ['get', 'kategorija'], 'Usluge'], 'pin-usluge',
-                    ['==', ['get', 'kategorija'], 'Manifestacije'], 'pin-manifestacije',
-                    'pin-zanat' // default
-                  ],
-                  'icon-size': 1,
-                  'icon-allow-overlap': true,
-                  'icon-ignore-placement': true
-                }
-              });
-            }
+            // Create popup content
+            const popupContent = createPopupContent(properties);
+            const popup = new maplibregl.Popup({
+              offset: 25,
+              closeButton: true,
+              closeOnClick: false
+            })
+              .setLngLat(coordinates)
+              .setHTML(popupContent)
+              .addTo(map);
+            
+            // Wire up carousel if photos exist
+            setTimeout(() => {
+              const container = popup.getElement().querySelector('.carousel-container');
+              if (container) {
+                wireCarousel(container, properties.foto ? properties.foto.split(',') : []);
+              }
+            }, 100);
           });
         });
 
-        // Add click handler for the symbol layer
-        map.on('click', 'places-symbols', (e) => {
-          const coordinates = e.features[0].geometry.coordinates.slice();
-          const properties = e.features[0].properties;
-          
-          // Check if popup is already open
-          const existingPopup = document.querySelector('.maplibregl-popup');
-          if (existingPopup) {
-            popup.remove();
-            return;
-          }
-          
-          const photos = normPhotos(properties.foto);
-          console.log('Marker clicked, photos:', photos);
-          
-          popup.setLngLat(coordinates).setHTML(popupHTML(properties)).addTo(map);
-          
-          // Wire carousel after popup is in DOM
-          setTimeout(() => {
-            const container = document.querySelector(".maplibregl-popup-content");
-            if (container && photos.length > 1) {
-              wireCarousel(container, photos);
-            }
-          }, 100);
-        });
+        // HTML markers handle their own click events, no symbol layer needed
 
         // Global tooltip management
         let currentTooltip = null;
