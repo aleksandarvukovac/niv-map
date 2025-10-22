@@ -919,39 +919,12 @@
           updateTooltip(e.originalEvent);
         });
 
-        map.on('mouseleave', 'places-symbols', (e) => {
-          map.getCanvas().style.cursor = '';
-          
-          // Reset marker appearance
-          map.setPaintProperty('places-symbols', 'icon-opacity', 1);
-          map.setLayoutProperty('places-symbols', 'icon-size', 1);
-          
-          // Close tooltip immediately
-          if (currentTooltip) {
-            document.body.removeChild(currentTooltip);
-            currentTooltip = null;
-          }
-          if (tooltipTimeout) {
-            clearTimeout(tooltipTimeout);
-            tooltipTimeout = null;
-          }
-        });
-
-        // Markers are now loaded and symbol layer is created above
-
-        // Store markers for filtering (we'll use the GeoJSON data)
-        const markers = data.features.map(f => ({
-          properties: f.properties,
-          coordinates: f.geometry.coordinates
-        }));
-        
         // Search and Filter Functionality
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
         const filterBtns = document.querySelectorAll('.filter-btn');
         
         let currentFilter = 'all';
-        let allMarkers = [...markers]; // Keep reference to all markers
         
         // Search functionality
         function performSearch() {
