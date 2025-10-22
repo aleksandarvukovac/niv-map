@@ -739,8 +739,8 @@
 
           const canvas = document.createElement("canvas");
           const ctx = canvas.getContext("2d");
-          canvas.width = 24;
-          canvas.height = 32;
+          canvas.width = 32;
+          canvas.height = 40;
 
           // Draw teardrop shape
           ctx.fillStyle = "#00903b";
@@ -749,20 +749,20 @@
 
           // Teardrop path
           ctx.beginPath();
-          ctx.arc(12, 10, 6, 0, Math.PI * 2);
-          ctx.moveTo(12, 16);
-          ctx.lineTo(8, 28);
-          ctx.lineTo(16, 28);
+          ctx.arc(16, 12, 8, 0, Math.PI * 2);
+          ctx.moveTo(16, 20);
+          ctx.lineTo(12, 32);
+          ctx.lineTo(20, 32);
           ctx.closePath();
           ctx.fill();
           ctx.stroke();
 
           // Add emoji
-          ctx.font = "10px Arial";
+          ctx.font = "12px Arial";
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
           ctx.fillStyle = "#ffffff";
-          ctx.fillText(emoji, 12, 10);
+          ctx.fillText(emoji, 16, 12);
 
           return canvas.toDataURL("image/png");
         };
