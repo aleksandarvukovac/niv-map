@@ -707,7 +707,8 @@
         // Add the GeoJSON source
         map.addSource('places', {
           type: 'geojson',
-          data: data
+          data: data,
+          generateId: true // This ensures each feature gets a unique ID
         });
 
         // Use the existing popupHTML function instead of creating new one
@@ -783,8 +784,7 @@
           }
         });
 
-        // Add hover effects
-        let hoveredStateId = null;
+        // Add hover effects (simplified without feature state)
         map.on('mouseenter', 'places-symbols', (e) => {
           map.getCanvas().style.cursor = 'pointer';
           
@@ -815,13 +815,6 @@
             word-wrap: break-word;
           `;
           document.body.appendChild(currentTooltip);
-          
-          // Visual feedback
-          if (hoveredStateId !== null) {
-            map.setFeatureState({ source: 'places', id: hoveredStateId }, { hover: false });
-          }
-          hoveredStateId = e.features[0].id;
-          map.setFeatureState({ source: 'places', id: hoveredStateId }, { hover: true });
         });
 
         map.on('mouseleave', 'places-symbols', () => {
@@ -832,12 +825,6 @@
             document.body.removeChild(currentTooltip);
             currentTooltip = null;
           }
-          
-          // Reset hover state
-          if (hoveredStateId !== null) {
-            map.setFeatureState({ source: 'places', id: hoveredStateId }, { hover: false });
-          }
-          hoveredStateId = null;
         });
 
         // Add click handler for popups
