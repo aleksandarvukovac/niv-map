@@ -710,17 +710,88 @@
           data: data
         });
 
-        // Add symbol layer for markers
-        map.addLayer({
-          id: 'places-symbols',
-          type: 'symbol',
-          source: 'places',
-          layout: {
-            'icon-image': 'custom-pin',
-            'icon-size': 1,
-            'icon-allow-overlap': true,
-            'icon-ignore-placement': true
-          }
+        // Create and load teardrop markers first
+        const createTeardropMarker = (category) => {
+          const emojis = {
+            'Zanat': '🔨',
+            'Proizvodi': '📦', 
+            'Usluge': '🛠️',
+            'Manifestacije': '🎡',
+            'default': '📍'
+          };
+          
+          const emoji = emojis[category] || emojis.default;
+          const brandGreen = '#00903b';
+          
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = 40;
+          canvas.height = 50;
+          
+          // Create teardrop shape (standard map pin shape)
+          ctx.fillStyle = brandGreen;
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          
+          // Draw teardrop body (circle)
+          ctx.beginPath();
+          ctx.arc(20, 18, 12, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          
+          // Draw teardrop point
+          ctx.beginPath();
+          ctx.moveTo(20, 30);
+          ctx.lineTo(16, 42);
+          ctx.lineTo(24, 42);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+          
+          // Add white emoji icon
+          ctx.font = '18px Arial';
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(emoji, 20, 18);
+          
+          return canvas.toDataURL();
+        };
+
+        // Load all teardrop markers
+        const categories = ['Zanat', 'Proizvodi', 'Usluge', 'Manifestacije'];
+        let loadedMarkers = 0;
+        
+        categories.forEach(category => {
+          const pinImage = createTeardropMarker(category);
+          map.loadImage(pinImage, (error, image) => {
+            if (error) throw error;
+            map.addImage(`pin-${category.toLowerCase()}`, image);
+            loadedMarkers++;
+            
+            // Add symbol layer after all markers are loaded
+            if (loadedMarkers === categories.length) {
+              // Add symbol layer for markers
+              map.addLayer({
+                id: 'places-symbols',
+                type: 'symbol',
+                source: 'places',
+                layout: {
+                  'icon-image': [
+                    'case',
+                    ['==', ['get', 'kategorija'], 'Zanat'], 'pin-zanat',
+                    ['==', ['get', 'kategorija'], 'Proizvodi'], 'pin-proizvodi',
+                    ['==', ['get', 'kategorija'], 'Usluge'], 'pin-usluge',
+                    ['==', ['get', 'kategorija'], 'Manifestacije'], 'pin-manifestacije',
+                    'pin-zanat' // default
+                  ],
+                  'icon-size': 1,
+                  'icon-allow-overlap': true,
+                  'icon-ignore-placement': true
+                }
+              });
+            }
+          });
         });
 
         // Add click handler for the symbol layer
@@ -873,25 +944,7 @@
           return canvas.toDataURL();
         };
 
-        // Add uniform teardrop markers to map
-        const categories = ['Zanat', 'Proizvodi', 'Usluge', 'Manifestacije'];
-        categories.forEach(category => {
-          const pinImage = createTeardropMarker(category);
-          map.loadImage(pinImage, (error, image) => {
-            if (error) throw error;
-            map.addImage(`pin-${category.toLowerCase()}`, image);
-          });
-        });
-
-        // Update the symbol layer to use category-specific pins
-        map.setLayoutProperty('places-symbols', 'icon-image', [
-          'case',
-          ['==', ['get', 'kategorija'], 'Zanat'], 'pin-zanat',
-          ['==', ['get', 'kategorija'], 'Proizvodi'], 'pin-proizvodi',
-          ['==', ['get', 'kategorija'], 'Usluge'], 'pin-usluge',
-          ['==', ['get', 'kategorija'], 'Manifestacije'], 'pin-manifestacije',
-          'pin-zanat' // default
-        ]);
+        // Markers are now loaded and symbol layer is created above
 
         // Store markers for filtering (we'll use the GeoJSON data)
         const markers = data.features.map(f => ({
