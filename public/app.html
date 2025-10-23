@@ -753,10 +753,6 @@
             cursor: pointer;
             font-size: 16px;
             transition: transform 0.2s ease;
-            position: absolute;
-            transform: translate(-50%, -50%);
-            margin: 0;
-            padding: 0;
           `;
           markerEl.innerHTML = emoji;
           return markerEl;
@@ -775,8 +771,7 @@
           const markerEl = createSimpleMarker(category);
           const marker = new maplibregl.Marker({
             element: markerEl,
-            anchor: "center",
-            offset: [0, 0]
+            anchor: "center"
           })
             .setLngLat(coordinates)
             .addTo(map);
@@ -858,19 +853,11 @@
           });
         });
 
-        // Add CSS to prevent marker floating
+        // Add CSS to ensure stable marker positioning
         const markerStyle = document.createElement("style");
         markerStyle.textContent = `
           .simple-marker {
-            position: absolute !important;
-            transform: translate(-50%, -50%) !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            box-sizing: border-box !important;
-          }
-          
-          .maplibregl-marker {
-            position: absolute !important;
+            box-sizing: border-box;
           }
         `;
         document.head.appendChild(markerStyle);
