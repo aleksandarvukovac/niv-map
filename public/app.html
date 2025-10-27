@@ -928,8 +928,8 @@
         const clusteredCityMarkers = [];
 
         Object.entries(cityClusters).forEach(([city, features]) => {
-          if (features.length >= 3) {
-            // Create cluster for this city
+          if (features.length >= 2) {
+            // Create cluster for cities with 2+ markers
             const centroid = features.reduce((acc, f) => {
               acc.lng += f.geometry.coordinates[0];
               acc.lat += f.geometry.coordinates[1];
@@ -938,6 +938,9 @@
 
             centroid.lng /= features.length;
             centroid.lat /= features.length;
+
+            // Collect unique categories in this cluster
+            const categories = [...new Set(features.map(f => f.properties.kategorija))];
 
             cityClusterFeatures.push({
               type: 'Feature',
@@ -948,7 +951,8 @@
               properties: {
                 city: city,
                 count: features.length,
-                bounds: features.map(f => f.geometry.coordinates)
+                bounds: features.map(f => f.geometry.coordinates),
+                categories: categories.join(',') // Store as comma-separated string
               }
             });
 
@@ -1001,8 +1005,8 @@
               'interpolate',
               ['linear'],
               ['get', 'count'],
-              3, 25,  // 3 markers = 25px
-              10, 35  // 10+ markers = 35px
+              2, 22,  // 2 markers = 22px
+              6, 32   // 6+ markers = 32px
             ],
             'circle-stroke-width': 2,
             'circle-stroke-color': '#ffffff',
@@ -1324,9 +1328,25 @@
 
           // Filter markers using symbol layer filter
           if (category === "all") {
+            // Show all markers and clusters
             map.setFilter('places-symbols', null);
+            map.setFilter('clustered-city-symbols', null);
+            map.setFilter('city-clusters-circles', null);
+            map.setFilter('city-clusters-labels', null);
           } else {
+            // Filter individual markers by category
             map.setFilter('places-symbols', ['==', ['get', 'kategorija'], category]);
+            map.setFilter('clustered-city-symbols', ['==', ['get', 'kategorija'], category]);
+
+            // Filter city clusters to only show if they contain markers from this category
+            // Check if the cluster's categories string contains the selected category
+            const categoryFilter = [
+              'in',
+              category,
+              ['split', ['get', 'categories'], ',']
+            ];
+            map.setFilter('city-clusters-circles', categoryFilter);
+            map.setFilter('city-clusters-labels', categoryFilter);
           }
         }
 
