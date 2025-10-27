@@ -42,8 +42,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          20.421398,
-          45.387731
+          20.41460676,
+          45.38576349
         ]
       }
     },
@@ -67,6 +67,673 @@
         "coordinates": [
           20.281477,
           44.962988
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0004",
+        "naziv": "Ravno Selo Film Festival",
+        "kategorija": "Manifestacije",
+        "opis": "Ravno Selo Film Festival promoviše debitantske filmove i mlade autore. Održava se svake godine u Ravnom Selu uz projekcije, koncerte i edukativne programe.",
+        "web": "https://ravnoseloff.com/",
+        "foto": "/img/ravno-selo-logo.png,/img/ravno-selo-1.jpg,/img/ravno-selo-2.jpg,/img/ravno-selo-3.jpg",
+        "adresa": "Topličin venac 11",
+        "mesto": "Beograd",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.45524641,
+          44.81631091
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0005",
+        "naziv": "Srem Folk Fest",
+        "kategorija": "Manifestacije",
+        "opis": "„Srem Folk Fest“ je međunarodni festival folklora koji se svake godine od 11. do 15. avgusta održava u Sremskoj Mitrovici. Okuplja ansamble iz celog sveta i promoviše narodne pesme, igre, muziku i nošnje različitih kultura.",
+        "web": "http://www.sremfolkfest.org.rs",
+        "foto": "/img/srem-folk-logo.jpg,/img/srem-folk-1.jpg,/img/srem-folk-2.jpg,/img/srem-folk-3.jpg",
+        "adresa": "Vuka Karadžića 10",
+        "mesto": "Sremska Mitrovica",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.60905068,
+          44.96720417
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0006",
+        "naziv": "Likovna kolonija UM ING",
+        "kategorija": "Manifestacije",
+        "opis": "Likovna kolonija „UM–ING“ više od decenije spaja umetnost, privredu i humanost. Okuplja poznate slikare, a sredstva od svake pete aukcije usmeravaju se u humanitarne svrhe, najčešće za zrenjaninsku neonatologiju.",
+        "web": "",
+        "foto": "/img/uming-logo.jpg,/img/uming-1.jpg,/img/uming-2.jpg,/img/uming-3.jpg",
+        "adresa": "Bagljaš Aerodrom 12",
+        "mesto": "Zrenjanin",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.35914033,
+          45.38728318
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0007",
+        "naziv": "Ikonopisna radionica Sandra Stanković",
+        "kategorija": "Usluge",
+        "opis": "Ikone rađene starom tradicionalnom tehnikom, prepoznatljivog stila, često na neobičnim prirodnim podlogama. Planirane su izložbe 2026. u Kikindi, Bosni i Hercegovini i Hrvatskoj.",
+        "web": "https://sandraikone.rs/",
+        "foto": "/img/ikonopisac-logo.jpg,/img/ikonopisac-1.jpg,/img/ikonopisac-2.jpg,/img/ikonopisac-3.jpg",
+        "adresa": "Dositejeva 56",
+        "mesto": "Kikinda",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.4700704,
+          45.83421917
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0008",
+        "naziv": "SZR “Maca papučarica”",
+        "kategorija": "Proizvodi",
+        "opis": "„Maca papučarica“ nudi ručno rađene opanke od prirodne kože, izrađene po tradicionalnim tehnikama sa prostora bivše SFRJ. Spoj autentičnog izgleda, udobnosti i trajnog kvaliteta.",
+        "web": "https://www.facebook.com/share/1HpCum6L9n/?mibextid=wwXIfr",
+        "foto": "/img/maca-logo.jpg,/img/maca-1.jpg,/img/maca-2.jpg,/img/maca-3.jpg",
+        "adresa": "Pere Segedinca 71",
+        "mesto": "Kikinda",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.48823918,
+          45.83344565
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0009",
+        "naziv": "Podrum Ćega Banoštor",
+        "kategorija": "Usluge",
+        "opis": "Vinogradi podruma Ćega nalaze se u Banoštoru na obroncima Fruške gore, selu sa „dva sunca“ – nebeskim i dunavskim odsjajem. Iako osnovan 2020. godine, podrum neguje dugu vinsku tradiciju, a njihova nagrađivana vina prepoznata su po vrhunskom kvalitetu.",
+        "web": "https://vojvodina.travel/podrum-cega-banostor/",
+        "foto": "/img/cega-logo.jpg,/img/cega-1.jpg,/img/cega-2.jpg,/img-cega-3.jpg",
+        "adresa": "Svetozara Markovića BB",
+        "mesto": "Banoštor",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.58019277,
+          45.2056589
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0010",
+        "naziv": "Vinarija Vinum",
+        "kategorija": "Usluge",
+        "opis": "Vinarija Vinum nudi širok asortiman nagrađivanih vina vrhunskog kvaliteta, uz besprekornu uslugu i prijem gostiju. Saradnjom s Turističkom organizacijom Sremski Karlovci organizuje događaje i edukacije o kulturi vina i tradiciji ovog kraja.",
+        "web": "https://vinum.rs/",
+        "foto": "/img/vinum-logo.jpg,/img/vinum-1.jpg,/img/vinum-2.jpg/img/vinum-3.jpg",
+        "adresa": "Karlovačkog mira 26a",
+        "mesto": "Sremski Karlovci",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.93997624,
+          45.19776433
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0011",
+        "naziv": "Vinarija Deurić",
+        "kategorija": "Usluge",
+        "opis": "Vinarija Deurić nudi jedinstven „full wine experience“ – spoj vrhunskih vina, domaće kuhinje i vinskog turizma. Uz restoran, radionice, događaje i smeštaj u apartmanima, posetioci mogu potpuno uživati u čarima Fruške gore.",
+        "web": "https://vinarijadeuric.com/",
+        "foto": "/img/deuric-logo.jpg,/img/deuric-1.jpg,/img/deuric-2.jpg,/img/deuric-3.jpg",
+        "adresa": "Ekonomija Salaš bb",
+        "mesto": "Mala Remeta",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.74158837,
+          45.09664796
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0012",
+        "naziv": "LAKI LUK & Co",
+        "kategorija": "Proizvodi",
+        "opis": "Dinstani luk u sopstvenom soku je veganski, pasiran proizvod bez aditiva i konzervansa, napravljen od kvalitetnog crnog luka sa malo soli. Idealan je kao osnova za pripremu raznih jela.",
+        "web": "https://www.lakiluk.rs/",
+        "foto": "/img/luk-logo.png,/img/luk-1.jpg,/img/luk-2.png,/img/luk-3.png",
+        "adresa": "Partizanska 6",
+        "mesto": "Kucura",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.59791095,
+          45.52901834
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0013",
+        "naziv": "Zdravstvena ustanova Medlab",
+        "kategorija": "Usluge",
+        "opis": "Medlab primenjuje najsavremenije materijale i opremu za laboratorijsku dijagnostiku, uz potpunu preciznost i bezbednost. Kao jedina privatna COVID laboratorija u Srbiji, ističe se inovativnim pristupom, vrhunskim kvalitetom usluga i stručnim doprinosom kroz edukacije i izdavanje stručne literature.",
+        "web": "https://www.medlab.rs/",
+        "foto": "/img/medlab-logo.png,/img/medlab-1.jpg,/img/medlab-2.jpg,/img/medlab-3.jpg",
+        "adresa": "Ilije Ognjanovića 1",
+        "mesto": "Novi Sad",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.84772585,
+          45.25505356
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0014",
+        "naziv": "PMP Mangulica",
+        "kategorija": "Proizvodi",
+        "opis": "PMP Mangulica je porodična firma sa više od 10 godina tradicije u uzgoju mangulica i proizvodnji suhomesnatih proizvoda bez aditiva. Njihovo meso je poznato po kvalitetu i zdravom odnosu holesterola, a proizvodi su dostupni u Kovilju, na pijacama i manifestacijama širom Srbije.",
+        "web": "https://www.mangulicakovilj.rs/",
+        "foto": "/img/mangulica-logo.jpg,/img/mangulica-1.jpg,/img/mangulica-2.jpg,/img-mangulica-3.jpg",
+        "adresa": "Vojvođanskih brigada 57",
+        "mesto": "Kovilj",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.02970088,
+          45.22206788
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0015",
+        "naziv": "SZR \"Susam\"",
+        "kategorija": "Proizvodi",
+        "opis": "SZR „Susam“ već 20 godina proizvodi vrhunske domaće štrudle pod brendom „Mak sa Štrudlom“. Odlikuju se bogatim filom od čak 80% i prepoznatljivim, izbalansiranim ukusom.",
+        "web": "https://pekarasusam.com/",
+        "foto": "/img/susam-logo.png,/img/susam-1.png,/img/susam-2.png,/img/susam-3.png",
+        "adresa": "Mitrovačka 32",
+        "mesto": "Novi Sad",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.81122732,
+          45.23557431
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0016",
+        "naziv": "Vitamin Horgoš",
+        "kategorija": "Proizvodi",
+        "opis": "Kompanija Vitamin Horgoš naslednik je prve fabrike za preradu paprike osnovane 1919. godine. Poznata po sorti „Horgoška slatka-1“, prvoj priznatnoj začinskoj paprici u Jugoslaviji, čuva tradiciju i kvalitet vojvođanske paprike već više od jednog veka.",
+        "web": "https://www.vitamin.co.rs/",
+        "foto": "/img/vitamin-logo.jpg,/img/vitamin-1.jpg,/img/vitamin-2.jpg,/img/vitamin-3.png",
+        "adresa": "Segedinski put 427",
+        "mesto": "Horgoš",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.984131,
+          46.17582004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0017",
+        "naziv": "Advise Institute Novi Sad",
+        "kategorija": "Usluge",
+        "opis": "Edukativna i konsalting organizacija koja pruža stručnu podršku kroz obuke, radionice i konsultantske usluge, sa ciljem unapređenja znanja, veština i poslovnih procesa.",
+        "web": "http://www.adviseinstitute.com/",
+        "foto": "/img/advise-logo.png,/img/advise-1.png,/img/advise-2.png,/img/advise-3.png",
+        "adresa": "Temerinska 111",
+        "mesto": "Novi Sad",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.84103205,
+          45.27197478
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0018",
+        "naziv": "UG EtnoDom Gorocvet",
+        "kategorija": "Usluge",
+        "opis": "Udruženje građana „Etnodom Gorocvet“ iz Inđije čuva i prenosi tradicionalne zanate i veštine na decu i mlade. Kroz radionice u školama i vrtićima neguju se vez, zlatovez, tkanje, keramika i drugi obrasci kulturnog nasleđa Srbije.",
+        "web": "https://www.instagram.com/etnodomgorocvet/",
+        "foto": "/img/gorocvet-logo.png,/img/gorocvet-1.jpg,/img/gorocvet-2.jpg,/img/gorocvet-3.jpg",
+        "adresa": "Novosadska 47a",
+        "mesto": "Inđija",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.07658565,
+          45.05159675
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0019",
+        "naziv": "Sremska Svinjokolja i Kobasicijada",
+        "kategorija": "Manifestacije",
+        "opis": "Sremska svinjokolja i kobasicijada je međunarodna gastronomsko-privredna manifestacija koja se održava od 1996. godine. Održava se dva puta godišnje – u februaru kao Sremska kobasicijada i u oktobru kao Srem Klob Kob Fest.",
+        "web": "https://sremskakobasicijada.rs/",
+        "foto": "/img/svinjokolja-logo.png,/img/svinjokolja-1.jpg,/img/svinjokolja-2.jpg,/img/svinjokolja-3.jpg",
+        "adresa": "Svetog Save 74",
+        "mesto": "Šid",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.23295014,
+          45.12471507
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0020",
+        "naziv": "Ravangrad Pivara",
+        "kategorija": "Proizvodi",
+        "opis": "„Ravangrad pivara“ je prva kraft pivara u Somboru, najzelenijem gradu Srbije. Pivo kuvaju s ljubavlju, koristeći isključivo prirodne sastojke i sopstveni domaći med za posebne sezonske varijante.",
+        "web": "https://www.ravangradpivara.rs/",
+        "foto": "/img/ravangrad-logo.png,/img/ravangrad-1.jpg,/img/ravangrad-2.jpg,/img/ravangrad-3.png",
+        "adresa": "JNA 39",
+        "mesto": "Sombor",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.12203228,
+          45.76161975
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0021",
+        "naziv": "Bio Farma Šoškić Plus",
+        "kategorija": "Proizvodi",
+        "opis": "Porodična firma koja se bavi organskom proizvodnjom povrća na 15Ha. Plasman i distribucija ka svim većim trgovinskim lancima.",
+        "web": "https://biofarmasoksic.rs/",
+        "foto": "/img/soskic-logo.png,/img/soskic-1.jpg,/img/soskic-2.png,/img/soskic-3.jpg",
+        "adresa": "Borisa Kidriča 1-3",
+        "mesto": "Taraš",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.20620049,
+          45.46449163
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0022",
+        "naziv": "Velikogospojinski dani",
+        "kategorija": "Manifestacije",
+        "opis": "Velikogospojinski dani u Novom Bečeju tradicionalna su manifestacija koja traje više od tri decenije. Okuplja oko 150.000 posetilaca i nudi bogat program za sve uzraste tokom nekoliko dana uz Tisu.",
+        "web": "https://novi-becej.travel/%d0%b2%d0%b5%d0%bb%d0%b8%d0%ba%d0%be%d0%b3%d0%be%d1%81%d0%bf%d0%be%d0%b8%d0%bd%d1%81%d0%ba%d0%b8-%d0%b4%d0%b0%d0%bd%d0%b8/",
+        "foto": "/img/becej-logo.png,/img/becej-1.jpg,/img/becej-2.jpg,/img/becej-3.jpg",
+        "adresa": "Žarka Zrenjanina 8",
+        "mesto": "Novi Bečej",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.1310941,
+          45.59665812
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0023",
+        "naziv": "Somborski Polumaraton",
+        "kategorija": "Manifestacije",
+        "opis": "Somborski polumaraton je dvodnevna sportsko-turistička manifestacija i jedan od prepoznatljivih brendova grada Sombora. Okuplja preko hiljadu učesnika iz više od 20 zemalja, uz bogat prateći program i sjajnu atmosferu.",
+        "web": "www.somaraton.org.rs",
+        "foto": "/img/somaraton-logo.png,/img/somaraton-1.jpg,/img/somaraton-2.jpg,/img/somaraton-3.jpg",
+        "adresa": "Apatinski put 81/36",
+        "mesto": "Sombor",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.10539091,
+          45.76525866
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0024",
+        "naziv": "Nectar doo",
+        "kategorija": "Proizvodi",
+        "opis": "Tomatello je brend pasiranog paradajza kompanije Nectar, napravljen od paradajza sa sopstvenih i lokalnih plantaža. Minimalno obrađen i upakovan u tetrapak koji čuva svežinu i aromu, Tomatello je idealan za kuvanje ili kao osvežavajući napitak.",
+        "web": "https://tomatello.rs/",
+        "foto": "/img/nectar-logo.png,/img/nectar-1.png,/img/nectar-2.png,/img/nectar-3.png",
+        "adresa": "Novosadski put 9",
+        "mesto": "Bačka Palanka",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.42392847,
+          45.25015744
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0025",
+        "naziv": "Šekspir Festival",
+        "kategorija": "Manifestacije",
+        "opis": "Šekspir festival je međunarodni pozorišni festival osnovan 2014. godine, posvećen savremenim svetskim produkcijama Šekspirovih dela. Održava se svake godine krajem juna u autentičnom ambijentu Vile Stanković u Čortanovcima i jedini je festival te vrste u Srbiji.",
+        "web": "https://sekspirfestival.org/",
+        "foto": "/img/sekspir-logo.jpg,/img/sekspir-1.jpg,/img/sekspir-2.jpg,/img/sekspir-3.jpg",
+        "adresa": "Put za Dunav 40",
+        "mesto": "Čortanovci",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.99720047,
+          45.16475564
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0026",
+        "naziv": "Slovačke Narodne Svečanosti",
+        "kategorija": "Manifestacije",
+        "opis": "Slovačke narodne svečanosti, centralna manifestacija Slovaka u Srbiji, održavaju se svake godine drugog vikenda avgusta u Bačkom Petrovcu. Tokom trodnevnog programa posetioci uživaju u izložbama, koncertima i kulturnim događajima koji predstavljaju bogatu tradiciju i život slovačke zajednice u Srbiji.",
+        "web": "https://www.backipetrovac.rs/",
+        "foto": "/img/slovaci-logo.png,/img/slovaci-1.jpg,/img/slovaci-2.jpg,/img/slovaci-3.jpg",
+        "adresa": "Kolarova 6",
+        "mesto": "Bački Petrovac",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.59137498,
+          45.36007625
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0027",
+        "naziv": "Serbia Epic Series",
+        "kategorija": "Manifestacije",
+        "opis": "Serbia Epic Series je sportsko-turistički događaj koji spaja planinski biciklizam i trčanje na atraktivnim lokacijama širom Srbije. Uz raznovrsne staze i vrhunsku organizaciju, promoviše sport, rekreaciju i avanturistički turizam u jedinstvenom prirodnom ambijentu.",
+        "web": "www.serbiaepicseries.com",
+        "foto": "/img/epic-logo.jpg,/img/epic-1.jpg,/img/epic-2.jpg/img/epic-3.jpg",
+        "adresa": "Augusta Cesarca 1",
+        "mesto": "Novi Sad",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.83931392,
+          45.25160675
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0028",
+        "naziv": "Kobasicijada Turija",
+        "kategorija": "Manifestacije",
+        "opis": "Kobasicijada u Turiji, stara više od 40 godina, održava se svake godine poslednjeg vikenda u februaru i traje tri dana. Poznata je po pravljenju najduže sveže kobasice na svetu, koja svake godine postaje duža za još jedan metar.",
+        "web": "https://kobasicijada.rs/",
+        "foto": "/img/kobasicijada-logo.png,/img/kobasicijada-1.jpg,/img/kobasicijada-2.jpg,/img/kobasicijada-3.jpg",
+        "adresa": "Petra Drapšina 8",
+        "mesto": "Turija",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.8563704,
+          45.53997583
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0029",
+        "naziv": "Destilerija Mladenović",
+        "kategorija": "Proizvodi",
+        "opis": "Destilerija Mladenović proizvodi vrhunske rakije, a znak kvaliteta dobila je za rakiju od vilijamovke čija se sirovina nabavlja isključivo u Sremu, na području Rume. Njihova vilijamovka važi za jednu od najboljih u Srbiji, potvrđeno brojnim nagradama i priznanjima na festivalima rakije.",
+        "web": "www.destilerijamladenovic.rs",
+        "foto": "/img/mladenovic-logo.png,/img/mladenovic-1.png",
+        "adresa": "Sime Šolaje 24",
+        "mesto": "Stara Pazova",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.14315636,
+          44.99016336
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0030",
+        "naziv": "Tamburica Fest",
+        "kategorija": "Manifestacije",
+        "opis": "Tamburica fest je svetski tamburaški festival osnovan 2008. godine u Novom Sadu, posvećen promociji tamburaške muzike i tamburice kao instrumenta. Proglašen je za najbolji etno festival u Evropi i jednu od najznačajnijih turističkih manifestacija u Srbiji.",
+        "web": "https://tamburicafest.com/",
+        "foto": "/img/tamburica-logo.png,/img/tamburica-1.jpg,/img/tamburica-2.jpg,/img/tamburica-3.jpg",
+        "adresa": "Kralja Aleksandra 14",
+        "mesto": "Novi Sad",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.84347717,
+          45.25377098
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0031",
+        "naziv": "Fruškogorski Vinogradi",
+        "kategorija": "Proizvodi",
+        "opis": "Fruškogorski vinogradi iz sela Banoštor, jednog od najstarijih vinogradarskih mesta u Vojvodini, spajaju bogatu tradiciju i savremenu tehnologiju u proizvodnji vrhunskih vina. Na više od 100 hektara vinograda uz obalu Dunava nastaju vina prepoznatljivog fruškogorskog karaktera, među kojima se izdvajaju premium linija Quet i serija Fruškać – simbol kvaliteta, tradicije i modernog vinarstva Fruške gore.",
+        "web": "https://fruvin.com/",
+        "foto": "/img/vinogradi-logo.png,/img/vinogradi-1.jpg,/img/vinogradi-2.jpg,/img/vinogradi-3.jpeg",
+        "adresa": "Dunavska 5",
+        "mesto": "Banoštor",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.61583225,
+          45.21495254
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0032",
+        "naziv": "Novi Tvrđava Teatar",
+        "kategorija": "Manifestacije",
+        "opis": "Novi Tvrđava Teatar je međunarodni pozorišni festival koji se održava svake godine. Mesto održavanja je Vila Stanković u Čortanovcima.",
+        "web": "https://www.tvrdjavateatar.com/",
+        "foto": "/img/teatar-logo.png,/img/teatar-1.jpg,/img/teatar-2.jpg,/img/teatar-3.jpg",
+        "adresa": "Kneza Miloša 22",
+        "mesto": "Novi Sad",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.79104937,
+          45.25195944
         ]
       }
     }
