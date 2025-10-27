@@ -719,8 +719,9 @@
         });
 
         // Create custom pin images for stable Symbol Layer markers
-        // Google Maps-style teardrop design with professional look
+        // Brand-oriented "Badge with Wheat Crown" design inspired by "Najbolje iz Vojvodine" logo
         const createCustomPin = (category) => {
+          const brandGreen = "#00A651"; // Official logo green
           const colors = {
             Zanat: "#F4A261",
             Proizvodi: "#8B4513",
@@ -736,12 +737,12 @@
             default: "📍"
           };
 
-          const color = colors[category] || colors.default;
+          const categoryColor = colors[category] || colors.default;
           const emoji = emojis[category] || emojis.default;
 
           const canvas = document.createElement('canvas');
-          const width = 40;
-          const height = 50;
+          const width = 46;
+          const height = 56;
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
@@ -750,53 +751,121 @@
           ctx.imageSmoothingEnabled = true;
           ctx.imageSmoothingQuality = 'high';
 
-          // Draw drop shadow first (behind marker)
-          ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-          ctx.shadowBlur = 8;
-          ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 4;
-
-          // Draw teardrop shape (Google Maps style)
-          ctx.beginPath();
           const centerX = width / 2;
-          const centerY = 18;
-          const radius = 14;
+          const badgeCenterY = 24;
+          const outerRadius = 18;
 
-          // Top circular part
-          ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+          // Draw drop shadow
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
+          ctx.shadowBlur = 10;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 5;
 
-          // Bottom point (teardrop tip)
-          ctx.moveTo(centerX, centerY + radius);
-          ctx.lineTo(centerX, height - 5);
-          ctx.lineTo(centerX, centerY + radius);
-
-          // Fill with color
-          ctx.fillStyle = color;
+          // Draw main badge circle (outer green ring)
+          ctx.beginPath();
+          ctx.arc(centerX, badgeCenterY, outerRadius, 0, 2 * Math.PI);
+          ctx.fillStyle = brandGreen;
           ctx.fill();
 
-          // Reset shadow for border
+          // Reset shadow
           ctx.shadowColor = 'transparent';
           ctx.shadowBlur = 0;
           ctx.shadowOffsetX = 0;
           ctx.shadowOffsetY = 0;
 
-          // Draw white border for contrast
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 2.5;
-          ctx.stroke();
-
-          // Draw inner white circle for emoji background
+          // Draw white middle ring
           ctx.beginPath();
-          ctx.arc(centerX, centerY, radius - 4, 0, 2 * Math.PI);
+          ctx.arc(centerX, badgeCenterY, outerRadius - 3.5, 0, 2 * Math.PI);
+          ctx.fillStyle = '#ffffff';
+          ctx.fill();
+
+          // Draw category-colored center circle
+          ctx.beginPath();
+          ctx.arc(centerX, badgeCenterY, outerRadius - 6, 0, 2 * Math.PI);
+          ctx.fillStyle = categoryColor;
+          ctx.fill();
+
+          // Draw white inner circle for emoji background
+          ctx.beginPath();
+          ctx.arc(centerX, badgeCenterY, outerRadius - 9, 0, 2 * Math.PI);
           ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
           ctx.fill();
 
           // Draw emoji in center
-          ctx.font = 'bold 16px Arial, sans-serif';
+          ctx.font = 'bold 14px Arial, sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillStyle = '#333';
-          ctx.fillText(emoji, centerX, centerY);
+          ctx.fillText(emoji, centerX, badgeCenterY);
+
+          // Draw wheat grain decoration at top (brand element)
+          // Simple stylized wheat grain - 3 small diagonal lines
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.lineCap = 'round';
+
+          const wheatY = 4;
+          const wheatSpacing = 3;
+
+          // Left grain
+          ctx.beginPath();
+          ctx.moveTo(centerX - wheatSpacing - 2, wheatY + 4);
+          ctx.lineTo(centerX - wheatSpacing, wheatY);
+          ctx.stroke();
+
+          // Center grain (tallest)
+          ctx.beginPath();
+          ctx.moveTo(centerX, wheatY + 5);
+          ctx.lineTo(centerX, wheatY - 1);
+          ctx.stroke();
+
+          // Right grain
+          ctx.beginPath();
+          ctx.moveTo(centerX + wheatSpacing + 2, wheatY + 4);
+          ctx.lineTo(centerX + wheatSpacing, wheatY);
+          ctx.stroke();
+
+          // Add wheat kernels (small circles)
+          ctx.fillStyle = '#ffffff';
+          const kernelRadius = 1.5;
+
+          // Left grain kernels
+          ctx.beginPath();
+          ctx.arc(centerX - wheatSpacing - 1, wheatY + 2, kernelRadius, 0, 2 * Math.PI);
+          ctx.fill();
+
+          // Center grain kernels
+          ctx.beginPath();
+          ctx.arc(centerX, wheatY + 1.5, kernelRadius, 0, 2 * Math.PI);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(centerX, wheatY + 3.5, kernelRadius, 0, 2 * Math.PI);
+          ctx.fill();
+
+          // Right grain kernels
+          ctx.beginPath();
+          ctx.arc(centerX + wheatSpacing + 1, wheatY + 2, kernelRadius, 0, 2 * Math.PI);
+          ctx.fill();
+
+          // Draw teardrop point at bottom for precise positioning
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
+          ctx.shadowBlur = 8;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 4;
+
+          ctx.beginPath();
+          ctx.moveTo(centerX - 4, badgeCenterY + outerRadius);
+          ctx.lineTo(centerX, height - 6);
+          ctx.lineTo(centerX + 4, badgeCenterY + outerRadius);
+          ctx.closePath();
+          ctx.fillStyle = brandGreen;
+          ctx.fill();
+
+          // Add white stroke to point
+          ctx.shadowColor = 'transparent';
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
 
           return canvas.toDataURL('image/png');
         };
