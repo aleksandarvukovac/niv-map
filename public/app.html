@@ -1021,10 +1021,10 @@
           source: 'city-clusters',
           maxzoom: 10, // Hide when zoomed in past level 10
           layout: {
-            'text-field': ['concat', ['get', 'city'], '\n(', ['get', 'count'], ')'],
+            'text-field': ['concat', ['get', 'city'], '\n', ['get', 'count']],
             'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': 12,
-            'text-allow-overlap': false,
+            'text-size': 10,
+            'text-allow-overlap': true,
             'text-anchor': 'center'
           },
           paint: {
@@ -1253,7 +1253,7 @@
 
           map.fitBounds(bbox, {
             padding: 100,
-            maxZoom: 13,
+            maxZoom: 11,
             duration: 800
           });
         });
