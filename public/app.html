@@ -719,18 +719,18 @@
         });
 
         // Create custom pin images for stable Symbol Layer markers
-        // Clean Google Maps-style teardrop with brand green color
+        // Hybrid design: White icons on brand green + colored category dot
         const createCustomPin = (category) => {
           const brandGreen = "#00A651"; // Official "Najbolje iz Vojvodine" logo green
-          const emojis = {
-            Zanat: "🔨",
-            Proizvodi: "📦",
-            Usluge: "🛠️",
-            Manifestacije: "🎡",
-            default: "📍"
+          const categoryColors = {
+            Zanat: "#F4A261",      // Orange
+            Proizvodi: "#8B4513",  // Brown
+            Usluge: "#20B2AA",     // Teal
+            Manifestacije: "#DC143C", // Red
+            default: "#1F7A8C"
           };
 
-          const emoji = emojis[category] || emojis.default;
+          const categoryColor = categoryColors[category] || categoryColors.default;
 
           const canvas = document.createElement('canvas');
           const width = 32;
@@ -774,18 +774,103 @@
           ctx.shadowOffsetX = 0;
           ctx.shadowOffsetY = 0;
 
-          // Draw white inner circle for emoji background
-          ctx.beginPath();
-          ctx.arc(centerX, circleCenterY, circleRadius - 3, 0, 2 * Math.PI);
+          // Set white color for all icons
           ctx.fillStyle = '#ffffff';
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+
+          // Draw category-specific icon in white
+          if (category === 'Zanat') {
+            // Hammer icon
+            const hammerScale = 0.7;
+            const hx = centerX;
+            const hy = circleCenterY;
+
+            // Hammer head (rectangle)
+            ctx.fillRect(hx - 4 * hammerScale, hy - 5 * hammerScale, 8 * hammerScale, 4 * hammerScale);
+
+            // Hammer handle
+            ctx.fillRect(hx - 1 * hammerScale, hy - 1 * hammerScale, 2 * hammerScale, 8 * hammerScale);
+
+          } else if (category === 'Proizvodi') {
+            // Box/Package icon
+            const boxScale = 0.8;
+            const bx = centerX;
+            const by = circleCenterY;
+
+            // Box outline
+            ctx.strokeRect(bx - 5 * boxScale, by - 4 * boxScale, 10 * boxScale, 8 * boxScale);
+
+            // Box flap lines
+            ctx.beginPath();
+            ctx.moveTo(bx - 5 * boxScale, by - 4 * boxScale);
+            ctx.lineTo(bx, by);
+            ctx.lineTo(bx + 5 * boxScale, by - 4 * boxScale);
+            ctx.stroke();
+
+          } else if (category === 'Usluge') {
+            // Wrench icon
+            const wrenchScale = 0.7;
+            const wx = centerX;
+            const wy = circleCenterY;
+
+            // Wrench head (circle)
+            ctx.beginPath();
+            ctx.arc(wx - 2 * wrenchScale, wy - 3 * wrenchScale, 3 * wrenchScale, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            // Wrench handle
+            ctx.beginPath();
+            ctx.moveTo(wx, wy);
+            ctx.lineTo(wx + 4 * wrenchScale, wy + 4 * wrenchScale);
+            ctx.stroke();
+
+          } else if (category === 'Manifestacije') {
+            // Festival Flag icon
+            const flagScale = 0.8;
+            const fx = centerX;
+            const fy = circleCenterY;
+
+            // Flag pole
+            ctx.beginPath();
+            ctx.moveTo(fx - 4 * flagScale, fy - 5 * flagScale);
+            ctx.lineTo(fx - 4 * flagScale, fy + 5 * flagScale);
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Flag (triangular pennant)
+            ctx.beginPath();
+            ctx.moveTo(fx - 4 * flagScale, fy - 5 * flagScale);
+            ctx.lineTo(fx + 4 * flagScale, fy - 2 * flagScale);
+            ctx.lineTo(fx - 4 * flagScale, fy + 1 * flagScale);
+            ctx.closePath();
+            ctx.fill();
+
+          } else {
+            // Default: Location pin icon
+            ctx.beginPath();
+            ctx.arc(centerX, circleCenterY - 1, 3, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(centerX, circleCenterY + 2);
+            ctx.lineTo(centerX, circleCenterY + 5);
+            ctx.lineWidth = 2;
+            ctx.stroke();
+          }
+
+          // Draw small colored dot at bottom of teardrop for category distinction
+          const dotY = circleCenterY + circleRadius - 5;
+          ctx.beginPath();
+          ctx.arc(centerX, dotY, 2, 0, 2 * Math.PI); // 4px diameter (2px radius)
+          ctx.fillStyle = categoryColor;
           ctx.fill();
 
-          // Draw emoji in center
-          ctx.font = 'bold 14px Arial, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillStyle = '#333';
-          ctx.fillText(emoji, centerX, circleCenterY);
+          // Add white border to dot for visibility
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
 
           return canvas.toDataURL('image/png');
         };
