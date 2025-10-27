@@ -769,23 +769,42 @@
         // Create custom pin images and add to map
         const categories = ['Zanat', 'Proizvodi', 'Usluge', 'Manifestacije'];
 
-        // Add images synchronously (no nested load handler!)
-        categories.forEach(category => {
-          const pinImage = createCustomPin(category);
-          const img = new Image();
-          img.src = pinImage;
-          // Immediately add the image - canvas data URLs are already loaded
-          map.addImage(`pin-${category.toLowerCase()}`, img);
+        // Track loaded images
+        let imagesLoaded = 0;
+        const totalImages = categories.length;
+
+        // Load all images and wait for them to complete
+        const imagePromises = categories.map(category => {
+          return new Promise((resolve) => {
+            const pinImage = createCustomPin(category);
+            const img = new Image();
+            img.onload = () => {
+              map.addImage(`pin-${category.toLowerCase()}`, img);
+              imagesLoaded++;
+              console.log(`Loaded image: pin-${category.toLowerCase()} (${imagesLoaded}/${totalImages})`);
+              resolve();
+            };
+            img.onerror = (err) => {
+              console.error(`Failed to load image for ${category}:`, err);
+              resolve(); // Resolve anyway to not block other images
+            };
+            img.src = pinImage;
+          });
         });
 
-        // Add GeoJSON source (immediately after images)
+        // Wait for all images to load before adding source and layer
+        await Promise.all(imagePromises);
+
+        console.log('All marker images loaded successfully');
+
+        // Add GeoJSON source (after all images are loaded)
         map.addSource('places', {
           type: 'geojson',
           data: data,
           generateId: true
         });
 
-        // Add symbol layer for markers (immediately after source)
+        // Add symbol layer for markers (after source)
         map.addLayer({
           id: 'places-symbols',
           type: 'symbol',
@@ -804,6 +823,8 @@
             'icon-ignore-placement': true
           }
         });
+
+        console.log('Symbol layer added with all images');
 
         // Store all features for search functionality
         data.features.forEach((feature) => {
