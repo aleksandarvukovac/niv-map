@@ -719,16 +719,9 @@
         });
 
         // Create custom pin images for stable Symbol Layer markers
-        // Brand-oriented "Badge with Wheat Crown" design inspired by "Najbolje iz Vojvodine" logo
+        // Clean Google Maps-style teardrop with brand green color
         const createCustomPin = (category) => {
-          const brandGreen = "#00A651"; // Official logo green
-          const colors = {
-            Zanat: "#F4A261",
-            Proizvodi: "#8B4513",
-            Usluge: "#20B2AA",
-            Manifestacije: "#DC143C",
-            default: "#1F7A8C"
-          };
+          const brandGreen = "#00A651"; // Official "Najbolje iz Vojvodine" logo green
           const emojis = {
             Zanat: "🔨",
             Proizvodi: "📦",
@@ -737,12 +730,11 @@
             default: "📍"
           };
 
-          const categoryColor = colors[category] || colors.default;
           const emoji = emojis[category] || emojis.default;
 
           const canvas = document.createElement('canvas');
-          const width = 46;
-          const height = 56;
+          const width = 32;
+          const height = 42;
           canvas.width = width;
           canvas.height = height;
           const ctx = canvas.getContext('2d');
@@ -752,43 +744,40 @@
           ctx.imageSmoothingQuality = 'high';
 
           const centerX = width / 2;
-          const badgeCenterY = 24;
-          const outerRadius = 18;
+          const circleCenterY = 13;
+          const circleRadius = 12;
 
           // Draw drop shadow
-          ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
-          ctx.shadowBlur = 10;
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+          ctx.shadowBlur = 8;
           ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 5;
+          ctx.shadowOffsetY = 4;
 
-          // Draw main badge circle (outer green ring)
+          // Draw the teardrop shape
           ctx.beginPath();
-          ctx.arc(centerX, badgeCenterY, outerRadius, 0, 2 * Math.PI);
+
+          // Top circle part
+          ctx.arc(centerX, circleCenterY, circleRadius, 0, 2 * Math.PI);
+
+          // Bottom point (create triangle from circle bottom to tip)
+          ctx.moveTo(centerX - circleRadius * 0.5, circleCenterY + circleRadius - 2);
+          ctx.lineTo(centerX, height - 4);
+          ctx.lineTo(centerX + circleRadius * 0.5, circleCenterY + circleRadius - 2);
+
+          // Fill with brand green
           ctx.fillStyle = brandGreen;
           ctx.fill();
 
-          // Reset shadow
+          // Reset shadow for inner elements
           ctx.shadowColor = 'transparent';
           ctx.shadowBlur = 0;
           ctx.shadowOffsetX = 0;
           ctx.shadowOffsetY = 0;
 
-          // Draw white middle ring
-          ctx.beginPath();
-          ctx.arc(centerX, badgeCenterY, outerRadius - 3.5, 0, 2 * Math.PI);
-          ctx.fillStyle = '#ffffff';
-          ctx.fill();
-
-          // Draw category-colored center circle
-          ctx.beginPath();
-          ctx.arc(centerX, badgeCenterY, outerRadius - 6, 0, 2 * Math.PI);
-          ctx.fillStyle = categoryColor;
-          ctx.fill();
-
           // Draw white inner circle for emoji background
           ctx.beginPath();
-          ctx.arc(centerX, badgeCenterY, outerRadius - 9, 0, 2 * Math.PI);
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+          ctx.arc(centerX, circleCenterY, circleRadius - 3, 0, 2 * Math.PI);
+          ctx.fillStyle = '#ffffff';
           ctx.fill();
 
           // Draw emoji in center
@@ -796,76 +785,7 @@
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillStyle = '#333';
-          ctx.fillText(emoji, centerX, badgeCenterY);
-
-          // Draw wheat grain decoration at top (brand element)
-          // Simple stylized wheat grain - 3 small diagonal lines
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 2;
-          ctx.lineCap = 'round';
-
-          const wheatY = 4;
-          const wheatSpacing = 3;
-
-          // Left grain
-          ctx.beginPath();
-          ctx.moveTo(centerX - wheatSpacing - 2, wheatY + 4);
-          ctx.lineTo(centerX - wheatSpacing, wheatY);
-          ctx.stroke();
-
-          // Center grain (tallest)
-          ctx.beginPath();
-          ctx.moveTo(centerX, wheatY + 5);
-          ctx.lineTo(centerX, wheatY - 1);
-          ctx.stroke();
-
-          // Right grain
-          ctx.beginPath();
-          ctx.moveTo(centerX + wheatSpacing + 2, wheatY + 4);
-          ctx.lineTo(centerX + wheatSpacing, wheatY);
-          ctx.stroke();
-
-          // Add wheat kernels (small circles)
-          ctx.fillStyle = '#ffffff';
-          const kernelRadius = 1.5;
-
-          // Left grain kernels
-          ctx.beginPath();
-          ctx.arc(centerX - wheatSpacing - 1, wheatY + 2, kernelRadius, 0, 2 * Math.PI);
-          ctx.fill();
-
-          // Center grain kernels
-          ctx.beginPath();
-          ctx.arc(centerX, wheatY + 1.5, kernelRadius, 0, 2 * Math.PI);
-          ctx.fill();
-          ctx.beginPath();
-          ctx.arc(centerX, wheatY + 3.5, kernelRadius, 0, 2 * Math.PI);
-          ctx.fill();
-
-          // Right grain kernels
-          ctx.beginPath();
-          ctx.arc(centerX + wheatSpacing + 1, wheatY + 2, kernelRadius, 0, 2 * Math.PI);
-          ctx.fill();
-
-          // Draw teardrop point at bottom for precise positioning
-          ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
-          ctx.shadowBlur = 8;
-          ctx.shadowOffsetX = 0;
-          ctx.shadowOffsetY = 4;
-
-          ctx.beginPath();
-          ctx.moveTo(centerX - 4, badgeCenterY + outerRadius);
-          ctx.lineTo(centerX, height - 6);
-          ctx.lineTo(centerX + 4, badgeCenterY + outerRadius);
-          ctx.closePath();
-          ctx.fillStyle = brandGreen;
-          ctx.fill();
-
-          // Add white stroke to point
-          ctx.shadowColor = 'transparent';
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 1.5;
-          ctx.stroke();
+          ctx.fillText(emoji, centerX, circleCenterY);
 
           return canvas.toDataURL('image/png');
         };
