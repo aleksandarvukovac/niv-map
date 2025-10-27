@@ -1339,11 +1339,11 @@
             map.setFilter('clustered-city-symbols', ['==', ['get', 'kategorija'], category]);
 
             // Filter city clusters to only show if they contain markers from this category
-            // Check if the cluster's categories string contains the selected category
+            // Use index-of to check if category exists in comma-separated categories string
             const categoryFilter = [
-              'in',
-              category,
-              ['split', ['get', 'categories'], ',']
+              'any',
+              ['==', ['get', 'categories'], category], // Single category in cluster
+              ['>', ['index-of', category, ['get', 'categories']], -1] // Category found in list
             ];
             map.setFilter('city-clusters-circles', categoryFilter);
             map.setFilter('city-clusters-labels', categoryFilter);
