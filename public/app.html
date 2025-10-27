@@ -910,18 +910,68 @@
 
         console.log('All marker images loaded successfully');
 
-        // Add GeoJSON source (after all images are loaded)
+        // Add GeoJSON source with clustering enabled (after all images are loaded)
         map.addSource('places', {
           type: 'geojson',
           data: data,
-          generateId: true
+          generateId: true,
+          cluster: true,
+          clusterMaxZoom: 12, // Max zoom to cluster points on (above this, show individual markers)
+          clusterRadius: 60 // Radius of each cluster when clustering points (in pixels)
         });
 
-        // Add symbol layer for markers (after source)
+        // Add cluster circle layer
+        map.addLayer({
+          id: 'clusters',
+          type: 'circle',
+          source: 'places',
+          filter: ['has', 'point_count'],
+          paint: {
+            'circle-color': [
+              'step',
+              ['get', 'point_count'],
+              '#00A651', // Brand green for small clusters (< 5)
+              5,
+              '#0d8a43', // Darker green for medium clusters (5-10)
+              10,
+              '#0a6b34'  // Even darker for large clusters (10+)
+            ],
+            'circle-radius': [
+              'step',
+              ['get', 'point_count'],
+              20,  // Small clusters
+              5,
+              25,  // Medium clusters
+              10,
+              30   // Large clusters
+            ],
+            'circle-stroke-width': 2,
+            'circle-stroke-color': '#ffffff'
+          }
+        });
+
+        // Add cluster count text layer
+        map.addLayer({
+          id: 'cluster-count',
+          type: 'symbol',
+          source: 'places',
+          filter: ['has', 'point_count'],
+          layout: {
+            'text-field': '{point_count_abbreviated}',
+            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+            'text-size': 14
+          },
+          paint: {
+            'text-color': '#ffffff'
+          }
+        });
+
+        // Add individual marker symbol layer (only for unclustered points)
         map.addLayer({
           id: 'places-symbols',
           type: 'symbol',
           source: 'places',
+          filter: ['!', ['has', 'point_count']], // Only show individual markers (not clusters)
           layout: {
             'icon-image': [
               'case',
@@ -1017,6 +1067,38 @@
               wireCarousel(container, photos);
             }
           }, 100);
+        });
+
+        // Cluster interaction handlers
+        // Change cursor on cluster hover
+        map.on('mouseenter', 'clusters', () => {
+          map.getCanvas().style.cursor = 'pointer';
+        });
+
+        map.on('mouseleave', 'clusters', () => {
+          map.getCanvas().style.cursor = '';
+        });
+
+        // Click handler for clusters - zoom in to expand
+        map.on('click', 'clusters', (e) => {
+          const features = map.queryRenderedFeatures(e.point, {
+            layers: ['clusters']
+          });
+
+          if (!features.length) return;
+
+          const clusterId = features[0].properties.cluster_id;
+
+          // Get cluster expansion zoom level
+          map.getSource('places').getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (err) return;
+
+            map.easeTo({
+              center: features[0].geometry.coordinates,
+              zoom: zoom,
+              duration: 500
+            });
+          });
         });
 
         // Symbol layers are stable by default - no additional CSS needed
