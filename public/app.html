@@ -1049,21 +1049,25 @@
           if (matchingFeatures.length > 0) {
             const matchingIds = matchingFeatures.map((_, index) => index);
             map.setFilter('places-symbols', ['in', ['id'], ['literal', matchingIds]]);
-            
+
             // Zoom to matching results
             const coordinates = matchingFeatures.map(({ coordinates }) => coordinates);
             if (coordinates.length === 1) {
-              // Single result - zoom to it
+              // Single result - zoom to comfortable level (not too close)
               map.flyTo({
                 center: coordinates[0],
-                zoom: 15,
+                zoom: 12, // Changed from 15 to 12 for better context
                 duration: 1000,
               });
             } else {
-              // Multiple results - fit bounds
+              // Multiple results - fit bounds showing all markers
               const bounds = new maplibregl.LngLatBounds();
               coordinates.forEach((coord) => bounds.extend(coord));
-              map.fitBounds(bounds, { padding: 50, duration: 1000 });
+              map.fitBounds(bounds, {
+                padding: 100, // Increased from 50 to 100 for more breathing room
+                maxZoom: 13, // Don't zoom closer than level 13, even for tight clusters
+                duration: 1000
+              });
             }
           } else {
             // No matches - hide all markers
