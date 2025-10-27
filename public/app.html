@@ -719,6 +719,7 @@
         });
 
         // Create custom pin images for stable Symbol Layer markers
+        // Google Maps-style teardrop design with professional look
         const createCustomPin = (category) => {
           const colors = {
             Zanat: "#F4A261",
@@ -739,25 +740,63 @@
           const emoji = emojis[category] || emojis.default;
 
           const canvas = document.createElement('canvas');
-          const size = 32;
-          canvas.width = size;
-          canvas.height = size;
+          const width = 40;
+          const height = 50;
+          canvas.width = width;
+          canvas.height = height;
           const ctx = canvas.getContext('2d');
 
-          // Draw circle background
+          // Enable anti-aliasing for smooth edges
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+
+          // Draw drop shadow first (behind marker)
+          ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+          ctx.shadowBlur = 8;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 4;
+
+          // Draw teardrop shape (Google Maps style)
           ctx.beginPath();
-          ctx.arc(size/2, size/2, size/2 - 2, 0, 2 * Math.PI);
+          const centerX = width / 2;
+          const centerY = 18;
+          const radius = 14;
+
+          // Top circular part
+          ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+
+          // Bottom point (teardrop tip)
+          ctx.moveTo(centerX, centerY + radius);
+          ctx.lineTo(centerX, height - 5);
+          ctx.lineTo(centerX, centerY + radius);
+
+          // Fill with color
           ctx.fillStyle = color;
           ctx.fill();
+
+          // Reset shadow for border
+          ctx.shadowColor = 'transparent';
+          ctx.shadowBlur = 0;
+          ctx.shadowOffsetX = 0;
+          ctx.shadowOffsetY = 0;
+
+          // Draw white border for contrast
           ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 2.5;
           ctx.stroke();
 
-          // Draw emoji
-          ctx.font = '16px Arial';
+          // Draw inner white circle for emoji background
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, radius - 4, 0, 2 * Math.PI);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+          ctx.fill();
+
+          // Draw emoji in center
+          ctx.font = 'bold 16px Arial, sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillText(emoji, size/2, size/2);
+          ctx.fillStyle = '#333';
+          ctx.fillText(emoji, centerX, centerY);
 
           return canvas.toDataURL('image/png');
         };
@@ -819,6 +858,7 @@
               'pin-zanat' // default
             ],
             'icon-size': 1,
+            'icon-anchor': 'bottom', // Pin point anchors to exact coordinates
             'icon-allow-overlap': true,
             'icon-ignore-placement': true
           }
