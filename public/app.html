@@ -910,68 +910,131 @@
 
         console.log('All marker images loaded successfully');
 
-        // Add GeoJSON source with clustering enabled (after all images are loaded)
+        // City-based semantic clustering
+        // Group markers by city and create city clusters for cities with 3+ markers
+        const cityClusters = {};
+        const individualMarkers = [];
+
+        data.features.forEach(feature => {
+          const city = feature.properties.mesto || 'Unknown';
+          if (!cityClusters[city]) {
+            cityClusters[city] = [];
+          }
+          cityClusters[city].push(feature);
+        });
+
+        // Create city cluster points and separate individual markers
+        const cityClusterFeatures = [];
+        const clusteredCityMarkers = [];
+
+        Object.entries(cityClusters).forEach(([city, features]) => {
+          if (features.length >= 3) {
+            // Create cluster for this city
+            const centroid = features.reduce((acc, f) => {
+              acc.lng += f.geometry.coordinates[0];
+              acc.lat += f.geometry.coordinates[1];
+              return acc;
+            }, { lng: 0, lat: 0 });
+
+            centroid.lng /= features.length;
+            centroid.lat /= features.length;
+
+            cityClusterFeatures.push({
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: [centroid.lng, centroid.lat]
+              },
+              properties: {
+                city: city,
+                count: features.length,
+                bounds: features.map(f => f.geometry.coordinates)
+              }
+            });
+
+            // Also store the individual markers for this clustered city
+            clusteredCityMarkers.push(...features);
+          } else {
+            // Add to individual markers
+            individualMarkers.push(...features);
+          }
+        });
+
+        // Add source for individual markers (cities with 1-2 locations)
         map.addSource('places', {
           type: 'geojson',
-          data: data,
-          generateId: true,
-          cluster: true,
-          clusterMaxZoom: 12, // Max zoom to cluster points on (above this, show individual markers)
-          clusterRadius: 60 // Radius of each cluster when clustering points (in pixels)
+          data: {
+            type: 'FeatureCollection',
+            features: individualMarkers
+          },
+          generateId: true
         });
 
-        // Add cluster circle layer
+        // Add source for city clusters (cities with 3+ locations)
+        map.addSource('city-clusters', {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: cityClusterFeatures
+          }
+        });
+
+        // Add source for markers from clustered cities (show when zoomed in)
+        map.addSource('clustered-city-markers', {
+          type: 'geojson',
+          data: {
+            type: 'FeatureCollection',
+            features: clusteredCityMarkers
+          },
+          generateId: true
+        });
+
+        // Add city cluster circle layer (only visible when zoomed out)
         map.addLayer({
-          id: 'clusters',
+          id: 'city-clusters-circles',
           type: 'circle',
-          source: 'places',
-          filter: ['has', 'point_count'],
+          source: 'city-clusters',
+          maxzoom: 10, // Hide when zoomed in past level 10
           paint: {
-            'circle-color': [
-              'step',
-              ['get', 'point_count'],
-              '#00A651', // Brand green for small clusters (< 5)
-              5,
-              '#0d8a43', // Darker green for medium clusters (5-10)
-              10,
-              '#0a6b34'  // Even darker for large clusters (10+)
-            ],
+            'circle-color': '#00A651', // Brand green
             'circle-radius': [
-              'step',
-              ['get', 'point_count'],
-              20,  // Small clusters
-              5,
-              25,  // Medium clusters
-              10,
-              30   // Large clusters
+              'interpolate',
+              ['linear'],
+              ['get', 'count'],
+              3, 25,  // 3 markers = 25px
+              10, 35  // 10+ markers = 35px
             ],
             'circle-stroke-width': 2,
-            'circle-stroke-color': '#ffffff'
+            'circle-stroke-color': '#ffffff',
+            'circle-opacity': 0.9
           }
         });
 
-        // Add cluster count text layer
+        // Add city cluster label layer (only visible when zoomed out)
         map.addLayer({
-          id: 'cluster-count',
+          id: 'city-clusters-labels',
           type: 'symbol',
-          source: 'places',
-          filter: ['has', 'point_count'],
+          source: 'city-clusters',
+          maxzoom: 10, // Hide when zoomed in past level 10
           layout: {
-            'text-field': '{point_count_abbreviated}',
+            'text-field': ['concat', ['get', 'city'], '\n(', ['get', 'count'], ')'],
             'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-            'text-size': 14
+            'text-size': 12,
+            'text-allow-overlap': false,
+            'text-anchor': 'center'
           },
           paint: {
-            'text-color': '#ffffff'
+            'text-color': '#ffffff',
+            'text-halo-color': 'rgba(0, 166, 81, 0.8)',
+            'text-halo-width': 1
           }
         });
 
-        // Add individual marker symbol layer (only for unclustered points)
+        // Add individual marker symbol layer (cities with 1-2 markers - always visible)
         map.addLayer({
           id: 'places-symbols',
           type: 'symbol',
           source: 'places',
-          filter: ['!', ['has', 'point_count']], // Only show individual markers (not clusters)
           layout: {
             'icon-image': [
               'case',
@@ -982,15 +1045,38 @@
               'pin-zanat' // default
             ],
             'icon-size': 1,
-            'icon-anchor': 'bottom', // Pin point anchors to exact coordinates
+            'icon-anchor': 'bottom',
+            'icon-allow-overlap': true,
+            'icon-ignore-placement': true
+          }
+        });
+
+        // Add clustered city markers layer (cities with 3+ markers - only visible when zoomed in)
+        map.addLayer({
+          id: 'clustered-city-symbols',
+          type: 'symbol',
+          source: 'clustered-city-markers',
+          minzoom: 10, // Only show when zoomed in past level 10
+          layout: {
+            'icon-image': [
+              'case',
+              ['==', ['get', 'kategorija'], 'Zanat'], 'pin-zanat',
+              ['==', ['get', 'kategorija'], 'Proizvodi'], 'pin-proizvodi',
+              ['==', ['get', 'kategorija'], 'Usluge'], 'pin-usluge',
+              ['==', ['get', 'kategorija'], 'Manifestacije'], 'pin-manifestacije',
+              'pin-zanat' // default
+            ],
+            'icon-size': 1,
+            'icon-anchor': 'bottom',
             'icon-allow-overlap': true,
             'icon-ignore-placement': true
           }
         });
 
         console.log('Symbol layer added with all images');
+        console.log(`City clusters: ${cityClusterFeatures.length}, Individual markers: ${individualMarkers.length}`);
 
-        // Store all features for search functionality
+        // Store ALL features for search functionality (both clustered and individual)
         data.features.forEach((feature) => {
           allMarkers.push({
             properties: feature.properties,
@@ -1069,35 +1155,102 @@
           }, 100);
         });
 
-        // Cluster interaction handlers
-        // Change cursor on cluster hover
-        map.on('mouseenter', 'clusters', () => {
+        // Add hover and click handlers for clustered city markers (same as regular markers)
+        map.on('mouseenter', 'clustered-city-symbols', (e) => {
+          map.getCanvas().style.cursor = 'pointer';
+
+          if (currentTooltip) {
+            document.body.removeChild(currentTooltip);
+            currentTooltip = null;
+          }
+
+          const properties = e.features[0].properties;
+          currentTooltip = document.createElement("div");
+          currentTooltip.className = "custom-tooltip";
+          currentTooltip.textContent = properties.naziv;
+          currentTooltip.style.cssText = `
+            position: absolute;
+            left: ${e.originalEvent.pageX + 8}px;
+            top: ${e.originalEvent.pageY - 25}px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            z-index: 10000;
+            pointer-events: none;
+            max-width: 200px;
+            word-wrap: break-word;
+          `;
+          document.body.appendChild(currentTooltip);
+        });
+
+        map.on('mouseleave', 'clustered-city-symbols', () => {
+          map.getCanvas().style.cursor = '';
+          if (currentTooltip) {
+            document.body.removeChild(currentTooltip);
+            currentTooltip = null;
+          }
+        });
+
+        map.on('click', 'clustered-city-symbols', (e) => {
+          const coordinates = e.features[0].geometry.coordinates.slice();
+          const properties = e.features[0].properties;
+
+          const existingPopup = document.querySelector(".maplibregl-popup");
+          if (existingPopup) {
+            existingPopup.remove();
+            return;
+          }
+
+          const photos = normPhotos(properties.foto);
+          popup
+            .setLngLat(coordinates)
+            .setHTML(popupHTML(properties))
+            .addTo(map);
+
+          setTimeout(() => {
+            const container = popup
+              .getElement()
+              .querySelector(".maplibregl-popup-content");
+            if (container && photos.length > 1) {
+              wireCarousel(container, photos);
+            }
+          }, 100);
+        });
+
+        // City cluster interaction handlers
+        // Change cursor on city cluster hover
+        map.on('mouseenter', 'city-clusters-circles', () => {
           map.getCanvas().style.cursor = 'pointer';
         });
 
-        map.on('mouseleave', 'clusters', () => {
+        map.on('mouseleave', 'city-clusters-circles', () => {
           map.getCanvas().style.cursor = '';
         });
 
-        // Click handler for clusters - zoom in to expand
-        map.on('click', 'clusters', (e) => {
+        // Click handler for city clusters - zoom to show all markers in that city
+        map.on('click', 'city-clusters-circles', (e) => {
           const features = map.queryRenderedFeatures(e.point, {
-            layers: ['clusters']
+            layers: ['city-clusters-circles']
           });
 
           if (!features.length) return;
 
-          const clusterId = features[0].properties.cluster_id;
+          const bounds = features[0].properties.bounds;
 
-          // Get cluster expansion zoom level
-          map.getSource('places').getClusterExpansionZoom(clusterId, (err, zoom) => {
-            if (err) return;
+          // Parse bounds from string (stored as array in properties)
+          const coordinates = JSON.parse(bounds);
 
-            map.easeTo({
-              center: features[0].geometry.coordinates,
-              zoom: zoom,
-              duration: 500
-            });
+          // Create bounds and fit to them
+          const bbox = new maplibregl.LngLatBounds();
+          coordinates.forEach(coord => bbox.extend(coord));
+
+          map.fitBounds(bbox, {
+            padding: 100,
+            maxZoom: 13,
+            duration: 800
           });
         });
 
