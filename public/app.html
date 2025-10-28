@@ -283,7 +283,7 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
-        max-width: 180px;
+        max-width: 280px;
       }
 
       .search-container {
@@ -477,7 +477,7 @@
 
     <!-- Logo Watermark -->
     <div class="logo-watermark">
-      <img src="./img/niv-logo.png" alt="Najbolje iz Vojvodine" />
+      <img src="img/niv-logo.png" alt="Najbolje iz Vojvodine" />
     </div>
 
     <!-- Search and Filter Controls -->
@@ -504,29 +504,39 @@
           </button>
           <button class="filter-btn" data-category="Zanat">
             <svg viewBox="0 0 16 16" fill="currentColor">
-              <path d="M3 13l3-3M12 4l-6 6M13 3c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2 2 .9 2 2zM6 14l-3 1 1-3 6-6 2 2-6 6z"/>
+              <!-- Hammer head (rectangle) -->
+              <rect x="4" y="3.5" width="8" height="4" rx="0.5"/>
+              <!-- Hammer handle (vertical) -->
+              <rect x="7" y="6.5" width="2" height="8" rx="0.5"/>
             </svg>
             Zanati
           </button>
           <button class="filter-btn" data-category="Proizvodi">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <path d="M2 4v8c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V4M3 4h10M6 2h4"/>
-              <path d="M6 7v3M10 7v3" stroke="currentColor" fill="none"/>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Box outline -->
+              <rect x="3" y="5" width="10" height="8"/>
+              <!-- Box flap lines -->
+              <path d="M3 5 L8 9 L13 5"/>
             </svg>
             Proizvodi
           </button>
         </div>
         <div class="filter-row">
           <button class="filter-btn" data-category="Usluge">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <path d="M11 2L9 4M6 7l-4 4 2 2 4-4M13 6c0 1.1-.9 2-2 2L9 6c0-1.1.9-2 2-2s2 .9 2 2z"/>
-              <rect x="1.5" y="11.5" width="3" height="3" rx="0.5" transform="rotate(-45 3 13)"/>
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <!-- Wrench head (circle) -->
+              <circle cx="6" cy="5.5" r="3"/>
+              <!-- Wrench handle (diagonal line) -->
+              <line x1="8" y1="8" x2="12" y2="12"/>
             </svg>
             Usluge
           </button>
           <button class="filter-btn" data-category="Manifestacije">
-            <svg viewBox="0 0 16 16" fill="currentColor">
-              <path d="M3 3v10M3 3l7 2v6l-7-2"/>
+            <svg viewBox="0 0 16 16" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <!-- Flag pole (vertical line) -->
+              <line x1="4" y1="2" x2="4" y2="14" fill="none"/>
+              <!-- Flag pennant (triangular) -->
+              <path d="M4 2 L12 5 L4 8 Z"/>
             </svg>
             Manifestacije
           </button>
