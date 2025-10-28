@@ -287,6 +287,7 @@
       }
 
       .search-container {
+        position: relative;
         display: flex;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
@@ -305,8 +306,7 @@
         font-size: 13px;
         outline: none;
         color: #333;
-        width: 100px;
-        max-width: 100px;
+        min-width: 0;
       }
 
       #searchInput::placeholder {
@@ -334,6 +334,73 @@
       #searchBtn:hover {
         background: #2c5282;
         transform: scale(1.05);
+      }
+
+      /* Autocomplete Dropdown */
+      .search-dropdown {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px);
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        max-height: 320px;
+        overflow-y: auto;
+        display: none;
+        z-index: 2000;
+      }
+
+      .search-dropdown.active {
+        display: block;
+      }
+
+      .dropdown-item {
+        padding: 10px 14px;
+        cursor: pointer;
+        transition: background 0.15s ease;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .dropdown-item:last-child {
+        border-bottom: none;
+      }
+
+      .dropdown-item:hover,
+      .dropdown-item.highlighted {
+        background: rgba(49, 130, 206, 0.1);
+      }
+
+      .dropdown-item-name {
+        font-weight: 600;
+        font-size: 13px;
+        color: #333;
+      }
+
+      .dropdown-item-location {
+        font-size: 11px;
+        color: #666;
+        margin-left: auto;
+      }
+
+      .dropdown-item-category {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+
+      .dropdown-empty {
+        padding: 16px;
+        text-align: center;
+        color: #999;
+        font-size: 12px;
       }
 
       .category-filters {
@@ -487,8 +554,10 @@
           type="text"
           id="searchInput"
           placeholder="Pretraži lokacije..."
+          autocomplete="off"
         />
         <button id="searchBtn">🔍</button>
+        <div class="search-dropdown" id="searchDropdown"></div>
       </div>
 
       <div class="category-filters">
@@ -1357,58 +1426,110 @@
 
         // Symbol layers are stable by default - no additional CSS needed
 
-        // Search and Filter Functionality
+        // Autocomplete Search Functionality
         const searchInput = document.getElementById("searchInput");
         const searchBtn = document.getElementById("searchBtn");
+        const searchDropdown = document.getElementById("searchDropdown");
         const filterBtns = document.querySelectorAll(".filter-btn");
 
+        const categoryColors = {
+          'Zanat': '#F4A261',
+          'Proizvodi': '#8B4513',
+          'Usluge': '#20B2AA',
+          'Manifestacije': '#DC143C'
+        };
+
         let currentFilter = "all";
+        let highlightedIndex = -1;
+        let filteredLocations = [];
 
-        // Search functionality - search in naziv and mesto columns
-        function performSearch() {
-          const query = searchInput.value.toLowerCase().trim();
+        // Build locations list from allMarkers
+        const allLocations = allMarkers.map((marker, index) => ({
+          id: index,
+          naziv: marker.properties.naziv,
+          mesto: marker.properties.mesto,
+          kategorija: marker.properties.kategorija,
+          coordinates: marker.coordinates
+        }));
 
-          if (!query) {
-            // Show all markers
-            map.setFilter('places-symbols', null);
+        // Render dropdown items
+        function renderDropdown(locations) {
+          filteredLocations = locations;
+          highlightedIndex = -1;
+
+          if (locations.length === 0) {
+            searchDropdown.innerHTML = '<div class="dropdown-empty">Nema rezultata</div>';
+            searchDropdown.classList.add('active');
             return;
           }
 
-          // Search in naziv and mesto columns
-          const matchingFeatures = allMarkers.filter(({ properties }) => {
-            const naziv = properties.naziv?.toLowerCase() || "";
-            const mesto = properties.mesto?.toLowerCase() || "";
+          const html = locations.map((loc, index) => `
+            <div class="dropdown-item" data-index="${index}">
+              <span class="dropdown-item-category" style="background-color: ${categoryColors[loc.kategorija] || '#999'}"></span>
+              <span class="dropdown-item-name">${loc.naziv}</span>
+              <span class="dropdown-item-location">${loc.mesto}</span>
+            </div>
+          `).join('');
+
+          searchDropdown.innerHTML = html;
+          searchDropdown.classList.add('active');
+
+          // Add click listeners to items
+          searchDropdown.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', () => {
+              const index = parseInt(item.dataset.index);
+              selectLocation(filteredLocations[index]);
+            });
+          });
+        }
+
+        // Filter and show dropdown
+        function filterDropdown() {
+          const query = searchInput.value.toLowerCase().trim();
+
+          const filtered = allLocations.filter(loc => {
+            const naziv = loc.naziv.toLowerCase();
+            const mesto = loc.mesto.toLowerCase();
             return naziv.includes(query) || mesto.includes(query);
           });
 
-          // Filter the symbol layer to show only matching markers
-          if (matchingFeatures.length > 0) {
-            const matchingIds = matchingFeatures.map((_, index) => index);
-            map.setFilter('places-symbols', ['in', ['id'], ['literal', matchingIds]]);
+          renderDropdown(filtered);
+        }
 
-            // Zoom to matching results
-            const coordinates = matchingFeatures.map(({ coordinates }) => coordinates);
-            if (coordinates.length === 1) {
-              // Single result - zoom to comfortable level (not too close)
-              map.flyTo({
-                center: coordinates[0],
-                zoom: 12, // Changed from 15 to 12 for better context
-                duration: 1000,
-              });
+        // Select a location from dropdown
+        function selectLocation(location) {
+          searchInput.value = location.naziv;
+          searchDropdown.classList.remove('active');
+
+          // Zoom to selected location
+          map.flyTo({
+            center: location.coordinates,
+            zoom: 14,
+            duration: 1000
+          });
+
+          // Optional: Show popup for selected location
+          // You can uncomment below if you want to show the popup immediately
+          // const marker = allMarkers[location.id];
+          // popup.setLngLat(location.coordinates).setHTML(popupHTML(marker.properties)).addTo(map);
+        }
+
+        // Hide dropdown
+        function hideDropdown() {
+          searchDropdown.classList.remove('active');
+          highlightedIndex = -1;
+        }
+
+        // Highlight navigation
+        function updateHighlight() {
+          searchDropdown.querySelectorAll('.dropdown-item').forEach((item, index) => {
+            if (index === highlightedIndex) {
+              item.classList.add('highlighted');
+              item.scrollIntoView({ block: 'nearest' });
             } else {
-              // Multiple results - fit bounds showing all markers
-              const bounds = new maplibregl.LngLatBounds();
-              coordinates.forEach((coord) => bounds.extend(coord));
-              map.fitBounds(bounds, {
-                padding: 100, // Increased from 50 to 100 for more breathing room
-                maxZoom: 13, // Don't zoom closer than level 13, even for tight clusters
-                duration: 1000
-              });
+              item.classList.remove('highlighted');
             }
-          } else {
-            // No matches - hide all markers
-            map.setFilter('places-symbols', ['==', ['id'], -1]);
-          }
+          });
         }
 
         // Category filtering
@@ -1447,22 +1568,68 @@
           }
         }
 
-        // Event listeners
-        searchInput.addEventListener("input", performSearch);
-        searchBtn.addEventListener("click", performSearch);
+        // Event listeners for autocomplete
 
+        // Show all locations on focus
+        searchInput.addEventListener("focus", () => {
+          filterDropdown();
+        });
+
+        // Filter as user types
+        searchInput.addEventListener("input", () => {
+          filterDropdown();
+        });
+
+        // Search button click - if there's a value, show dropdown
+        searchBtn.addEventListener("click", () => {
+          if (searchInput.value.trim()) {
+            filterDropdown();
+          } else {
+            renderDropdown(allLocations);
+          }
+        });
+
+        // Keyboard navigation
+        searchInput.addEventListener("keydown", (e) => {
+          const items = searchDropdown.querySelectorAll('.dropdown-item');
+
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            if (highlightedIndex < filteredLocations.length - 1) {
+              highlightedIndex++;
+              updateHighlight();
+            }
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            if (highlightedIndex > 0) {
+              highlightedIndex--;
+              updateHighlight();
+            }
+          } else if (e.key === "Enter") {
+            e.preventDefault();
+            if (highlightedIndex >= 0 && filteredLocations[highlightedIndex]) {
+              selectLocation(filteredLocations[highlightedIndex]);
+            }
+          } else if (e.key === "Escape") {
+            hideDropdown();
+            searchInput.blur();
+          }
+        });
+
+        // Click outside to close dropdown
+        document.addEventListener("click", (e) => {
+          if (!searchInput.contains(e.target) &&
+              !searchDropdown.contains(e.target) &&
+              !searchBtn.contains(e.target)) {
+            hideDropdown();
+          }
+        });
+
+        // Category filter buttons
         filterBtns.forEach((btn) => {
           btn.addEventListener("click", () => {
             filterByCategory(btn.dataset.category);
           });
-        });
-
-        // Clear search on escape
-        searchInput.addEventListener("keydown", (e) => {
-          if (e.key === "Escape") {
-            searchInput.value = "";
-            performSearch();
-          }
         });
       }); // <-- Close map.on("load", ...) function
     </script>
