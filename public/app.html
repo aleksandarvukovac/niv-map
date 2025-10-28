@@ -453,15 +453,15 @@
         position: absolute;
         bottom: 10px;
         right: 10px;
-        width: 90px;
-        opacity: 0.75;
+        width: 110px;
+        opacity: 0.85;
         pointer-events: none;
         z-index: 1;
         transition: opacity 0.3s ease;
       }
 
       .logo-watermark:hover {
-        opacity: 0.95;
+        opacity: 1;
       }
 
       .logo-watermark img {
@@ -873,19 +873,38 @@
             ctx.fillRect(hx - 1 * hammerScale, hy - 1 * hammerScale, 2 * hammerScale, 8 * hammerScale);
 
           } else if (category === 'Proizvodi') {
-            // Box/Package icon
-            const boxScale = 0.8;
+            // Shopping bag icon
+            const bagScale = 0.7;
             const bx = centerX;
             const by = circleCenterY;
 
-            // Box outline
-            ctx.strokeRect(bx - 5 * boxScale, by - 4 * boxScale, 10 * boxScale, 8 * boxScale);
+            // Shopping bag body (rounded rectangle)
+            const bagWidth = 8 * bagScale;
+            const bagHeight = 8 * bagScale;
+            const bagX = bx - bagWidth / 2;
+            const bagY = by - bagHeight / 2 + 1 * bagScale;
+            const radius = 1 * bagScale;
 
-            // Box flap lines
             ctx.beginPath();
-            ctx.moveTo(bx - 5 * boxScale, by - 4 * boxScale);
-            ctx.lineTo(bx, by);
-            ctx.lineTo(bx + 5 * boxScale, by - 4 * boxScale);
+            ctx.moveTo(bagX + radius, bagY);
+            ctx.lineTo(bagX + bagWidth - radius, bagY);
+            ctx.arcTo(bagX + bagWidth, bagY, bagX + bagWidth, bagY + radius, radius);
+            ctx.lineTo(bagX + bagWidth, bagY + bagHeight - radius);
+            ctx.arcTo(bagX + bagWidth, bagY + bagHeight, bagX + bagWidth - radius, bagY + bagHeight, radius);
+            ctx.lineTo(bagX + radius, bagY + bagHeight);
+            ctx.arcTo(bagX, bagY + bagHeight, bagX, bagY + bagHeight - radius, radius);
+            ctx.lineTo(bagX, bagY + radius);
+            ctx.arcTo(bagX, bagY, bagX + radius, bagY, radius);
+            ctx.stroke();
+
+            // Shopping bag handles (curved arcs)
+            ctx.beginPath();
+            // Left handle
+            ctx.moveTo(bx - 2 * bagScale, bagY);
+            ctx.lineTo(bx - 2 * bagScale, bagY - 1 * bagScale);
+            ctx.arcTo(bx - 2 * bagScale, bagY - 3 * bagScale, bx, bagY - 3 * bagScale, 2 * bagScale);
+            ctx.arcTo(bx + 2 * bagScale, bagY - 3 * bagScale, bx + 2 * bagScale, bagY - 1 * bagScale, 2 * bagScale);
+            ctx.lineTo(bx + 2 * bagScale, bagY);
             ctx.stroke();
 
           } else if (category === 'Usluge') {
