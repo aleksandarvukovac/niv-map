@@ -1809,17 +1809,41 @@
           searchInput.value = location.naziv;
           searchDropdown.classList.remove('active');
 
-          // Zoom to selected location
+          // Get full marker data
+          const marker = allMarkers[location.id];
+          const properties = marker.properties;
+
+          // If embedded and has website, open it directly
+          if (isEmbedded && properties.web) {
+            window.open(properties.web, '_blank');
+            return;
+          }
+
+          // Otherwise (full map), zoom and show popup
           map.flyTo({
             center: location.coordinates,
             zoom: 14,
             duration: 1000
           });
 
-          // Optional: Show popup for selected location
-          // You can uncomment below if you want to show the popup immediately
-          // const marker = allMarkers[location.id];
-          // popup.setLngLat(location.coordinates).setHTML(popupHTML(marker.properties)).addTo(map);
+          // Show popup after zoom animation completes
+          setTimeout(() => {
+            const photos = normPhotos(properties.foto);
+            popup
+              .setLngLat(location.coordinates)
+              .setHTML(popupHTML(properties))
+              .addTo(map);
+
+            // Wire up carousel if photos exist
+            setTimeout(() => {
+              const container = popup
+                .getElement()
+                .querySelector('.maplibregl-popup-content');
+              if (container && photos.length > 1) {
+                wireCarousel(container, photos);
+              }
+            }, 100);
+          }, 1000);
         }
 
         // Hide dropdown
