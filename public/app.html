@@ -797,6 +797,60 @@
         }
       }
 
+      /* ===== Mini Tooltip for Two-Click Embed Behavior ===== */
+      .mini-tooltip {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 10px 14px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        z-index: 10000;
+        pointer-events: none;
+        animation: tooltipFadeIn 0.2s ease-out;
+        max-width: 250px;
+      }
+
+      @keyframes tooltipFadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .mini-tooltip-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #2d3748;
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+      }
+
+      .mini-tooltip-category {
+        font-size: 11px;
+        color: #718096;
+        margin: 0 0 6px 0;
+      }
+
+      .mini-tooltip-hint {
+        font-size: 11px;
+        color: #3182ce;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .mini-tooltip-hint::after {
+        content: "→";
+        font-size: 12px;
+      }
+
     </style>
   </head>
   <body>
@@ -1158,6 +1212,62 @@
 
         // Detect if running in iframe (embed mode)
         const isEmbedded = window.self !== window.top;
+
+        // Two-click behavior for embed: track last clicked marker
+        let lastClickedMarkerId = null;
+        let clickResetTimeout = null;
+        let currentMiniTooltip = null;
+
+        // Helper: Show mini tooltip on first click (embed only)
+        function showMiniTooltip(properties, point) {
+          // Remove existing tooltip
+          if (currentMiniTooltip) {
+            document.body.removeChild(currentMiniTooltip);
+          }
+
+          // Create tooltip element
+          const tooltip = document.createElement('div');
+          tooltip.className = 'mini-tooltip';
+          tooltip.innerHTML = `
+            <div class="mini-tooltip-title">${properties.naziv}</div>
+            <div class="mini-tooltip-category">${properties.kategorija} · ${properties.mesto}</div>
+            <div class="mini-tooltip-hint">Tap again to visit website</div>
+          `;
+
+          // Position tooltip above click point
+          tooltip.style.left = point.x + 'px';
+          tooltip.style.top = (point.y - 10) + 'px';
+          tooltip.style.transform = 'translate(-50%, -100%)';
+
+          document.body.appendChild(tooltip);
+          currentMiniTooltip = tooltip;
+
+          // Auto-remove after 8 seconds
+          setTimeout(() => {
+            if (currentMiniTooltip === tooltip) {
+              document.body.removeChild(tooltip);
+              currentMiniTooltip = null;
+            }
+          }, 8000);
+        }
+
+        // Helper: Hide mini tooltip
+        function hideMiniTooltip() {
+          if (currentMiniTooltip) {
+            document.body.removeChild(currentMiniTooltip);
+            currentMiniTooltip = null;
+          }
+        }
+
+        // Helper: Reset two-click state
+        function resetTwoClickState() {
+          lastClickedMarkerId = null;
+          hideMiniTooltip();
+          if (clickResetTimeout) {
+            clearTimeout(clickResetTimeout);
+            clickResetTimeout = null;
+          }
+        }
 
         // Create custom pin images for stable Symbol Layer markers
         // Hybrid design: White icons on brand green + colored category dot
@@ -1590,18 +1700,36 @@
           }
         });
 
-        // Add click handler for popups
+        // Add click handler for popups (with two-click behavior for embed)
         map.on('click', 'places-symbols', (e) => {
           const coordinates = e.features[0].geometry.coordinates.slice();
           const properties = e.features[0].properties;
+          const markerId = properties.id;
 
-          // If embedded and website URL exists, open website directly
+          // EMBED MODE: Two-click behavior
           if (isEmbedded && properties.web) {
-            window.open(properties.web, '_blank');
-            return;
+            // Check if this is the second click on the same marker
+            if (lastClickedMarkerId === markerId) {
+              // Second click - open website
+              window.open(properties.web, '_blank');
+              resetTwoClickState();
+              return;
+            } else {
+              // First click - show mini tooltip
+              lastClickedMarkerId = markerId;
+              showMiniTooltip(properties, e.point);
+
+              // Reset after 8 seconds
+              if (clickResetTimeout) clearTimeout(clickResetTimeout);
+              clickResetTimeout = setTimeout(() => {
+                resetTwoClickState();
+              }, 8000);
+
+              return;
+            }
           }
 
-          // Otherwise show popup (full-size map behavior)
+          // FULL MAP MODE: Show popup immediately
           // Check if popup is already open
           const existingPopup = document.querySelector(".maplibregl-popup");
           if (existingPopup) {
@@ -1668,14 +1796,32 @@
         map.on('click', 'clustered-city-symbols', (e) => {
           const coordinates = e.features[0].geometry.coordinates.slice();
           const properties = e.features[0].properties;
+          const markerId = properties.id;
 
-          // If embedded and website URL exists, open website directly
+          // EMBED MODE: Two-click behavior
           if (isEmbedded && properties.web) {
-            window.open(properties.web, '_blank');
-            return;
+            // Check if this is the second click on the same marker
+            if (lastClickedMarkerId === markerId) {
+              // Second click - open website
+              window.open(properties.web, '_blank');
+              resetTwoClickState();
+              return;
+            } else {
+              // First click - show mini tooltip
+              lastClickedMarkerId = markerId;
+              showMiniTooltip(properties, e.point);
+
+              // Reset after 8 seconds
+              if (clickResetTimeout) clearTimeout(clickResetTimeout);
+              clickResetTimeout = setTimeout(() => {
+                resetTwoClickState();
+              }, 8000);
+
+              return;
+            }
           }
 
-          // Otherwise show popup (full-size map behavior)
+          // FULL MAP MODE: Show popup immediately
           const existingPopup = document.querySelector(".maplibregl-popup");
           if (existingPopup) {
             existingPopup.remove();
@@ -1733,6 +1879,19 @@
         });
 
         // Symbol layers are stable by default - no additional CSS needed
+
+        // Reset two-click state when clicking empty space (embed only)
+        map.on('click', (e) => {
+          // Check if click was on a marker layer
+          const features = map.queryRenderedFeatures(e.point, {
+            layers: ['places-symbols', 'clustered-city-symbols']
+          });
+
+          // If no marker clicked and in embed mode, reset state
+          if (features.length === 0 && isEmbedded) {
+            resetTwoClickState();
+          }
+        });
 
         // Autocomplete Search Functionality
         const searchInput = document.getElementById("searchInput");
@@ -1867,6 +2026,11 @@
         // Category filtering
         function filterByCategory(category) {
           currentFilter = category;
+
+          // Reset two-click state when changing filters
+          if (isEmbedded) {
+            resetTwoClickState();
+          }
 
           // Update filter buttons
           filterBtns.forEach((btn) => {
