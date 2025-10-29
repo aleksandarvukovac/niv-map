@@ -136,16 +136,17 @@
       .maplibregl-popup-content {
         padding: 0;
         border-radius: 20px;
-        overflow: hidden;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px);
         border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
           0 8px 16px rgba(0, 0, 0, 0.05);
         animation: popupSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        max-height: 500px;
-        overflow-y: auto;
+        max-height: 70vh;
+        overflow-y: auto !important;
         overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
       }
       .maplibregl-popup-close-button {
         top: 12px;
@@ -179,7 +180,7 @@
 
       .card {
         width: 280px;
-        max-height: 400px;
+        max-height: 65vh;
         overflow-y: auto;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px);
@@ -549,8 +550,8 @@
       /* Fullscreen/Open button */
       .fullscreen-btn {
         position: absolute;
-        top: 20px;
-        right: 20px;
+        bottom: 20px;
+        left: 20px;
         z-index: 1000;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
@@ -570,7 +571,7 @@
 
       .fullscreen-btn:hover {
         background: rgba(255, 255, 255, 1);
-        transform: translateY(-1px);
+        transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
 
