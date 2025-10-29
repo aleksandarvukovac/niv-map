@@ -1989,20 +1989,33 @@
           const marker = allMarkers[location.id];
           const properties = marker.properties;
 
-          // If embedded and has website, open it directly
-          if (isEmbedded && properties.web) {
-            window.open(properties.web, '_blank');
-            return;
-          }
-
-          // Otherwise (full map), zoom and show popup
+          // Zoom to location first (both embed and full map)
           map.flyTo({
             center: location.coordinates,
             zoom: 14,
             duration: 1000
           });
 
-          // Show popup after zoom animation completes
+          // EMBED MODE: Show tooltip after zoom (consistent with marker click)
+          if (isEmbedded && properties.web) {
+            setTimeout(() => {
+              // Set this marker as "first clicked"
+              lastClickedMarkerId = properties.id;
+
+              // Calculate screen point for tooltip positioning
+              const point = map.project(location.coordinates);
+              showMiniTooltip(properties, point);
+
+              // Reset after 8 seconds
+              if (clickResetTimeout) clearTimeout(clickResetTimeout);
+              clickResetTimeout = setTimeout(() => {
+                resetTwoClickState();
+              }, 8000);
+            }, 1000); // Show tooltip after zoom completes
+            return;
+          }
+
+          // FULL MAP MODE: Show popup after zoom completes
           setTimeout(() => {
             const photos = normPhotos(properties.foto);
             popup
