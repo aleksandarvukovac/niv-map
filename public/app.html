@@ -226,9 +226,9 @@
         font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
         color: #1a202c;
-        overflow-y: auto;
+        overflow-y: auto !important;
         overflow-x: hidden;
-        max-height: 300px;
+        max-height: 350px;
       }
 
       .card_body::-webkit-scrollbar {
@@ -560,14 +560,14 @@
       /* Fullscreen/Open button - Icon only */
       .fullscreen-btn {
         position: absolute;
-        bottom: 80px;
+        bottom: 50px;
         left: 10px;
         z-index: 1000;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(0, 0, 0, 0.1);
         border-radius: 4px;
-        padding: 6px;
+        padding: 5px;
         cursor: pointer;
         transition: all 0.2s ease;
         color: #333;
@@ -577,6 +577,8 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         width: 29px;
         height: 29px;
+        font-size: 0;
+        line-height: 0;
       }
 
       .fullscreen-btn:hover {
@@ -586,12 +588,8 @@
       }
 
       .fullscreen-btn svg {
-        width: 17px;
-        height: 17px;
-      }
-
-      .fullscreen-btn span {
-        display: none;
+        width: 18px;
+        height: 18px;
       }
     </style>
   </head>
@@ -609,7 +607,6 @@
         <path d="M2 2h4v1H3v3H2V2zm10 0h4v4h-1V3h-3V2zM2 12v-4h1v3h3v1H2zm10 0v1h4v-4h-1v3h-3z"/>
         <path d="M5 5h6v6H5z" opacity="0.5"/>
       </svg>
-      Cela mapa
     </button>
 
     <!-- Search and Filter Controls -->
@@ -698,9 +695,13 @@
         style: STYLE_URL,
         center: [19.8335, 45.2671],
         zoom: 7.2,
-        attributionControl: true,
-        customAttribution: '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OSM contributors</a>',
+        attributionControl: false,
       });
+
+      // Add custom attribution control with shortened text
+      map.addControl(new maplibregl.AttributionControl({
+        customAttribution: '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OSM contributors</a>'
+      }), 'bottom-left');
       map.addControl(new maplibregl.NavigationControl(), "top-right");
 
       // 3) Učitavanje podataka
