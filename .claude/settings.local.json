@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sort:*)",
+      "Bash(git branch:*)",
+      "Bash(curl:*)",
+      "Bash(© MapTiler © OpenStreetMap contributors\"\n\nSolution: Hide MapTiler''''s built-in attribution with CSS\n- .maplibregl-ctrl-attrib-inner { display: none !important }\n- Hides the default attribution content from style\n- .maplibregl-ctrl-attrib-button { display: none !important }\n- Hides the info button\n- Our custom attribution still shows\n\nNow displays only: \"© MapTiler © OSM contributors\"\n\n2. Fixed Popup Scrolling (Flexbox + Forced Scroll)\n\nProblem: Scrolling still not working despite overflow-y: auto\n\nRoot Cause Analysis:\n- Card had no max-height constraint\n- Carousel had no fixed height\n- Flexbox wasn''''t properly constraining children\n\nSolution:\n- .card: Added max-height: 600px + flexbox (display: flex, flex-direction: column)\n- .card_media: Added flex-shrink: 0 + fixed height (min/max: 180px)\n- .card_body: Changed overflow-y from ''''auto'''' to ''''scroll'''' (always shows scrollbar track)\n- .card_body: Added -webkit-overflow-scrolling: touch (smooth iOS scrolling)\n- .card_body: Kept max-height: 350px\n\nHow it works:\n1. Card is flex container with max 600px height\n2. Carousel is fixed at 180px (flex-shrink: 0)\n3. Card body gets remaining space (max 350px)\n4. When content exceeds 350px, scrollbar appears and works\n\nTested:\n✓ Attribution shows once\n✓ Popup text scrolls when content is long\n✓ Carousel stays fixed while text scrolls\n✓ Smooth scrolling on touch devices\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

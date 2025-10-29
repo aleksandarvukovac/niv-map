@@ -2,7 +2,7 @@
 <html lang="sr">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
     <title>Najbolje iz Vojvodine – mapa</title>
 
     <!-- MapLibre -->
@@ -22,7 +22,7 @@
         --pad: 12px;
       }
 
-      /* Version: 2024-10-29-v2 - Force full iframe fill */
+      /* Version: 2024-10-29-v3 - Force full iframe fill + JS resize */
 
       * {
         box-sizing: border-box;
@@ -904,6 +904,29 @@
         attributionControl: true,
       });
       map.addControl(new maplibregl.NavigationControl(), "top-right");
+
+      // Force map resize on load and window resize (fixes iframe sizing issues)
+      map.on('load', () => {
+        // Force resize after a short delay to ensure proper layout
+        setTimeout(() => {
+          map.resize();
+        }, 100);
+        setTimeout(() => {
+          map.resize();
+        }, 500);
+        setTimeout(() => {
+          map.resize();
+        }, 1000);
+      });
+
+      // Handle window resize events
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          map.resize();
+        }, 250);
+      });
 
       // 3) Učitavanje podataka
       async function loadData() {

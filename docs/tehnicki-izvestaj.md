@@ -4,7 +4,7 @@
 
 ## 1. Pregled projekta
 
-Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za Pokrajinski sekretarijat za regionalni razvoj, inter-regionalnu saradnju i lokalnu samoupravu. Cilj projekta je vizuelizacija svih 32 nosioca znaka kvaliteta "Najbolje iz Vojvodine" na interaktivnoj mapi Vojvodine, sa mogućnostima pretraživanja, filtriranja po kategorijama i detaljnim prikazom informacija o svakom nosiocu.
+Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za Pokrajinski sekretarijat za privredu i turizam. Cilj projekta je vizuelizacija svih 32 nosioca znaka kvaliteta "Najbolje iz Vojvodine" na interaktivnoj mapi Vojvodine, sa mogućnostima pretraživanja, filtriranja po kategorijama i detaljnim prikazom informacija o svakom nosiocu.
 
 ### Ciljevi projekta
 
@@ -22,12 +22,14 @@ Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za
 **MapLibre GL JS** je open-source biblioteka za interaktivne vektorske mape. Odabrana je kao besplatna i snažna alternativa komercijalnim rešenjima.
 
 **Prednosti:**
+
 - Potpuno besplatna, bez licensing troškova
 - Hardverska GPU akceleracija za glatke animacije
 - Podržava milione podataka bez usporavanja
 - Aktivna zajednica i redovni update-i
 
 **Upotreba u projektu:**
+
 - Renderovanje osnovne mape Vojvodine
 - Prikazivanje custom markera kao Symbol Layers
 - Animacije (flyTo, fitBounds) za zoom i fokusiranje
@@ -37,10 +39,10 @@ Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za
 
 **MapTiler** pruža stilizovane mape i geocoding servise.
 
-**API Key:** WJJJqPPstboZWo4827qc
 **Map Style:** streets-v2 (optimizovan za čitljivost)
 
 **Servisi korišćeni:**
+
 - Tiles za renderovanje mape (vektorski format)
 - Geocoding za pretragu lokacija
 - Auto-scaling za različite rezolucije ekrana
@@ -50,6 +52,7 @@ Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za
 **GeoJSON** je standardni format za geospatijalne podatke.
 
 **Struktura podataka:**
+
 ```json
 {
   "type": "FeatureCollection",
@@ -76,6 +79,7 @@ Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za
 ```
 
 **Izvor podataka:**
+
 - Primarni podaci: CSV fajl (places.csv)
 - Konverzija: Node.js skripta (csv2geojson.js)
 - Lokacija: `/public/data/places.geojson`
@@ -85,12 +89,14 @@ Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za
 **Netlify** je moderna platforma za hosting statičkih sajtova.
 
 **Prednosti:**
+
 - Automatski deployment iz GitHub repozitorijuma
 - Globalni CDN (brzo učitavanje svuda u svetu)
 - HTTPS sertifikat (besplatno, automatski)
 - Zero-downtime deployments
 
 **Konfigurisanje:**
+
 - Povezan sa GitHub repom: aleksandarvukovac/niv-map
 - Automatski build i deploy na svaki git push
 - Custom domen: niv.amityintegration.com
@@ -104,12 +110,14 @@ Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za
 Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim CSS-om i JavaScript-om.
 
 **Razlozi za ovaj pristup:**
+
 - Jednostavnost deployment-a (jedan fajl)
 - Lakša WordPress/iframe integracija
 - Nema potrebe za build procesima
 - Potpuna portabilnost
 
 **Struktura:**
+
 ```
 /public/
   ├── app.html           # Glavni fajl aplikacije (~1650 linija)
@@ -120,16 +128,18 @@ Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim 
   │   └── places.geojson # Konvertovani podaci
   ├── /img/              # Slike (carousel, logoi)
   └── /tools/
-      └── csv2geojson.js # Konverzioni skripta
+      └── csv2geojson.js # Konverziona skripta
 ```
 
 ### 3.2 Korisnički interfejs
 
 **Kontrole (levo gore):**
+
 1. **Pretraga sa autocomplete** - Dropdown sa svim lokacijama, filtriranje u realnom vremenu
 2. **Kategorijski filteri** - 5 dugmića: Sve, Zanati, Proizvodi, Usluge, Manifestacije
 
 **Elementi na mapi:**
+
 - **Custom markeri** - Teardrops (kap-oblik) u brendiranoj zelenoj boji (#00A651)
 - **Ikonice po kategoriji** - Čekić (Zanati), Torba (Proizvodi), Ključ (Usluge), Zastava (Manifestacije)
 - **Kategoriski dot** - 4px obojeni krug na dnu markera
@@ -137,6 +147,7 @@ Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim 
 - **Watermark** - NIV logo (donje desno)
 
 **Popup sa informacijama:**
+
 - Naslov nosioca znaka
 - Kategorija i adresa
 - Opis (do 200 karaktera)
@@ -150,6 +161,7 @@ Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim 
 **Tehnologija:** Custom JavaScript dropdown (Option B pattern)
 
 **Mogućnosti:**
+
 - Prikazuje svih 32 lokacija odjednom
 - Real-time filtriranje (naziv + grad)
 - Keyboard navigacija (↑↓, Enter, Escape)
@@ -157,6 +169,7 @@ Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim 
 - Klik → zoom na marker (nivo 14)
 
 **Implementacija:**
+
 - `filterDropdown()` - Filtrira lokacije na osnovu unosa
 - `renderDropdown()` - Renderuje rezultate
 - `selectLocation()` - Zoom i fokusiranje na izabranu lokaciju
@@ -164,45 +177,52 @@ Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim 
 #### b) Kategorijsko filtriranje
 
 **Kategorije:**
+
 1. **Zanati** - Oranž (#F4A261) - 8 nosioca
 2. **Proizvodi** - Braon (#8B4513) - 12 nosioca
 3. **Usluge** - Teal (#20B2AA) - 6 nosioca
 4. **Manifestacije** - Crvena (#DC143C) - 6 nosioca
 
 **Logika:**
+
 - Filtriranje na MapLibre layer nivou (GPU optimizovano)
 - Automatsko sakrivanje klastera koji ne sadrže izabranu kategoriju
-- Active state sa kategoriskom bojom
+- Active state sa kategorijskom bojom
 
 #### c) Clustering po gradovima
 
 **Strategija:** Semantički clustering (po gradovima) umesto proximity-based
 
 **Pravila:**
+
 - Gradovi sa 2+ markera → prikazuju se kao cluster
 - Gradovi sa 1 markerom → prikazuje se individualni marker
 - Cluster label: "Naziv grada broj_markera" (npr. "Novi Sad 6")
 
 **Gradovi sa clusterima:**
+
 - Novi Sad: 6 markera
 - Zrenjanin, Kikinda, Sombor, Stara Pazova, Banoštor: po 2 markera
 
 **Interakcija:**
+
 - Klik na cluster → zoom sa fitBounds (maxZoom: 11)
-- Kategoriski filtri automatski sakrivaju prazne clustere
+- Kategorijski filteri automatski sakrivaju prazne clustere
 
 #### d) Custom canvas markeri
 
 **Razlog za canvas rendering:**
+
 - Brži od HTML markera
 - Bolji za veliki broj elemenata
 - Potpuna kontrola nad dizajnom
 
 **Dizajn:**
+
 - Teardrop oblik (kap): 32×42px
 - Brend zelena boja (#00A651)
 - Beli ikonice (čekić, torba, ključ, zastava)
-- Kategoriski obojeni 4px dot
+- Kategorijski obojeni 4px dot
 - Drop shadow za dubinu
 
 **Funkcija:** `createCustomPin(category)`
@@ -216,11 +236,13 @@ Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim 
 **Problem:** Originalne slike (carousel) bile su ~47MB ukupno (dijamant-1.jpg: 15.3MB)
 
 **Rešenje:** macOS sips tool kompresija
+
 ```bash
 sips -Z 1000 --setProperty formatOptions 75 image.jpg
 ```
 
 **Rezultat:**
+
 - Pre: 47MB
 - Posle: 4.2MB
 - Smanjenje: 91%
@@ -229,12 +251,14 @@ sips -Z 1000 --setProperty formatOptions 75 image.jpg
 ### 4.2 Symbol Layers umesto HTML markera
 
 **Symbol Layers** (MapLibre nativni markeri):
+
 - GPU renderovani
 - Nema floating problema
 - Brže od DOM manipulacije
 - Stabilni na zoom/pan
 
 **Rezultat:**
+
 - 32 markera renderuje se trenutno
 - Smooth zoom i pan animacije
 - Nema memory leakova
@@ -252,23 +276,27 @@ sips -Z 1000 --setProperty formatOptions 75 image.jpg
 ### 5.1 Brand alignment
 
 **"Najbolje iz Vojvodine" brend:**
+
 - Zelena boja: #00A651 (iz zvaničnog logoa)
 - Watermark: NIV logo (110px, 85% opacity)
-- Profesionalan, vladin look
+- Profesionalan dizajn
 
 ### 5.2 UX paterni
 
 **Autocomplete combo box:**
+
 - Inspirisan Google pretraživanjem
 - Enables browsing behavior (korisno za istraživanje)
 - Mobile-friendly (veliki touch targeti)
 
 **Category filtering:**
+
 - Single-click access
 - Visual feedback (aktivne boje)
 - Jasne ikonice
 
 **City clustering:**
+
 - Smanjuje vizuelni clutter
 - Semantički (po gradovima) je logičniji od proximity
 - Labels sa brojem markera
@@ -280,17 +308,6 @@ sips -Z 1000 --setProperty formatOptions 75 image.jpg
 - **Tablet:** Optimalno za oba režima (portrait/landscape)
 
 ---
-
-## 6. Budući razvoj
-
-### Moguća proširenja
-
-1. **Admin panel** za dodavanje novih nosilaca znaka (bez editovanja CSV-a)
-2. **Multilingual podrška** (Engleski, Mađarski za turiste)
-3. **Heatmap prikaz** po kategorijama
-4. **Rute** između markera (tourist trails)
-5. **Integracija sa društvenim mrežama** (share buttons)
-6. **Analytics** (Google Analytics ili Plausible za praćenje korišćenja)
 
 ### Održavanje
 
@@ -305,7 +322,7 @@ sips -Z 1000 --setProperty formatOptions 75 image.jpg
 Interaktivna mapa "Najbolje iz Vojvodine" je moderna, performantna i user-friendly web aplikacija koja uspešno vizuelizuje sve nosioce znaka kvaliteta. Korišćenjem savremenih open-source tehnologija (MapLibre, GeoJSON) i best-practice pristupa (optimizacija, semantic clustering, autocomplete), mapa pruža profesionalno iskustvo koje je spremno za integraciju na zvanični sajt Pokrajinskog sekretarijata.
 
 **Ključne prednosti:**
-- ✅ Potpuno besplatne tehnologije (zero licensing costs)
+
 - ✅ Brzo učitavanje i glatke animacije
 - ✅ Profesionalan dizajn usklađen sa brendom
 - ✅ Mobilna optimizacija
@@ -313,6 +330,7 @@ Interaktivna mapa "Najbolje iz Vojvodine" je moderna, performantna i user-friend
 - ✅ Automatski deployment i HTTPS
 
 **Statistika:**
+
 - **Lokacije:** 32 nosioca znaka
 - **Kategorije:** 4 (Zanati, Proizvodi, Usluge, Manifestacije)
 - **Slike:** 96 fotografija (~4.2MB optimizovano)
@@ -322,7 +340,7 @@ Interaktivna mapa "Najbolje iz Vojvodine" je moderna, performantna i user-friend
 ---
 
 **Dokument kreiran:** Oktobar 2025
-**Autor:** Aleksandar Vukovac (aleksandar.vukovac@amityintegration.com)
+**Autor:** Aleksandar Vukovac (aleksa24sata@gmail.com)
 **Tehnologije:** MapLibre GL v3.6.1, MapTiler API, GeoJSON, Netlify
 **GitHub:** https://github.com/aleksandarvukovac/niv-map
 **Live Demo:** https://niv.amityintegration.com/app.html

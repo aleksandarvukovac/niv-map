@@ -1,4 +1,5 @@
 # Vodič za implementaciju interaktivne mape
+
 ## Najbolje iz Vojvodine
 
 ---
@@ -17,31 +18,38 @@ Najbrži i najsigurniji način ugradnje je korišćenje iframe elementa. Evo ta�
 
 ```html
 <iframe
-  src="https://niv.amityintegration.com/app.html"
+  src="https://niv.amityintegration.com/app.html?v=20241029"
   width="100%"
   height="600"
   frameborder="0"
-  style="border: none; border-radius: 8px;"
+  style="border: none; border-radius: 8px; display: block; max-width: 100%;"
   title="Interaktivna mapa - Najbolje iz Vojvodine"
-  loading="lazy">
+  loading="lazy"
+  allowfullscreen
+>
 </iframe>
 ```
+
+**Napomena:** Query parametar `?v=20241029` služi za cache busting. Ako nakon ugradnje vidite staru verziju mape, promenite datum (npr. `?v=20241030`) da forsirate učitavanje nove verzije.
 
 ---
 
 ### Opcije za pozicioniranje
 
 **Opcija 1: Sidebar (Preporučeno)**
+
 - Širina: 100% parent kontejnera
 - Visina: 600px - 700px
 - Pozicija: Desna ili leva kolona na stranici
 
 **Opcija 2: Puna širina**
+
 - Širina: 100% širine stranice
 - Visina: 80vh ili 800px
 - Pozicija: Glavni sadržaj stranice
 
 **Opcija 3: Popup/Modal**
+
 - Prikazuje se na klik dugmeta "Pogledaj mapu"
 - Overlay preko trenutne stranice
 - Dugme za zatvaranje
@@ -100,7 +108,8 @@ Nakon ugradnje, proverite:
 ### Kontakt i podrška
 
 Za tehnička pitanja i podršku:
-- Email: aleksandar.vukovac@amityintegration.com
+
+- Email: aleksa24sata@gmail.com
 - GitHub Repository: https://github.com/aleksandarvukovac/niv-map
 
 ---
