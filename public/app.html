@@ -136,17 +136,10 @@
       .maplibregl-popup-content {
         padding: 0;
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
-          0 8px 16px rgba(0, 0, 0, 0.05);
+        background: transparent;
+        border: none;
+        box-shadow: none;
         animation: popupSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        max-height: 70vh;
-        overflow-y: auto !important;
-        overflow-x: hidden;
-        display: flex;
-        flex-direction: column;
       }
       .maplibregl-popup-close-button {
         top: 12px;
@@ -185,10 +178,6 @@
         border-radius: 20px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        display: flex;
-        flex-direction: column;
-        max-height: 70vh;
-        overflow: hidden;
       }
 
       .card::-webkit-scrollbar {
@@ -239,8 +228,7 @@
         color: #1a202c;
         overflow-y: auto;
         overflow-x: hidden;
-        flex: 1;
-        min-height: 0;
+        max-height: 300px;
       }
 
       .card_body::-webkit-scrollbar {
@@ -569,37 +557,41 @@
         filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.15));
       }
 
-      /* Fullscreen/Open button */
+      /* Fullscreen/Open button - Icon only */
       .fullscreen-btn {
         position: absolute;
-        bottom: 130px;
-        right: 10px;
+        bottom: 80px;
+        left: 10px;
         z-index: 1000;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 16px;
-        padding: 8px 14px;
-        font-size: 12px;
-        font-weight: 600;
+        border-radius: 4px;
+        padding: 6px;
         cursor: pointer;
         transition: all 0.2s ease;
         color: #333;
         display: flex;
         align-items: center;
-        gap: 6px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 29px;
+        height: 29px;
       }
 
       .fullscreen-btn:hover {
         background: rgba(255, 255, 255, 1);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        transform: scale(1.1);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
       }
 
       .fullscreen-btn svg {
-        width: 14px;
-        height: 14px;
+        width: 17px;
+        height: 17px;
+      }
+
+      .fullscreen-btn span {
+        display: none;
       }
     </style>
   </head>
@@ -707,6 +699,7 @@
         center: [19.8335, 45.2671],
         zoom: 7.2,
         attributionControl: true,
+        customAttribution: '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OSM contributors</a>',
       });
       map.addControl(new maplibregl.NavigationControl(), "top-right");
 
