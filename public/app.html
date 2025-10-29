@@ -180,15 +180,15 @@
 
       .card {
         width: 280px;
-        max-height: 65vh;
-        overflow-y: auto;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px);
         border-radius: 20px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        scrollbar-width: thin;
-        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+        display: flex;
+        flex-direction: column;
+        max-height: 70vh;
+        overflow: hidden;
       }
 
       .card::-webkit-scrollbar {
@@ -217,6 +217,7 @@
         position: relative;
         background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         overflow: hidden;
+        flex-shrink: 0;
       }
 
       .card_img {
@@ -236,6 +237,27 @@
         font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
         color: #1a202c;
+        overflow-y: auto;
+        overflow-x: hidden;
+        flex: 1;
+        min-height: 0;
+      }
+
+      .card_body::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .card_body::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .card_body::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+
+      .card_body::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
       }
 
       .card_title {
@@ -550,8 +572,8 @@
       /* Fullscreen/Open button */
       .fullscreen-btn {
         position: absolute;
-        bottom: 20px;
-        left: 20px;
+        bottom: 130px;
+        right: 10px;
         z-index: 1000;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(10px);
