@@ -178,6 +178,9 @@
         border-radius: 20px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        max-height: 600px;
+        display: flex;
+        flex-direction: column;
       }
 
       .card::-webkit-scrollbar {
@@ -207,6 +210,8 @@
         background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         overflow: hidden;
         flex-shrink: 0;
+        min-height: 180px;
+        max-height: 180px;
       }
 
       .card_img {
@@ -226,9 +231,10 @@
         font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
         color: #1a202c;
-        overflow-y: auto !important;
+        overflow-y: scroll !important;
         overflow-x: hidden;
         max-height: 350px;
+        -webkit-overflow-scrolling: touch;
       }
 
       .card_body::-webkit-scrollbar {
@@ -590,6 +596,20 @@
       .fullscreen-btn svg {
         width: 18px;
         height: 18px;
+      }
+
+      /* Hide MapTiler's built-in attribution to avoid duplication */
+      .maplibregl-ctrl-attrib-inner {
+        display: none !important;
+      }
+
+      /* Show only our custom attribution */
+      .maplibregl-ctrl-attrib.maplibregl-compact {
+        display: block !important;
+      }
+
+      .maplibregl-ctrl-attrib-button {
+        display: none !important;
       }
     </style>
   </head>
