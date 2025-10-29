@@ -143,6 +143,9 @@
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
           0 8px 16px rgba(0, 0, 0, 0.05);
         animation: popupSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        max-height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;
       }
       .maplibregl-popup-close-button {
         top: 12px;
@@ -542,6 +545,39 @@
         display: block;
         filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.15));
       }
+
+      /* Fullscreen/Open button */
+      .fullscreen-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 16px;
+        padding: 8px 14px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .fullscreen-btn:hover {
+        background: rgba(255, 255, 255, 1);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      .fullscreen-btn svg {
+        width: 14px;
+        height: 14px;
+      }
     </style>
   </head>
   <body>
@@ -551,6 +587,15 @@
     <div class="logo-watermark">
       <img src="img/niv-logo.png" alt="Najbolje iz Vojvodine" />
     </div>
+
+    <!-- Fullscreen/Open in New Window Button -->
+    <button class="fullscreen-btn" id="fullscreenBtn" title="Otvori u celom ekranu">
+      <svg viewBox="0 0 16 16" fill="currentColor">
+        <path d="M2 2h4v1H3v3H2V2zm10 0h4v4h-1V3h-3V2zM2 12v-4h1v3h3v1H2zm10 0v1h4v-4h-1v3h-3z"/>
+        <path d="M5 5h6v6H5z" opacity="0.5"/>
+      </svg>
+      Cela mapa
+    </button>
 
     <!-- Search and Filter Controls -->
     <div class="map-controls">
@@ -1636,6 +1681,14 @@
             filterByCategory(btn.dataset.category);
           });
         });
+
+        // Fullscreen/Open in new window button
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        if (fullscreenBtn) {
+          fullscreenBtn.addEventListener('click', () => {
+            window.open('https://niv.amityintegration.com/app.html', '_blank');
+          });
+        }
       }); // <-- Close map.on("load", ...) function
     </script>
   </body>
