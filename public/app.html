@@ -563,7 +563,7 @@
       /* Fullscreen/Open button - Icon only */
       .fullscreen-btn {
         position: absolute;
-        bottom: 50px;
+        bottom: 10px;
         left: 10px;
         z-index: 1000;
         background: rgba(255, 255, 255, 0.95);
@@ -930,6 +930,9 @@
           closeButton: true,
           closeOnClick: true,
         });
+
+        // Detect if running in iframe (embed mode)
+        const isEmbedded = window.self !== window.top;
 
         // Create custom pin images for stable Symbol Layer markers
         // Hybrid design: White icons on brand green + colored category dot
@@ -1367,6 +1370,13 @@
           const coordinates = e.features[0].geometry.coordinates.slice();
           const properties = e.features[0].properties;
 
+          // If embedded and website URL exists, open website directly
+          if (isEmbedded && properties.web) {
+            window.open(properties.web, '_blank');
+            return;
+          }
+
+          // Otherwise show popup (full-size map behavior)
           // Check if popup is already open
           const existingPopup = document.querySelector(".maplibregl-popup");
           if (existingPopup) {
@@ -1434,6 +1444,13 @@
           const coordinates = e.features[0].geometry.coordinates.slice();
           const properties = e.features[0].properties;
 
+          // If embedded and website URL exists, open website directly
+          if (isEmbedded && properties.web) {
+            window.open(properties.web, '_blank');
+            return;
+          }
+
+          // Otherwise show popup (full-size map behavior)
           const existingPopup = document.querySelector(".maplibregl-popup");
           if (existingPopup) {
             existingPopup.remove();
