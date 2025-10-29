@@ -807,9 +807,17 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         border: 1px solid rgba(0, 0, 0, 0.1);
         z-index: 10000;
-        pointer-events: none;
+        pointer-events: auto;
+        cursor: pointer;
         animation: tooltipFadeIn 0.2s ease-out;
         max-width: 250px;
+        transition: all 0.2s ease;
+      }
+
+      .mini-tooltip:hover {
+        background: rgba(255, 255, 255, 1);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
       }
 
       @keyframes tooltipFadeIn {
@@ -1231,13 +1239,22 @@
           tooltip.innerHTML = `
             <div class="mini-tooltip-title">${properties.naziv}</div>
             <div class="mini-tooltip-category">${properties.kategorija} · ${properties.mesto}</div>
-            <div class="mini-tooltip-hint">Tap again to visit website</div>
+            <div class="mini-tooltip-hint">Klikni da posetis sajt</div>
           `;
 
           // Position tooltip above click point
           tooltip.style.left = point.x + 'px';
           tooltip.style.top = (point.y - 10) + 'px';
           tooltip.style.transform = 'translate(-50%, -100%)';
+
+          // Make tooltip clickable - opens website directly
+          tooltip.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (properties.web) {
+              window.open(properties.web, '_blank');
+              resetTwoClickState();
+            }
+          });
 
           document.body.appendChild(tooltip);
           currentMiniTooltip = tooltip;
