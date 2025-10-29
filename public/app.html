@@ -136,9 +136,12 @@
       .maplibregl-popup-content {
         padding: 0;
         border-radius: 20px;
-        background: transparent;
-        border: none;
-        box-shadow: none;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1),
+          0 8px 16px rgba(0, 0, 0, 0.05);
         animation: popupSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .maplibregl-popup-close-button {
@@ -173,14 +176,15 @@
 
       .card {
         width: 280px;
+        max-height: 400px;
+        overflow-y: auto;
         background: rgba(255, 255, 255, 0.95);
         backdrop-filter: blur(20px);
         border-radius: 20px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        max-height: 600px;
-        display: flex;
-        flex-direction: column;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
       }
 
       .card::-webkit-scrollbar {
@@ -209,9 +213,6 @@
         position: relative;
         background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         overflow: hidden;
-        flex-shrink: 0;
-        min-height: 180px;
-        max-height: 180px;
       }
 
       .card_img {
@@ -231,10 +232,6 @@
         font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
         color: #1a202c;
-        overflow-y: scroll !important;
-        overflow-x: hidden;
-        max-height: 350px;
-        -webkit-overflow-scrolling: touch;
       }
 
       .card_body::-webkit-scrollbar {
@@ -598,19 +595,6 @@
         height: 18px;
       }
 
-      /* Hide MapTiler's built-in attribution to avoid duplication */
-      .maplibregl-ctrl-attrib-inner {
-        display: none !important;
-      }
-
-      /* Show only our custom attribution */
-      .maplibregl-ctrl-attrib.maplibregl-compact {
-        display: block !important;
-      }
-
-      .maplibregl-ctrl-attrib-button {
-        display: none !important;
-      }
     </style>
   </head>
   <body>
@@ -715,13 +699,8 @@
         style: STYLE_URL,
         center: [19.8335, 45.2671],
         zoom: 7.2,
-        attributionControl: false,
+        attributionControl: true,
       });
-
-      // Add custom attribution control with shortened text
-      map.addControl(new maplibregl.AttributionControl({
-        customAttribution: '© <a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OSM contributors</a>'
-      }), 'bottom-left');
       map.addControl(new maplibregl.NavigationControl(), "top-right");
 
       // 3) Učitavanje podataka
