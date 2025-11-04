@@ -736,6 +736,259 @@
           45.25195944
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0033",
+        "naziv": "Banjoni 021 doo",
+        "kategorija": "Proizvodi",
+        "opis": "Orašasti plodovi- pečeni lešnik namenjen za direktnu konzumaciju ili kao sastojak u prehrambenim proizvodima",
+        "web": "https://banjoni.com/",
+        "foto": "/img/banjoni-logo.png,/img/banjoni-1.png,/img/banjoni-2.png,/img/banjoni-3.png",
+        "adresa": "Žarka Zrenjanina 1",
+        "mesto": "Temerin",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.87554961,
+          45.3855395
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0034",
+        "naziv": "Vinarija Kovačević doo",
+        "kategorija": "Proizvodi",
+        "opis": "Vinarija Kovačević je porodična vinarija sa južnih padina Fruške gore, posvećena očuvanju tradicije i razvoju modernog vinarstva u Srbiji. Od 2019. prelazi na organsku proizvodnju sa 95 ha vinograda, a vina nastaju kombinacijom tradicionalnih tehnika i savremenog pristupa.",
+        "web": "https://vinarijakovacevic.com/",
+        "foto": "/img/kovacevic-logo.png,/img/kovacevic-1.png,/img/kovacevic-2.png,/img/kovacevic-3.png",
+        "adresa": "Vojvode Putnika 78",
+        "mesto": "Irig",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.86069794,
+          45.09233531
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0035",
+        "naziv": "KFTRJ Sremska Mitrovica",
+        "kategorija": "Proizvodi",
+        "opis": "KFTRJ Sremska Mitrovica je porodična firma posvećena proizvodnji prave, čiste kafe po tradicionalnoj recepturi i savremenim standardima. Kontinuiranim unapređenjem proizvodnje i pakovanja održava visok kvalitet, dok stručan i strastven tim promoviše kulturu uživanja u kafi.",
+        "web": "https://kftrj.rs/",
+        "foto": "/img/kftrj-logo.png,/img/kftrj-1.png,/img/kftrj-2.png,/img/kftrj-3.png",
+        "adresa": "Puškinova 26",
+        "mesto": "Sremska Mitrovica",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.60617966,
+          44.96599055
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0036",
+        "naziv": "Boemske noći Srpska Crnja",
+        "kategorija": "Manifestacije",
+        "opis": "„Boemske noći“ su zabavno-turistička manifestacija u Srpskoj Crnji, posvećena liku i delu Đure Jakšića, poznatog slikara, pesnika i boema. Već dve decenije ova manifestacija okuplja sve više posetilaca, slaveći umetnost, boemski duh i kulturno nasleđe Srpske Crnje.",
+        "web": "https://www.instagram.com/boemskenoci_srpskacrnja/",
+        "foto": "/img/boemske-logo.png,/img/boemske-1.png,/img/boemske-2.png,/img/boemske-3.png",
+        "adresa": "Kralja Aleksandra 65",
+        "mesto": "Srpska Crnja",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.69486644,
+          45.72585365
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0037",
+        "naziv": "Kovano gvožđe Mesaroš",
+        "kategorija": "Zanat",
+        "opis": "Kovano gvožđe Mesaroš iz Bečeja bavi se ručnom izradom predmeta od kovanog gvožđa, poput kapija, ograda, nameštaja i dekorativnih elemenata. Kao predstavnik stare zanatske tradicije, spojem veštine i umetnosti čuvaju duh ručnog kovanja metala.",
+        "web": "https://www.facebook.com/people/Kovano-Gvozdje-Mesaros/100057258768348/",
+        "foto": "/img/mesaros-logo.png,/img/mesaros-1.png,/img/mesaros-2.png,/img/mesaros-3.png",
+        "adresa": "Jovana Popovića 41",
+        "mesto": "Bečej",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.04574628,
+          45.6223717
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0038",
+        "naziv": "SAČ FEST-2012 Nova Gajdobra",
+        "kategorija": "Manifestacije",
+        "opis": "Manifestacija „SAČ FEST“ u Novoj Gajdobri održava se u maju, prve nedelje nakon seoske slave Svetog Vasilija Ostroškog. Prepoznatljiva je po takmičenju u pripremi jagnjetine ispod sača po tradicionalnom receptu, koje okuplja stotine učesnika i posetilaca iz zemlje i inostranstva.",
+        "web": "https://www.youtube.com/watch?v=8T1u2HNewwc",
+        "foto": "/img/gajdobra-logo.png,/img/gajdobra-1.png,/img/gajdobra-2.png,/img/gajdobra-3.png",
+        "adresa": "Park u centru sela",
+        "mesto": "Nova Gajdobra",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.43635316,
+          45.33026213
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0039",
+        "naziv": "Vinarija Kiš",
+        "kategorija": "Proizvodi",
+        "opis": "Kišov Bermet i Kišov Bermet beli su desertna vina sa zaštićenim geografskim poreklom i jedan od simbola Sremskih Karlovaca. Ova jedinstvena vina obogaćena su mešavinom trava i začina po porodičnom receptu starom više od 200 godina.",
+        "web": "https://kis1801.com/",
+        "foto": "/img/kis-logo.png,/img/kis-1.png,/img/kis-2.png,/img/kis-3.png",
+        "adresa": "Karlovačkog mira 46",
+        "mesto": "Sremski Karlovci",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.94151128,
+          45.19628478
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0040",
+        "naziv": "HOTEL & SPA GRAD",
+        "kategorija": "Usluge",
+        "opis": "Hotel & Spa Grad nalazi se u Kovinu, na uzvišenju iznad Dunava, u blizini lokaliteta Stari Grad. U prijatnom ambijentu okruženom parkom i maketom toka Dunava, hotel nudi moderni kafe-restoran sa domaćom i internacionalnom kuhinjom, dečiju igraonicu i pristup biciklističkoj stazi EuroVelo 6. Idealan je za odmor, rekreaciju i uživanje u prirodi pored reke.",
+        "web": "https://hotelgradkovin.com/",
+        "foto": "/img/grad-logo.png,/img/grad-1.png,/img/grad-2.png,/img/grad-3.png",
+        "adresa": "Dunavska 19",
+        "mesto": "Kovin",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.97609853,
+          44.73097037
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0041",
+        "naziv": "Salaš Stara Dunja",
+        "kategorija": "Usluge",
+        "opis": "Salaš Stara Dunja, smešten nadomak Zrenjanina, autentična je oaza banatske tradicije i ukusa. Gostima nudi jela pripremljena po starim receptima, poput teletine i jagnjetine ispod sača, domaćeg hleba i tradicionalnih poslastica, uz prijatan ambijent idealan za porodične ručkove i proslave u miru banatske ravnice.",
+        "web": "https://salaskodstaredunje.rs/",
+        "foto": "/img/dunja-logo.png,/img/dunja-1.png,/img/dunja-2.png,/img/dunja-3.png",
+        "adresa": "Beogradski put 261",
+        "mesto": "Perlez",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          20.43389221,
+          45.27136133
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0042",
+        "naziv": "Novosadski dani piva",
+        "kategorija": "Manifestacije",
+        "opis": "Manifestacija „Novosadski dani piva“ spoj je dobre muzike, lokalne pivarske tradicije i pozitivne energije Novog Sada. Održava se na Novosadskom sajmu, okuplja ljubitelje piva i roka, uz nastupe poznatih bendova i učešće malih pivara. Bogat program i podrška lokalne zajednice čine je prepoznatljivim brendom grada i događajem sa sve većim brojem posetilaca svake godine.",
+        "web": "https://www.facebook.com/novosadskidanipiva/?locale=sr_RS",
+        "foto": "/img/pivo-logo.png,/img/pivo-1.png,/img/pivo-2.png,/img/pivo-3.png",
+        "adresa": "Futoška 71",
+        "mesto": "Novi Sad",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.82297023,
+          45.24911017
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0043",
+        "naziv": "Čarda Kod Braše",
+        "kategorija": "Usluge",
+        "opis": "Restoran Čarda kod Braše u Begeču ima tradiciju dugu 40 godina i poznat je po pripremi ribljih specijaliteta na prepoznatljiv način. Nude bogat izbor ribljih čorbi, paprikaša, pečene, dimljene i marinirane ribe, uz prigodne priloge, pića i vina.",
+        "web": "https://cardakodbrase.rs/",
+        "foto": "/img/brasa-logo.png,/img/brasa-1.png,/img/brasa-2.png,/img/brasa-3.png",
+        "adresa": "Begečka jama 56",
+        "mesto": "Begeč",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.61581213,
+          45.22110341
+        ]
+      }
     }
   ]
 }
