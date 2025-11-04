@@ -1,3 +1,63 @@
+<style>
+@page {
+  size: A4;
+  margin: 2cm;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12pt;
+  line-height: 1.6;
+  color: #333;
+}
+
+h1 {
+  font-size: 24pt;
+  margin-top: 0;
+  margin-bottom: 12pt;
+  color: #00A651;
+}
+
+h2 {
+  font-size: 18pt;
+  margin-top: 16pt;
+  margin-bottom: 10pt;
+  color: #00A651;
+}
+
+h3 {
+  font-size: 14pt;
+  margin-top: 12pt;
+  margin-bottom: 8pt;
+}
+
+p, li {
+  font-size: 12pt;
+  margin-bottom: 8pt;
+}
+
+code {
+  font-size: 11pt;
+  background-color: #f5f5f5;
+  padding: 2px 4px;
+}
+
+pre {
+  font-size: 10pt;
+  background-color: #f5f5f5;
+  padding: 10pt;
+  border-left: 3px solid #00A651;
+}
+
+strong {
+  font-weight: 600;
+}
+
+a {
+  color: #00A651;
+}
+</style>
+
 # Dokumentacija / Documentation
 
 Ova fascikla sadrži tehničku dokumentaciju za interaktivnu mapu "Najbolje iz Vojvodine".

@@ -1,10 +1,137 @@
+<style>
+@page {
+  size: A4;
+  margin: 2.5cm;
+}
+
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 11pt;
+  line-height: 1.6;
+  color: #333;
+  max-width: 210mm;
+}
+
+h1 {
+  font-size: 22pt;
+  margin-top: 0;
+  margin-bottom: 16pt;
+  color: #00A651;
+  border-bottom: 2px solid #00A651;
+  padding-bottom: 8pt;
+}
+
+h2 {
+  font-size: 16pt;
+  margin-top: 20pt;
+  margin-bottom: 12pt;
+  color: #00A651;
+}
+
+h3 {
+  font-size: 13pt;
+  margin-top: 14pt;
+  margin-bottom: 10pt;
+  color: #555;
+}
+
+h4 {
+  font-size: 12pt;
+  margin-top: 12pt;
+  margin-bottom: 8pt;
+  font-weight: 600;
+}
+
+p, li {
+  font-size: 11pt;
+  margin-bottom: 8pt;
+}
+
+ul, ol {
+  margin-left: 20pt;
+}
+
+code {
+  font-size: 10pt;
+  font-family: "Courier New", Courier, monospace;
+  background-color: #f5f5f5;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+pre {
+  font-size: 9pt;
+  font-family: "Courier New", Courier, monospace;
+  background-color: #f8f8f8;
+  padding: 12pt;
+  border-left: 4px solid #00A651;
+  overflow-x: auto;
+  margin: 12pt 0;
+}
+
+pre code {
+  background-color: transparent;
+  padding: 0;
+}
+
+strong {
+  font-weight: 600;
+  color: #222;
+}
+
+em {
+  font-style: italic;
+}
+
+blockquote {
+  margin-left: 20pt;
+  padding-left: 12pt;
+  border-left: 3px solid #ddd;
+  color: #666;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12pt 0;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8pt;
+  text-align: left;
+  font-size: 10pt;
+}
+
+th {
+  background-color: #00A651;
+  color: white;
+  font-weight: 600;
+}
+
+a {
+  color: #00A651;
+  text-decoration: none;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 16pt 0;
+}
+
+.page-break {
+  page-break-after: always;
+}
+</style>
+
 # Tehnički izveštaj: Interaktivna mapa "Najbolje iz Vojvodine"
 
 ---
 
 ## 1. Pregled projekta
 
-Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za Pokrajinski sekretarijat za privredu i turizam. Cilj projekta je vizuelizacija svih 32 nosioca znaka kvaliteta "Najbolje iz Vojvodine" na interaktivnoj mapi Vojvodine, sa mogućnostima pretraživanja, filtriranja po kategorijama i detaljnim prikazom informacija o svakom nosiocu.
+Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za Pokrajinski sekretarijat za privredu i turizam. Cilj projekta je vizuelizacija svih nosilaca znaka kvaliteta "Najbolje iz Vojvodine" na interaktivnoj mapi Vojvodine, sa mogućnostima pretraživanja, filtriranja po kategorijama i detaljnim prikazom informacija o svakom nosiocu.
 
 ### Ciljevi projekta
 
@@ -23,15 +150,15 @@ Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za
 
 **Prednosti:**
 
-- Potpuno besplatna, bez licensing troškova
-- Hardverska GPU akceleracija za glatke animacije
+- Potpuno besplatna, bez troškova licenciranja
+- Hardversko ubrzavanje grafičkog procesora za glatke animacije
 - Podržava milione podataka bez usporavanja
-- Aktivna zajednica i redovni update-i
+- Aktivna zajednica i redovna ažuriranja
 
 **Upotreba u projektu:**
 
 - Renderovanje osnovne mape Vojvodine
-- Prikazivanje custom markera kao Symbol Layers
+- Prikazivanje personalizovanih markera kao npr. Symbol Layers
 - Animacije (flyTo, fitBounds) za zoom i fokusiranje
 - Event handling (klikovi, hover efekti)
 
@@ -91,7 +218,7 @@ Interaktivna mapa "Najbolje iz Vojvodine" je moderna web aplikacija razvijena za
 **Prednosti:**
 
 - Automatski deployment iz GitHub repozitorijuma
-- Globalni CDN (brzo učitavanje svuda u svetu)
+- Globalni CDN (brzo učitavanje sa geolokacijski najbližeg servera)
 - HTTPS sertifikat (besplatno, automatski)
 - Zero-downtime deployments
 
@@ -111,10 +238,10 @@ Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim 
 
 **Razlozi za ovaj pristup:**
 
-- Jednostavnost deployment-a (jedan fajl)
+- Jednostavnost softverskog razvoja (samo jedan fajl)
 - Lakša WordPress/iframe integracija
 - Nema potrebe za build procesima
-- Potpuna portabilnost
+- Potpuna integracija na bilo kojoj platformi
 
 **Struktura:**
 
@@ -142,7 +269,7 @@ Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim 
 
 - **Custom markeri** - Teardrops (kap-oblik) u brendiranoj zelenoj boji (#00A651)
 - **Ikonice po kategoriji** - Čekić (Zanati), Torba (Proizvodi), Ključ (Usluge), Zastava (Manifestacije)
-- **Kategoriski dot** - 4px obojeni krug na dnu markera
+- **Kategorijska tačka** - 4px obojeni krug na dnu markera
 - **Clusteri** - Grupisanje po gradovima (2+ markera)
 - **Watermark** - NIV logo (donje desno)
 
@@ -163,9 +290,9 @@ Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim 
 **Mogućnosti:**
 
 - Prikazuje svih 32 lokacija odjednom
-- Real-time filtriranje (naziv + grad)
-- Keyboard navigacija (↑↓, Enter, Escape)
-- Kategoriski obojene tačke
+- Filtriranje u realnom vremenu (naziv + grad)
+- Navigacija tasterima (↑↓, Enter, Escape)
+- Kategorijski obojene tačke
 - Klik → zoom na marker (nivo 14)
 
 **Implementacija:**
@@ -178,10 +305,10 @@ Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim 
 
 **Kategorije:**
 
-1. **Zanati** - Oranž (#F4A261) - 8 nosioca
-2. **Proizvodi** - Braon (#8B4513) - 12 nosioca
-3. **Usluge** - Teal (#20B2AA) - 6 nosioca
-4. **Manifestacije** - Crvena (#DC143C) - 6 nosioca
+1. **Zanati** - Oranž (#F4A261) - 8 nosilaca
+2. **Proizvodi** - Braon (#8B4513) - 12 nosilaca
+3. **Usluge** - Teal (#20B2AA) - 6 nosilaca
+4. **Manifestacije** - Crvena (#DC143C) - 6 nosilaca
 
 **Logika:**
 
@@ -221,7 +348,7 @@ Aplikacija je implementirana kao **jedan HTML fajl** (`app.html`) sa ugrađenim 
 
 - Teardrop oblik (kap): 32×42px
 - Brend zelena boja (#00A651)
-- Beli ikonice (čekić, torba, ključ, zastava)
+- Bele ikonice (čekić, torba, ključ, zastava)
 - Kategorijski obojeni 4px dot
 - Drop shadow za dubinu
 
@@ -253,7 +380,7 @@ sips -Z 1000 --setProperty formatOptions 75 image.jpg
 **Symbol Layers** (MapLibre nativni markeri):
 
 - GPU renderovani
-- Nema floating problema
+- Nema tzv. plutajućih problema (floating)
 - Brže od DOM manipulacije
 - Stabilni na zoom/pan
 
@@ -261,7 +388,7 @@ sips -Z 1000 --setProperty formatOptions 75 image.jpg
 
 - 32 markera renderuje se trenutno
 - Smooth zoom i pan animacije
-- Nema memory leakova
+- Nema "curenja" memorije
 
 ### 4.3 Lazy loading
 
@@ -286,8 +413,8 @@ sips -Z 1000 --setProperty formatOptions 75 image.jpg
 **Autocomplete combo box:**
 
 - Inspirisan Google pretraživanjem
-- Enables browsing behavior (korisno za istraživanje)
-- Mobile-friendly (veliki touch targeti)
+- Omogućava pretraživanje u pregledaču (browsing behavior)
+- Prilagođeno mobilnim telefonima (veliki touch targeti)
 
 **Category filtering:**
 
@@ -297,13 +424,13 @@ sips -Z 1000 --setProperty formatOptions 75 image.jpg
 
 **City clustering:**
 
-- Smanjuje vizuelni clutter
-- Semantički (po gradovima) je logičniji od proximity
-- Labels sa brojem markera
+- Smanjuje vizuelnu pretrpanost
+- Semantički (po gradovima) je logičniji od lokacijske udaljenosti
+- Oznake sa brojem markera
 
 ### 5.3 Responzivnost
 
-- **Desktop:** Kontrole levo gore, vodič thumb swipe navigacija
+- **Desktop:** Kontrole levo gore, vodič preko navigacije prevlačenja palcem (thumb swipe)
 - **Mobile:** Touch-friendly dugmići, swipe za carousel
 - **Tablet:** Optimalno za oba režima (portrait/landscape)
 
@@ -339,8 +466,11 @@ Interaktivna mapa "Najbolje iz Vojvodine" je moderna, performantna i user-friend
 
 ---
 
-**Dokument kreiran:** Oktobar 2025
-**Autor:** Aleksandar Vukovac (aleksa24sata@gmail.com)
 **Tehnologije:** MapLibre GL v3.6.1, MapTiler API, GeoJSON, Netlify
 **GitHub:** https://github.com/aleksandarvukovac/niv-map
 **Live Demo:** https://niv.amityintegration.com/app.html
+
+**Dokument kreiran:** Oktobar 2025<br>
+**Autor:** Aleksandar Vukovac (aleksa24sata@gmail.com)<br>
+
+************\_\_\_************

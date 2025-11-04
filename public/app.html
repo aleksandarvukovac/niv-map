@@ -576,24 +576,26 @@
       /* Logo watermark */
       .logo-watermark {
         position: absolute;
-        bottom: 10px;
-        right: 10px;
-        width: 110px;
-        opacity: 0.85;
+        bottom: 12px;
+        right: 12px;
+        width: 170px; /* Increased from 110px for better visibility */
+        opacity: 0.92; /* Increased from 0.85 for better presence */
         pointer-events: none;
         z-index: 1;
-        transition: opacity 0.3s ease;
+        transition: opacity 0.3s ease, transform 0.3s ease;
       }
 
       .logo-watermark:hover {
         opacity: 1;
+        transform: scale(1.02);
       }
 
       .logo-watermark img {
         width: 100%;
         height: auto;
         display: block;
-        filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.15));
+        filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25)) drop-shadow(0 0 12px rgba(255, 255, 255, 0.4));
+        /* Enhanced shadow for better separation + white glow for contrast */
       }
 
       /* Fullscreen/Open button - Icon only */
@@ -728,11 +730,25 @@
           font-size: 10px;
         }
 
-        /* Smaller logo watermark */
+        /* Mobile logo watermark - still visible but compact */
         .logo-watermark {
-          width: 80px;
-          bottom: 8px;
-          right: 8px;
+          width: 105px; /* Increased from 80px */
+          bottom: 10px;
+          right: 10px;
+        }
+      }
+
+      /* Tablet breakpoint (601px - 1024px) */
+      @media (min-width: 601px) and (max-width: 1024px) {
+        .logo-watermark {
+          width: 145px; /* Medium size for tablets */
+        }
+      }
+
+      /* Large desktop breakpoint (1400px+) */
+      @media (min-width: 1400px) {
+        .logo-watermark {
+          width: 190px; /* Even more prominent on large screens */
         }
 
         /* Adjust fullscreen button position to avoid overlap */
@@ -1221,6 +1237,27 @@
         // Detect if running in iframe (embed mode)
         const isEmbedded = window.self !== window.top;
 
+        // Apply embed-specific watermark styling for stronger brand presence
+        if (isEmbedded) {
+          const watermark = document.querySelector('.logo-watermark');
+          if (watermark) {
+            // Embeds need stronger branding - slightly smaller than full screen but more prominent
+            const isMobile = window.innerWidth <= 600;
+            const isTablet = window.innerWidth > 600 && window.innerWidth <= 1024;
+
+            if (isMobile) {
+              watermark.style.width = '95px'; // Compact but visible on mobile embeds
+            } else if (isTablet) {
+              watermark.style.width = '135px'; // Good presence on tablet embeds
+            } else {
+              watermark.style.width = '155px'; // Strong brand presence on desktop embeds
+            }
+
+            // Slightly higher opacity for embeds (brand visibility on third-party sites)
+            watermark.style.opacity = '0.94';
+          }
+        }
+
         // Two-click behavior for embed: track last clicked marker
         let lastClickedMarkerId = null;
         let clickResetTimeout = null;
@@ -1236,10 +1273,11 @@
           // Create tooltip element
           const tooltip = document.createElement('div');
           tooltip.className = 'mini-tooltip';
+          const hintText = properties.web ? 'Klikni da posetis sajt' : 'Klikni za vise informacija';
           tooltip.innerHTML = `
             <div class="mini-tooltip-title">${properties.naziv}</div>
             <div class="mini-tooltip-category">${properties.kategorija} · ${properties.mesto}</div>
-            <div class="mini-tooltip-hint">Klikni da posetis sajt</div>
+            <div class="mini-tooltip-hint">${hintText}</div>
           `;
 
           // Position tooltip above click point
@@ -1724,12 +1762,34 @@
           const markerId = properties.id;
 
           // EMBED MODE: Two-click behavior
-          if (isEmbedded && properties.web) {
+          if (isEmbedded) {
             // Check if this is the second click on the same marker
             if (lastClickedMarkerId === markerId) {
-              // Second click - open website
-              window.open(properties.web, '_blank');
-              resetTwoClickState();
+              // Second click - open website if available, otherwise show popup
+              if (properties.web) {
+                window.open(properties.web, '_blank');
+                resetTwoClickState();
+              } else {
+                // No website - show popup with info
+                resetTwoClickState();
+                const existingPopup = document.querySelector(".maplibregl-popup");
+                if (existingPopup) {
+                  existingPopup.remove();
+                }
+                const photos = normPhotos(properties.foto);
+                popup
+                  .setLngLat(coordinates)
+                  .setHTML(popupHTML(properties))
+                  .addTo(map);
+                setTimeout(() => {
+                  const container = popup
+                    .getElement()
+                    .querySelector(".maplibregl-popup-content");
+                  if (container && photos.length > 1) {
+                    wireCarousel(container, photos);
+                  }
+                }, 100);
+              }
               return;
             } else {
               // First click - show mini tooltip
@@ -1816,12 +1876,34 @@
           const markerId = properties.id;
 
           // EMBED MODE: Two-click behavior
-          if (isEmbedded && properties.web) {
+          if (isEmbedded) {
             // Check if this is the second click on the same marker
             if (lastClickedMarkerId === markerId) {
-              // Second click - open website
-              window.open(properties.web, '_blank');
-              resetTwoClickState();
+              // Second click - open website if available, otherwise show popup
+              if (properties.web) {
+                window.open(properties.web, '_blank');
+                resetTwoClickState();
+              } else {
+                // No website - show popup with info
+                resetTwoClickState();
+                const existingPopup = document.querySelector(".maplibregl-popup");
+                if (existingPopup) {
+                  existingPopup.remove();
+                }
+                const photos = normPhotos(properties.foto);
+                popup
+                  .setLngLat(coordinates)
+                  .setHTML(popupHTML(properties))
+                  .addTo(map);
+                setTimeout(() => {
+                  const container = popup
+                    .getElement()
+                    .querySelector(".maplibregl-popup-content");
+                  if (container && photos.length > 1) {
+                    wireCarousel(container, photos);
+                  }
+                }, 100);
+              }
               return;
             } else {
               // First click - show mini tooltip
@@ -1997,7 +2079,7 @@
           });
 
           // EMBED MODE: Show tooltip after zoom (consistent with marker click)
-          if (isEmbedded && properties.web) {
+          if (isEmbedded) {
             setTimeout(() => {
               // Set this marker as "first clicked"
               lastClickedMarkerId = properties.id;
