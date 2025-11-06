@@ -989,6 +989,29 @@
           45.22110341
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "NIV-0044",
+        "naziv": "MAXIM & CO doo",
+        "kategorija": "Usluge",
+        "opis": "Maxim & Co je vodeća kompanija za outdoor oglašavanje u Novom Sadu sa širokom mrežom reklamnih površina i ekskluzivnim lokacijama u gradu. Takođe poseduje 25 trafika koje nude mogućnost dodatnog brendiranja i promocije.",
+        "web": "https://maxim.co.rs/",
+        "foto": "/img/maxim-logo.png,/img/maxim-1.png,/img/maxim-2.png,/img/maxim-3.png",
+        "adresa": "Bulevar Mihajla Pupina 9",
+        "mesto": "Novi Sad",
+        "tags": "",
+        "status": "",
+        "updated_at": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          19.84266762,
+          45.25390087
+        ]
+      }
     }
   ]
 }
