@@ -1535,59 +1535,67 @@
 
         console.log('All marker images loaded successfully');
 
-        // City-based semantic clustering
-        // Group markers by city and create city clusters for cities with 3+ markers
-        const cityClusters = {};
-        const individualMarkers = [];
+        // Store all features for filtering
+        const allFeatures = data.features;
 
-        data.features.forEach(feature => {
-          const city = feature.properties.mesto || 'Unknown';
-          if (!cityClusters[city]) {
-            cityClusters[city] = [];
-          }
-          cityClusters[city].push(feature);
-        });
+        // Function to build city clusters from a set of features
+        function buildCityClusters(features) {
+          const cityClusters = {};
 
-        // Create city cluster points and separate individual markers
-        const cityClusterFeatures = [];
-        const clusteredCityMarkers = [];
+          features.forEach(feature => {
+            const city = feature.properties.mesto || 'Unknown';
+            if (!cityClusters[city]) {
+              cityClusters[city] = [];
+            }
+            cityClusters[city].push(feature);
+          });
 
-        Object.entries(cityClusters).forEach(([city, features]) => {
-          if (features.length >= 2) {
-            // Create cluster for cities with 2+ markers
-            const centroid = features.reduce((acc, f) => {
-              acc.lng += f.geometry.coordinates[0];
-              acc.lat += f.geometry.coordinates[1];
-              return acc;
-            }, { lng: 0, lat: 0 });
+          const cityClusterFeatures = [];
+          const clusteredCityMarkers = [];
+          const individualMarkers = [];
 
-            centroid.lng /= features.length;
-            centroid.lat /= features.length;
+          Object.entries(cityClusters).forEach(([city, cityFeatures]) => {
+            if (cityFeatures.length >= 2) {
+              // Create cluster for cities with 2+ markers
+              const centroid = cityFeatures.reduce((acc, f) => {
+                acc.lng += f.geometry.coordinates[0];
+                acc.lat += f.geometry.coordinates[1];
+                return acc;
+              }, { lng: 0, lat: 0 });
 
-            // Collect unique categories in this cluster
-            const categories = [...new Set(features.map(f => f.properties.kategorija))];
+              centroid.lng /= cityFeatures.length;
+              centroid.lat /= cityFeatures.length;
 
-            cityClusterFeatures.push({
-              type: 'Feature',
-              geometry: {
-                type: 'Point',
-                coordinates: [centroid.lng, centroid.lat]
-              },
-              properties: {
-                city: city,
-                count: features.length,
-                bounds: features.map(f => f.geometry.coordinates),
-                categories: categories.join(',') // Store as comma-separated string
-              }
-            });
+              // Collect unique categories in this cluster
+              const categories = [...new Set(cityFeatures.map(f => f.properties.kategorija))];
 
-            // Also store the individual markers for this clustered city
-            clusteredCityMarkers.push(...features);
-          } else {
-            // Add to individual markers
-            individualMarkers.push(...features);
-          }
-        });
+              cityClusterFeatures.push({
+                type: 'Feature',
+                geometry: {
+                  type: 'Point',
+                  coordinates: [centroid.lng, centroid.lat]
+                },
+                properties: {
+                  city: city,
+                  count: cityFeatures.length,
+                  bounds: cityFeatures.map(f => f.geometry.coordinates),
+                  categories: categories.join(',') // Store as comma-separated string
+                }
+              });
+
+              // Also store the individual markers for this clustered city
+              clusteredCityMarkers.push(...cityFeatures);
+            } else {
+              // Add to individual markers
+              individualMarkers.push(...cityFeatures);
+            }
+          });
+
+          return { cityClusterFeatures, clusteredCityMarkers, individualMarkers };
+        }
+
+        // Build initial clusters with all features
+        const { cityClusterFeatures, clusteredCityMarkers, individualMarkers } = buildCityClusters(allFeatures);
 
         // Add source for individual markers (cities with 1-2 locations)
         map.addSource('places', {
@@ -2152,28 +2160,32 @@
             }
           });
 
-          // Filter markers using symbol layer filter
+          // Rebuild clusters based on filtered features
+          let filteredFeatures;
           if (category === "all") {
-            // Show all markers and clusters
-            map.setFilter('places-symbols', null);
-            map.setFilter('clustered-city-symbols', null);
-            map.setFilter('city-clusters-circles', null);
-            map.setFilter('city-clusters-labels', null);
+            filteredFeatures = allFeatures;
           } else {
-            // Filter individual markers by category
-            map.setFilter('places-symbols', ['==', ['get', 'kategorija'], category]);
-            map.setFilter('clustered-city-symbols', ['==', ['get', 'kategorija'], category]);
-
-            // Filter city clusters to only show if they contain markers from this category
-            // Use index-of to check if category exists in comma-separated categories string
-            const categoryFilter = [
-              'any',
-              ['==', ['get', 'categories'], category], // Single category in cluster
-              ['>', ['index-of', category, ['get', 'categories']], -1] // Category found in list
-            ];
-            map.setFilter('city-clusters-circles', categoryFilter);
-            map.setFilter('city-clusters-labels', categoryFilter);
+            filteredFeatures = allFeatures.filter(f => f.properties.kategorija === category);
           }
+
+          // Rebuild clusters with filtered features
+          const { cityClusterFeatures: newClusters, clusteredCityMarkers: newClusteredMarkers, individualMarkers: newIndividualMarkers } = buildCityClusters(filteredFeatures);
+
+          // Update data sources with new clusters
+          map.getSource('places').setData({
+            type: 'FeatureCollection',
+            features: newIndividualMarkers
+          });
+
+          map.getSource('city-clusters').setData({
+            type: 'FeatureCollection',
+            features: newClusters
+          });
+
+          map.getSource('clustered-city-markers').setData({
+            type: 'FeatureCollection',
+            features: newClusteredMarkers
+          });
         }
 
         // Event listeners for autocomplete
