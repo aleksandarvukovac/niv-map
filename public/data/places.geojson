@@ -79,8 +79,8 @@
         "opis": "Ravno Selo Film Festival promoviše debitantske filmove i mlade autore. Održava se svake godine u Ravnom Selu uz projekcije, koncerte i edukativne programe.",
         "web": "https://ravnoseloff.com/",
         "foto": "/img/ravno-selo-logo.png,/img/ravno-selo-1.jpg,/img/ravno-selo-2.jpg,/img/ravno-selo-3.jpg",
-        "adresa": "Topličin venac 11",
-        "mesto": "Beograd",
+        "adresa": "7. Jula",
+        "mesto": "Ravno Selo",
         "tags": "",
         "status": "",
         "updated_at": ""
@@ -88,8 +88,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          20.45524641,
-          44.81631091
+          19.62256773,
+          45.44912285
         ]
       }
     },
