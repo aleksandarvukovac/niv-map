@@ -1068,7 +1068,7 @@
         "opis": "Radionica Petrović 021 nudi širok izbor repromaterijala za dekupaž, kao i ručno rađene drvene daske za serviranje i unikatne proizvode izrađene dekupaž tehnikom po želji kupaca. Svaki komad nastaje pažljivo, sa kreativnošću i posvećenošću detaljima. Idealno mesto za sve koji vole rukotvorine i personalizovane dekorativne predmete.",
         "web": "https://www.instagram.com/radionicapetrovic021/",
         "foto": "/img/021-logo.png,/img/021-1.jpg,/img/021-2.jpg,/img/021-3.jpg",
-        "adresa": "Ivana Gorana Kovačića 1",
+        "adresa": "Gorana Kovačića 1",
         "mesto": "Novi Sad",
         "tags": "",
         "status": "",
@@ -1077,8 +1077,8 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          19.88362212,
-          45.39609933
+          19.80111144,
+          45.24148557
         ]
       }
     },
